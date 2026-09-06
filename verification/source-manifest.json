@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-06T19:14:00.672869+00:00",
-  "source_set_sha256": "5eb30c8c4f5b482751ac6c3172f750ff160f84c639df9c2f7d317d1e22a7e154",
+  "generated_at": "2026-09-06T21:09:43.528099+00:00",
+  "source_set_sha256": "a38242911fcc1e027c42bf6f2a8b5bea25415ee5abc6198d31993645ce80b4c8",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -76,12 +76,12 @@
       "bytes": 3810
     },
     "evm/contracts/VerdictGraphVault.sol": {
-      "sha256": "4533224011f2a103eb09012342fc47ec319238d157c8567398ae238e776180df",
-      "bytes": 13509
+      "sha256": "e8ae647d517b52470eae9f12e78a51517b0c031297f44c0ca313de457fe80145",
+      "bytes": 16761
     },
     "evm/test/VerdictGraphVault.t.sol": {
-      "sha256": "9d3ccfb97a4e4656a80d739f11a25503f23e5cc09a9547ae5888ecf6e295c282",
-      "bytes": 23048
+      "sha256": "66e6da45c383f2476e9b193a73c712216893b712e389c10166f2f3bb3d8df744",
+      "bytes": 26434
     },
     "foundry.toml": {
       "sha256": "47d7d6e95e4c8ee0df5811d02dd17aff87dc9d9099de24f1fe12136e8c3f3e75",

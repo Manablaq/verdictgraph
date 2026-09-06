@@ -76,6 +76,89 @@ contract VerdictGraphVaultTest {
         return new VerdictGraphVault(registryCore_, adjudicatorCore_);
     }
 
+    function testGenLayerCamelCaseControllerGetters() public {
+        require(vault.registryCore() == address(this), "camel registry controller mismatch");
+        require(vault.adjudicatorCore() == address(this), "camel adjudicator controller mismatch");
+    }
+
+    function testGenLayerCamelCaseRegisterAndStatus() public {
+        VerdictGraphVault fresh = new VerdictGraphVault(address(this), address(this));
+
+        fresh.registerHandoff(
+            1, 44, POLICY, requester, provider, PRINCIPAL, BOND, block.timestamp + 1 days, block.timestamp + 7 days
+        );
+
+        require(
+            fresh.handoffStatus(44) == uint256(VerdictGraphVault.EscrowStatus.REGISTERED),
+            "camel registration/status failed"
+        );
+
+        require(
+            fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.REGISTERED),
+            "snake status disagrees with camel status"
+        );
+    }
+
+    function testGenLayerCamelCaseCompletionUsesIdenticalSettlementLogic() public {
+        vault.applyHandoffCompletion(1, 11, POLICY, DELIVERY);
+
+        require(vault.claimable(provider) == PRINCIPAL + BOND, "camel completion payout mismatch");
+        require(
+            vault.handoffStatus(11) == uint256(VerdictGraphVault.EscrowStatus.SETTLED),
+            "camel completion did not settle"
+        );
+    }
+
+    function testGenLayerCamelCaseVerdictUsesIdenticalSettlementLogic() public {
+        vault.applyFinalVerdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+
+        require(vault.claimable(requester) == PRINCIPAL + BOND, "camel verdict requester payout mismatch");
+        require(vault.claimable(provider) == 0, "camel verdict provider payout mismatch");
+        require(
+            vault.handoffStatus(11) == uint256(VerdictGraphVault.EscrowStatus.SETTLED), "camel verdict did not settle"
+        );
+    }
+
+    function testGenLayerCamelCaseAuthorizationRemainsEnforced() public {
+        VerdictGraphVault fresh = new VerdictGraphVault(address(this), address(0xAD1));
+
+        vm.prank(outsider);
+        (bool registrationOk,) = address(fresh)
+            .call(
+                abi.encodeCall(
+                    fresh.registerHandoff,
+                    (
+                        1,
+                        44,
+                        POLICY,
+                        requester,
+                        provider,
+                        PRINCIPAL,
+                        BOND,
+                        block.timestamp + 1 days,
+                        block.timestamp + 7 days
+                    )
+                )
+            );
+        require(!registrationOk, "outsider used camel registration");
+
+        vm.prank(outsider);
+        (bool completionOk,) =
+            address(vault).call(abi.encodeCall(vault.applyHandoffCompletion, (1, 11, POLICY, DELIVERY)));
+        require(!completionOk, "outsider used camel completion");
+
+        uint256 breachRule = vault.CONSEQUENCE_PROVIDER_BREACH();
+        vm.prank(outsider);
+        (bool verdictOk,) =
+            address(vault).call(abi.encodeCall(vault.applyFinalVerdict, (91, 1, 11, POLICY, breachRule, VERDICT)));
+        require(!verdictOk, "outsider used camel verdict");
+
+        require(
+            vault.handoffStatus(11) == uint256(VerdictGraphVault.EscrowStatus.ACTIVE),
+            "unauthorized camel call changed escrow state"
+        );
+    }
+
     function testConstructorRejectsZeroController() public {
         (bool registryOk,) = address(this).call(abi.encodeCall(this.deployVaultForTest, (address(0), address(this))));
         require(!registryOk, "zero registry core accepted");

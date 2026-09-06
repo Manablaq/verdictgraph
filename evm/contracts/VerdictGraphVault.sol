@@ -110,6 +110,16 @@ contract VerdictGraphVault {
         adjudicator_core = adjudicatorCore_;
     }
 
+    /// @notice GenLayer EVM-interface compatible Registry controller getter.
+    function registryCore() external view returns (address) {
+        return registry_core;
+    }
+
+    /// @notice GenLayer EVM-interface compatible Adjudicator controller getter.
+    function adjudicatorCore() external view returns (address) {
+        return adjudicator_core;
+    }
+
     /// @notice Registers exact escrow terms chosen by VerdictGraph Registry.
     /// @dev Called by a finality-only external message from the Core ghost.
     function register_handoff(
@@ -123,6 +133,54 @@ contract VerdictGraphVault {
         uint256 fundingDeadline,
         uint256 recoveryDeadline
     ) external onlyRegistryCore {
+        _registerHandoff(
+            workflowId,
+            handoffId,
+            policyFingerprintSha256,
+            requester,
+            provider,
+            principalRequired,
+            providerBondRequired,
+            fundingDeadline,
+            recoveryDeadline
+        );
+    }
+
+    function registerHandoff(
+        uint256 workflowId,
+        uint256 handoffId,
+        string calldata policyFingerprintSha256,
+        address requester,
+        address provider,
+        uint256 principalRequired,
+        uint256 providerBondRequired,
+        uint256 fundingDeadline,
+        uint256 recoveryDeadline
+    ) external onlyRegistryCore {
+        _registerHandoff(
+            workflowId,
+            handoffId,
+            policyFingerprintSha256,
+            requester,
+            provider,
+            principalRequired,
+            providerBondRequired,
+            fundingDeadline,
+            recoveryDeadline
+        );
+    }
+
+    function _registerHandoff(
+        uint256 workflowId,
+        uint256 handoffId,
+        string memory policyFingerprintSha256,
+        address requester,
+        address provider,
+        uint256 principalRequired,
+        uint256 providerBondRequired,
+        uint256 fundingDeadline,
+        uint256 recoveryDeadline
+    ) internal {
         HandoffEscrow storage existing = handoffs[handoffId];
         if (existing.status != EscrowStatus.NONE) {
             bool sameTerms = existing.workflowId == workflowId
@@ -170,6 +228,11 @@ contract VerdictGraphVault {
         return uint256(handoffs[handoffId].status);
     }
 
+    /// @notice GenLayer EVM-interface compatible handoff status getter.
+    function handoffStatus(uint256 handoffId) external view returns (uint256) {
+        return uint256(handoffs[handoffId].status);
+    }
+
     function fund_handoff(uint256 handoffId) external payable {
         HandoffEscrow storage escrow = _handoff(handoffId);
         if (escrow.status != EscrowStatus.REGISTERED) revert WrongState();
@@ -202,6 +265,24 @@ contract VerdictGraphVault {
         string calldata policyFingerprintSha256,
         string calldata deliverySha256
     ) external onlyRegistryCore {
+        _applyHandoffCompletion(workflowId, handoffId, policyFingerprintSha256, deliverySha256);
+    }
+
+    function applyHandoffCompletion(
+        uint256 workflowId,
+        uint256 handoffId,
+        string calldata policyFingerprintSha256,
+        string calldata deliverySha256
+    ) external onlyRegistryCore {
+        _applyHandoffCompletion(workflowId, handoffId, policyFingerprintSha256, deliverySha256);
+    }
+
+    function _applyHandoffCompletion(
+        uint256 workflowId,
+        uint256 handoffId,
+        string memory policyFingerprintSha256,
+        string memory deliverySha256
+    ) internal {
         HandoffEscrow storage escrow = _handoff(handoffId);
         if (escrow.workflowId != workflowId) revert InvalidTerms();
         if (keccak256(bytes(escrow.policyFingerprintSha256)) != keccak256(bytes(policyFingerprintSha256))) {
@@ -235,6 +316,28 @@ contract VerdictGraphVault {
         uint256 consequenceRuleId,
         string calldata verdictSha256
     ) external onlyAdjudicatorCore {
+        _applyFinalVerdict(caseId, workflowId, handoffId, policyFingerprintSha256, consequenceRuleId, verdictSha256);
+    }
+
+    function applyFinalVerdict(
+        uint256 caseId,
+        uint256 workflowId,
+        uint256 handoffId,
+        string calldata policyFingerprintSha256,
+        uint256 consequenceRuleId,
+        string calldata verdictSha256
+    ) external onlyAdjudicatorCore {
+        _applyFinalVerdict(caseId, workflowId, handoffId, policyFingerprintSha256, consequenceRuleId, verdictSha256);
+    }
+
+    function _applyFinalVerdict(
+        uint256 caseId,
+        uint256 workflowId,
+        uint256 handoffId,
+        string memory policyFingerprintSha256,
+        uint256 consequenceRuleId,
+        string memory verdictSha256
+    ) internal {
         HandoffEscrow storage escrow = _handoff(handoffId);
         if (escrow.workflowId != workflowId) revert InvalidTerms();
         if (keccak256(bytes(escrow.policyFingerprintSha256)) != keccak256(bytes(policyFingerprintSha256))) {
