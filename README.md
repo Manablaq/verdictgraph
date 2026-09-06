@@ -108,9 +108,11 @@ Completed before Stage 4E:
 - Stage 4C: 70,836-byte exact-AST deployment artifact passed GenVM + 35/35 Direct Mode but Bradbury no-send estimate rejected it.
 - Stage 4D: 69,197 / 62,050 / 57,721-byte candidates were all rejected by live Bradbury estimation with signing/sending blocked.
 
-Stage 4E is **complete and verified on macOS**. Both split Intelligent Contract deployment payloads passed live Bradbury `eth_estimateGas` with signing/sending blocked; both ICs passed GenVM validation; Direct Mode passed **40/40** tests (35 canonical + 2 Registry + 3 Adjudicator); the dual-controller Vault passed **30/30** Foundry tests; and the reviewer gate passed **145/145** checks. The verified deployment artifacts are 43,424 bytes for Registry and 52,552 bytes for Adjudicator.
+Stage 4E is **complete and verified on macOS**. Both split Intelligent Contract deployment payloads passed live Bradbury `eth_estimateGas` with signing/sending blocked; both ICs passed GenVM validation; Direct Mode passed **40/40** tests (35 canonical + 2 Registry + 3 Adjudicator); the dual-controller Vault passed **30/30** Foundry tests; and the reviewer gate passed **145/145** checks. The verified deployment artifacts are 43,424 bytes for Registry and 52,561 bytes for Adjudicator.
 
 See [`docs/BUILD_STATUS.md`](docs/BUILD_STATUS.md).
+
+Stage 4F live deployment is in progress. The Registry at `0x65c4acaD8Cfa4a531B5459e7C1f109443734860F` is Finalized. Adjudicator attempt 1 (`0x01b7edddf5dcda53a6d6ff2b3a2ee2da1b191148d1c03b9248d81dc80bc23ea4`) ended `FINISHED_WITH_ERROR`; proposed address `0xfdB5213510eEE10c6cC5f46842Ace79468a368B0` is invalid and must not be bound or used. The corrected Adjudicator artifact is 52,561 bytes with SHA-256 `d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1`. Corrected redeployment and all subsequent bindings remain pending.
 
 ## Submission rule
 

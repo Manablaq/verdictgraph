@@ -56,6 +56,124 @@ for bad in (b"\x00" * 19, "0x1234", "not-an-address"):
 
 print("PASS Direct address helper is SDK-independent before first deploy")
 PYADDR
+
+printf '%s\n' "=== Bradbury constructor Address-calldata compatibility regression ==="
+python - <<'PYBRADBURYADDR'
+from pathlib import Path
+
+from gltest.direct.sdk_loader import setup_sdk_paths
+
+contract = Path("contracts/verdict_graph_adjudicator_deploy.py")
+setup_sdk_paths(contract)
+
+from genlayer.py import calldata
+from genlayer.py.types import Address
+
+registry_hex = "0x65c4acaD8Cfa4a531B5459e7C1f109443734860F"
+
+original = Address(registry_hex)
+encoded = calldata.encode({"args": [original]})
+decoded = calldata.decode(encoded)["args"][0]
+
+if not isinstance(decoded, Address):
+    raise SystemExit(
+        f"STOP: constructor calldata no longer decodes to Address; got {type(decoded)!r}"
+    )
+
+if str(decoded).lower() != registry_hex.lower():
+    raise SystemExit("STOP: decoded Registry Address changed value")
+
+try:
+    Address(decoded)
+except TypeError as exc:
+    expected = "cannot convert 'Address' object to bytes"
+    if expected not in str(exc):
+        raise SystemExit(
+            f"STOP: old constructor failed differently than Stage 4F: {exc}"
+        ) from exc
+    print(f"PASS old constructor failure reproduced: {type(exc).__name__}: {exc}")
+else:
+    raise SystemExit(
+        "STOP: Address(Address) unexpectedly succeeded; "
+        "Stage 4F failure model no longer matches the pinned SDK"
+    )
+
+normalized = Address(str(decoded))
+
+if normalized.as_hex.lower() != registry_hex.lower():
+    raise SystemExit("STOP: Address(str(Address)) changed Registry value")
+
+print("PASS corrected constructor safely normalizes real Address calldata")
+PYBRADBURYADDR
+
+printf '%s\n' "=== Adjudicator constructor source regression gate ==="
+python - <<'PYADJAST'
+import ast
+from pathlib import Path
+
+expected = "Address(str(registry_address))"
+
+for path in (
+    Path("contracts/verdict_graph_adjudicator.py"),
+    Path("contracts/verdict_graph_adjudicator_deploy.py"),
+):
+    tree = ast.parse(path.read_text())
+
+    contract = next(
+        (
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef)
+            and node.name == "VerdictGraphAdjudicator"
+        ),
+        None,
+    )
+    if contract is None:
+        raise SystemExit(f"STOP: VerdictGraphAdjudicator missing from {path}")
+
+    constructor = next(
+        (
+            node
+            for node in contract.body
+            if isinstance(node, ast.FunctionDef)
+            and node.name == "__init__"
+        ),
+        None,
+    )
+    if constructor is None:
+        raise SystemExit(f"STOP: __init__ missing from {path}")
+
+    assignment = next(
+        (
+            node
+            for node in constructor.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Name)
+                and target.id == "registry"
+                for target in node.targets
+            )
+        ),
+        None,
+    )
+    if assignment is None:
+        raise SystemExit(
+            f"STOP: Registry normalization assignment missing from {path}"
+        )
+
+    actual = ast.unparse(assignment.value)
+
+    if actual != expected:
+        raise SystemExit(
+            f"STOP: constructor regression in {path}: "
+            f"expected {expected!r}, got {actual!r}"
+        )
+
+    print(f"PASS {path}: {actual}")
+
+print("PASS canonical + deploy constructor normalization locked")
+PYADJAST
+
 genvm-lint typecheck "$REGISTRY_DEPLOY"
 genvm-lint check "$REGISTRY_DEPLOY"
 genvm-lint typecheck "$ADJUDICATOR_DEPLOY"

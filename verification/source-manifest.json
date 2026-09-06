@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-06T18:25:46.919946+00:00",
-  "source_set_sha256": "e53cb9a7168f02418cfbb165f601064cc6ac9e74da5586a46065f90571f03899",
+  "generated_at": "2026-09-06T19:14:00.672869+00:00",
+  "source_set_sha256": "5eb30c8c4f5b482751ac6c3172f750ff160f84c639df9c2f7d317d1e22a7e154",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -16,16 +16,16 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "c882b0762c2aa08742eb5d04b07f04a4209c551484d4c1538d22a22e9fc8ad54",
-      "bytes": 7759
+      "sha256": "a77dc5960cd0f4a5a42b6a8868eb691e1e66f9a7eaa7627e7ebe677eb7bf318a",
+      "bytes": 8301
     },
     "contracts/verdict_graph_adjudicator.py": {
-      "sha256": "b60432a65f31072cc4408c4177b4902f887a98f9cbf3bb1fc8fe59a149bee5fd",
-      "bytes": 60720
+      "sha256": "c3336206d9334d170b1887b35195aa644f4285aa55810b3d20a1c39d6d7b992a",
+      "bytes": 60725
     },
     "contracts/verdict_graph_adjudicator_deploy.py": {
-      "sha256": "160f021c6f1bef20645a01aa8672366bb46c8d52f219e9754f753d75b7ead5ff",
-      "bytes": 52552
+      "sha256": "d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1",
+      "bytes": 52561
     },
     "contracts/verdict_graph_core.py": {
       "sha256": "59200fc916ed4a61b91aa27593cb773418ceb60d47f1fc269f1361a67aae92da",
@@ -52,8 +52,8 @@
       "bytes": 6565
     },
     "docs/BUILD_STATUS.md": {
-      "sha256": "3a074e90cad10cf87dfa7dd3c49d8fe45081b0ce0ff1d433b3e7124804df5a24",
-      "bytes": 5669
+      "sha256": "bc359e90b8bf82f2e366149e0077927048fae9832edc54e7f4602862291a67a0",
+      "bytes": 7807
     },
     "docs/REVIEWER_READINESS.md": {
       "sha256": "9084a1271f4208c6a6df61730b83b1f91343fc6edeef04d952b4c97e47c92958",
@@ -328,8 +328,8 @@
       "bytes": 4511
     },
     "scripts/mac_stage4e_split_architecture_verify.sh": {
-      "sha256": "3e1697501805c67507d51719c99edd810c552aaf7ac0f82eb82cf5be4f0acaa9",
-      "bytes": 6573
+      "sha256": "865acdc585b8e13e2f3db15c6b9dad38860b3c1bc6d75c179bb60a010817d861",
+      "bytes": 9927
     },
     "scripts/reviewer_gate.py": {
       "sha256": "93b9582f81ca37994dc86941ca8cbf1537a39891b39abf03cc7664bdabb02001",

@@ -1,0 +1,2082 @@
+=== VerdictGraph Stage 4E: split architecture verification ===
+Repository: /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph
+NO PRIVATE KEY. NO SIGNATURE. NO TRANSACTION SUBMISSION.
+=== Build deterministic split deployment artifacts ===
+verdict_graph_registry.py: READABLE_BYTES=45520 DEPLOY_BYTES=43424 DEPLOY_SHA256=33eed3c7865cf180e3179128962c1d68253368ebef983428e0b294bed6d0c5f3
+verdict_graph_adjudicator.py: READABLE_BYTES=60725 DEPLOY_BYTES=52561 DEPLOY_SHA256=d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1
+contracts/verdict_graph_registry_deploy.py bytes=43424 sha256=33eed3c7865cf180e3179128962c1d68253368ebef983428e0b294bed6d0c5f3
+contracts/verdict_graph_adjudicator_deploy.py bytes=52561 sha256=d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1
+=== Re-verify both split ICs in pinned GenVM runtime ===
+Python 3.12.14
+=== Direct helper pre-deploy independence gate ===
+PASS Direct address helper is SDK-independent before first deploy
+=== Bradbury constructor Address-calldata compatibility regression ===
+PASS old constructor failure reproduced: TypeError: cannot convert 'Address' object to bytes
+PASS corrected constructor safely normalizes real Address calldata
+=== Adjudicator constructor source regression gate ===
+PASS contracts/verdict_graph_adjudicator.py: Address(str(registry_address))
+PASS contracts/verdict_graph_adjudicator_deploy.py: Address(str(registry_address))
+PASS canonical + deploy constructor normalization locked
+Type checking verdict_graph_registry_deploy.py...
+
+✓ No type errors found
+
+✓ Lint passed (3 checks)
+✓ Validation passed
+  Contract: VerdictGraphRegistry
+  Methods: 41 (21 view, 20 write)
+  ℹ py-genlayer: a newer runner is available (5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng). See https://github.com/genlayerlabs/genvm-manager/releases for changes.
+Type checking verdict_graph_adjudicator_deploy.py...
+
+✓ No type errors found
+
+✓ Lint passed (3 checks)
+✓ Validation passed
+  Contract: VerdictGraphAdjudicator
+  Methods: 23 (12 view, 11 write)
+  ℹ py-genlayer: a newer runner is available (5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng). See https://github.com/genlayerlabs/genvm-manager/releases for changes.
+=== Direct Mode regression: canonical semantics ===
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph
+configfile: pyproject.toml
+plugins: genlayer-test-0.29.2
+collecting ... collected 35 items
+
+tests/direct/test_core_consensus.py::test_validator_rederives_same_consequential_fields PASSED [  2%]
+tests/direct/test_core_consensus.py::test_validator_rejects_contradictory_breach_outcome PASSED [  5%]
+tests/direct/test_core_consensus.py::test_hash_mismatch_persists_repairable_state PASSED [  8%]
+tests/direct/test_core_evidence.py::test_only_approved_issuer_can_register PASSED [ 11%]
+tests/direct/test_core_evidence.py::test_stable_evidence_id_cannot_be_reused PASSED [ 14%]
+tests/direct/test_core_evidence.py::test_publisher_boundary_is_enforced PASSED [ 17%]
+tests/direct/test_core_evidence.py::test_post_review_response_creates_fresh_revision PASSED [ 20%]
+tests/direct/test_core_evidence.py::test_revision_requires_independent_corroboration_thresholds PASSED [ 22%]
+tests/direct/test_core_evidence.py::test_revision_rejects_mixed_corroboration_groups PASSED [ 25%]
+tests/direct/test_core_evidence.py::test_corroboration_rejects_duplicate_content_digest PASSED [ 28%]
+tests/direct/test_core_registry.py::test_policy_is_immutable_after_seal PASSED [ 31%]
+tests/direct/test_core_registry.py::test_workflow_handoff_and_activation PASSED [ 34%]
+tests/direct/test_core_registry.py::test_bad_criteria_cannot_define_tolerance_or_arbitrary_rule PASSED [ 37%]
+tests/direct/test_core_registry.py::test_handoff_dependencies_are_acyclic_by_construction PASSED [ 40%]
+tests/direct/test_core_registry.py::test_creator_scoped_latest_ids_avoid_global_count_races PASSED [ 42%]
+tests/direct/test_core_registry.py::test_policy_requires_distinct_publisher_origins PASSED [ 45%]
+tests/direct/test_core_registry.py::test_provider_submits_one_immutable_hash_pinned_delivery PASSED [ 48%]
+tests/direct/test_core_registry.py::test_only_provider_can_submit_delivery PASSED [ 51%]
+tests/direct/test_core_registry.py::test_requester_accepts_delivery_and_closes_handoff_without_dispute PASSED [ 54%]
+tests/direct/test_core_registry.py::test_handoff_completion_retry_requires_bound_vault PASSED [ 57%]
+tests/direct/test_core_registry.py::test_completed_handoff_cannot_be_reopened_as_dispute PASSED [ 60%]
+tests/direct/test_core_response_and_liveness.py::test_initial_party_response_is_hash_verified_and_reviewed PASSED [ 62%]
+tests/direct/test_core_response_and_liveness.py::test_response_hash_failure_is_persisted_as_repairable PASSED [ 65%]
+tests/direct/test_core_response_and_liveness.py::test_evidence_is_rechecked_for_freshness_at_review_time PASSED [ 68%]
+tests/direct/test_core_response_and_liveness.py::test_open_case_has_deadline_recovery PASSED [ 71%]
+tests/direct/test_core_response_and_liveness.py::test_reviewed_verdict_has_bounded_post_review_response_window PASSED [ 74%]
+tests/direct/test_core_response_and_liveness.py::test_fresh_revision_supersedes_reviewed_verdict_before_settlement PASSED [ 77%]
+tests/direct/test_core_response_and_liveness.py::test_settlement_cannot_queue_before_post_review_window_closes PASSED [ 80%]
+tests/direct/test_core_response_and_liveness.py::test_only_latest_reviewed_verdict_can_queue_and_blocks_new_revision PASSED [ 82%]
+tests/direct/test_core_response_and_liveness.py::test_queued_settlement_retry_requires_bound_vault PASSED [ 85%]
+tests/direct/test_core_response_and_liveness.py::test_submitted_delivery_bytes_are_hash_verified_during_dispute_review PASSED [ 88%]
+tests/direct/test_core_response_and_liveness.py::test_repair_revision_carries_valid_sources_and_allows_only_failed_stable_record_upgrade PASSED [ 91%]
+tests/direct/test_core_response_and_liveness.py::test_nonfailed_stable_record_cannot_be_reused_in_fresh_review_revision PASSED [ 94%]
+tests/direct/test_core_response_and_liveness.py::test_delivery_repair_creates_new_immutable_version_and_preserves_history PASSED [ 97%]
+tests/direct/test_core_response_and_liveness.py::test_transient_delivery_fetch_failure_can_retry_same_revision_without_fake_new_evidence PASSED [100%]
+
+============================== 35 passed in 0.67s ==============================
+=== Direct Mode split regression: Registry isolated process ===
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph
+configfile: pyproject.toml
+plugins: genlayer-test-0.29.2
+collecting ... collected 2 items
+
+tests/direct/test_split_registry.py::test_split_dispute_lock_blocks_direct_acceptance PASSED [ 50%]
+tests/direct/test_split_registry.py::test_split_case_initialization_retry_is_idempotent PASSED [100%]
+
+============================== 2 passed in 0.04s ===============================
+=== Direct Mode split regression: Adjudicator isolated process ===
+WARNING: File `gltest.config.yaml` not found in the current directory, using default config, create a `gltest.config.yaml` file to manage multiple networks
+INFO: Clearing artifacts directory: artifacts
+INFO: Using the following configuration:
+INFO:   RPC URL: http://127.0.0.1:4000/api
+INFO:   Selected Network: localnet
+INFO:   Available networks: ['localnet', 'studionet', 'testnet_asimov', 'testnet_bradbury']
+INFO:   Selected chain type: localnet
+INFO:   Available chains: localnet, studionet, testnet_asimov, testnet_bradbury
+INFO:   Contracts directory: contracts
+INFO:   Artifacts directory: artifacts
+INFO:   Environment: .env
+INFO:   Default wait interval: 3000 ms
+INFO:   Default wait retries: 50
+INFO:   Leader only mode: False
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph
+configfile: pyproject.toml
+plugins: genlayer-test-0.29.2
+collecting ... collected 3 items
+
+tests/direct/test_split_adjudicator.py::test_split_binding_and_finalized_case_receiver PASSED [ 33%]
+tests/direct/test_split_adjudicator.py::test_split_evidence_authority_is_registry_bound PASSED [ 66%]
+tests/direct/test_split_adjudicator.py::test_split_validator_rederives_exact_consequence PASSED [100%]
+
+============================== 3 passed in 0.05s ===============================
+PASS Direct Mode total = 35 canonical + 2 Registry + 3 Adjudicator = 40 tests
+=== Dual-controller Vault re-verification ===
+forge Version: 1.8.1
+Compiling 2 files with Solc 0.8.20
+Solc 0.8.20 finished in 417.60ms
+Compiler run successful!
+
+╭---------------------+------------------+-------------------+--------------------+---------------------╮
+| Contract            | Runtime Size (B) | Initcode Size (B) | Runtime Margin (B) | Initcode Margin (B) |
++=======================================================================================================+
+| ReentrantWithdrawer | 561              | 706               | 24,015             | 48,446              |
+|---------------------+------------------+-------------------+--------------------+---------------------|
+| RejectingWithdrawer | 381              | 518               | 24,195             | 48,634              |
+|---------------------+------------------+-------------------+--------------------+---------------------|
+| VerdictGraphVault   | 7,379            | 7,657             | 17,197             | 41,495              |
+╰---------------------+------------------+-------------------+--------------------+---------------------╯
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ evm/contracts/VerdictGraphVault.sol:36:30
+   │
+36 │     address public immutable registry_core;
+   │                              ━━━━━━━━━━━━━ help: consider using: `REGISTRY_CORE`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[interface-naming]: interface names should be prefixed with 'I'
+  ╭▸ evm/test/VerdictGraphVault.t.sol:6:11
+  │
+6 │ interface Vm {
+  │           ━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/interface-naming
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ evm/test/VerdictGraphVault.t.sol:14:40
+   │
+14 │     VerdictGraphVault public immutable vault;
+   │                                        ━━━━━ help: consider using: `VAULT`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ evm/contracts/VerdictGraphVault.sol:37:30
+   │
+37 │     address public immutable adjudicator_core;
+   │                              ━━━━━━━━━━━━━━━━ help: consider using: `ADJUDICATOR_CORE`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-immutable]: immutables should use SCREAMING_SNAKE_CASE
+   ╭▸ evm/test/VerdictGraphVault.t.sol:37:40
+   │
+37 │     VerdictGraphVault public immutable vault;
+   │                                        ━━━━━ help: consider using: `VAULT`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-immutable
+
+note[screaming-snake-case-const]: constants should use SCREAMING_SNAKE_CASE
+   ╭▸ evm/test/VerdictGraphVault.t.sol:53:25
+   │
+53 │     Vm private constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
+   │                         ━━ help: consider using: `VM`
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/screaming-snake-case-const
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:115:14
+    │
+115 │     function register_handoff(
+    │              ━━━━━━━━━━━━━━━━ help: consider using: `registerHandoff`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+   ╭▸ evm/test/VerdictGraphVault.t.sol:80:30
+   │
+80 │         (bool registryOk,) = address(this).call(abi.encodeCall(this.deployVaultForTest, (address(0), address(this))));
+   │                              ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+   ╭▸ evm/test/VerdictGraphVault.t.sol:82:33
+   │
+82 │         (bool adjudicatorOk,) = address(this).call(abi.encodeCall(this.deployVaultForTest, (address(this), address(0))));
+   │                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:169:14
+    │
+169 │     function handoff_status(uint256 handoffId) external view returns (uint256) {
+    │              ━━━━━━━━━━━━━━ help: consider using: `handoffStatus`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:89:22
+    │
+ 89 │           (bool ok,) = address(fresh)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━┛
+ 90 │ ┃             .call(
+ 91 │ ┃                 abi.encodeCall(
+ 92 │ ┃                     fresh.register_handoff,
+    ‡ ┃
+105 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:173:14
+    │
+173 │     function fund_handoff(uint256 handoffId) external payable {
+    │              ━━━━━━━━━━━━ help: consider using: `fundHandoff`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:115:13
+    │
+115 │             address(fresh).call(abi.encodeCall(fresh.apply_final_verdict, (91, 1, 44, POLICY, uint256(2), VERDICT)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:120:13
+    │
+120 │             address(fresh).call(abi.encodeCall(fresh.apply_handoff_completion, (1, 44, POLICY, DELIVERY)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:184:14
+    │
+184 │     function post_bond(uint256 handoffId) external payable {
+    │              ━━━━━━━━━ help: consider using: `postBond`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:199:14
+    │
+199 │     function apply_handoff_completion(
+    │              ━━━━━━━━━━━━━━━━━━━━━━━━ help: consider using: `applyHandoffCompletion`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:126:27
+    │
+126 │           (bool shortOk,) = address(fresh)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+127 │ ┃             .call(
+128 │ ┃                 abi.encodeCall(
+129 │ ┃                     fresh.register_handoff,
+    ‡ ┃
+142 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:146:27
+    │
+146 │           (bool upperOk,) = address(fresh)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+147 │ ┃             .call(
+148 │ ┃                 abi.encodeCall(
+149 │ ┃                     fresh.register_handoff,
+    ‡ ┃
+162 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:230:14
+    │
+230 │     function apply_final_verdict(
+    │              ━━━━━━━━━━━━━━━━━━━ help: consider using: `applyFinalVerdict`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:168:31
+    │
+168 │           (bool samePartyOk,) = address(fresh)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+169 │ ┃             .call(
+170 │ ┃                 abi.encodeCall(
+171 │ ┃                     fresh.register_handoff,
+    ‡ ┃
+184 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:187:35
+    │
+187 │           (bool zeroPrincipalOk,) = address(fresh)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+188 │ ┃             .call(
+189 │ ┃                 abi.encodeCall(
+190 │ ┃                     fresh.register_handoff,
+    ‡ ┃
+193 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:282:14
+    │
+282 │     function recover_unactivated(uint256 handoffId) external {
+    │              ━━━━━━━━━━━━━━━━━━━ help: consider using: `recoverUnactivated`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:210:22
+    │
+210 │           (bool ok,) = address(fresh)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━┛
+211 │ ┃             .call(
+212 │ ┃                 abi.encodeCall(
+213 │ ┃                     fresh.register_handoff,
+    ‡ ┃
+226 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[mixed-case-function]: function names should use mixedCase
+    ╭▸ evm/contracts/VerdictGraphVault.sol:299:14
+    │
+299 │     function recover_active(uint256 handoffId) external {
+    │              ━━━━━━━━━━━━━━ help: consider using: `recoverActive`
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/mixed-case-function
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/contracts/VerdictGraphVault.sol:315:22
+    │
+315 │         (bool ok,) = payable(msg.sender).call{value: amount}("");
+    │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:237:36
+    │
+237 │         (bool wrongRequesterOk,) = address(fresh).call{value: PRINCIPAL}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:241:33
+    │
+241 │         (bool wrongAmountOk,) = address(fresh).call{value: PRINCIPAL - 1}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[custom-errors]: prefer using custom errors on revert and require calls
+    ╭▸ evm/contracts/VerdictGraphVault.sol:340:9
+    │
+340 │         revert();
+    │         ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/custom-errors
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:259:35
+    │
+259 │         (bool wrongProviderOk,) = address(fresh).call{value: BOND}(abi.encodeCall(fresh.post_bond, (44)));
+    │                                   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:263:33
+    │
+263 │         (bool wrongAmountOk,) = address(fresh).call{value: BOND - 1}(abi.encodeCall(fresh.post_bond, (44)));
+    │                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:277:22
+    │
+277 │         (bool ok,) = address(fresh).call{value: PRINCIPAL}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:288:27
+    │
+288 │         (bool shortOk,) = address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, POLICY, "abcd")));
+    │                           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:292:13
+    │
+292 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, POLICY, uppercase)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:307:13
+    │
+307 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (2, 11, POLICY, DELIVERY)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:311:13
+    │
+311 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, otherPolicy, DELIVERY)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:321:13
+    │
+321 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, POLICY, DELIVERY)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:327:13
+    │
+327 │             address(vault).call(abi.encodeCall(vault.apply_final_verdict, (91, 1, 11, POLICY, breachRule, VERDICT)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:350:26
+    │
+350 │           (bool hashOk,) = address(vault)
+    │ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+351 │ ┃             .call(
+352 │ ┃                 abi.encodeCall(
+353 │ ┃                     vault.apply_final_verdict, (91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), "abcd")
+354 │ ┃                 )
+355 │ ┃             );
+    │ ┗━━━━━━━━━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:360:13
+    │
+360 │             address(vault).call(abi.encodeCall(vault.apply_final_verdict, (91, 1, 11, POLICY, 99, VERDICT)));
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:412:22
+    │
+412 │         (bool ok,) = address(vault).call(abi.encodeCall(vault.recover_active, (11)));
+    │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:434:28
+    │
+434 │         (bool secondOk,) = address(vault).call(abi.encodeCall(vault.withdraw, ()));
+    │                            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:471:22
+    │
+471 │         (bool ok,) = address(receiver).call(abi.encodeCall(receiver.withdrawFromVault, ()));
+    │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:478:29
+    │
+478 │         (bool receiveOk,) = address(vault).call{value: 1 wei}("");
+    │                             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[low-level-calls]: Low-level calls should be avoided
+    ╭▸ evm/test/VerdictGraphVault.t.sol:480:30
+    │
+480 │         (bool fallbackOk,) = address(vault).call{value: 1 wei}(hex"1234");
+    │                              ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/low-level-calls
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+  ╭▸ evm/test/VerdictGraphVault.t.sol:6:11
+  │
+6 │ interface Vm {
+  │           ━━
+  │
+  ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ evm/test/VerdictGraphVault.t.sol:13:10
+   │
+13 │ contract ReentrantWithdrawer {
+   │          ━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ evm/test/VerdictGraphVault.t.sol:36:10
+   │
+36 │ contract RejectingWithdrawer {
+   │          ━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+note[multi-contract-file]: prefer having only one contract, interface or library per file
+   ╭▸ evm/test/VerdictGraphVault.t.sol:52:10
+   │
+52 │ contract VerdictGraphVaultTest {
+   │          ━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/multi-contract-file
+
+warning[locked-ether]: contract can receive ETH but has no mechanism to send it out
+   ╭▸ evm/test/VerdictGraphVault.t.sol:13:10
+   │
+13 │ contract ReentrantWithdrawer {
+   │          ━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/locked-ether
+
+note[unwrapped-modifier-logic]: wrap modifier logic to reduce code size
+   ╭▸ evm/contracts/VerdictGraphVault.sol:90:5
+   │
+90 │ ┏     modifier onlyRegistryCore() {
+91 │ ┃         if (msg.sender != registry_core) revert OnlyRegistryCore();
+92 │ ┃         _;
+93 │ ┃     }
+   │ ┗━━━━━┛
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/unwrapped-modifier-logic
+help: wrap modifier logic to reduce code size
+   ╭╴
+90 ±     modifier onlyRegistryCore() {
+91 +         _onlyRegistryCore();
+92 +         _;
+93 +     }
+94 + 
+95 +     function _onlyRegistryCore() internal {
+96 +         if (msg.sender != registry_core) revert OnlyRegistryCore();
+97 +     }
+   ╰╴
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ evm/test/VerdictGraphVault.t.sol:69:26
+   │
+69 │         _register(vault, 11, requester, provider, PRINCIPAL, BOND);
+   │                          ━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ evm/test/VerdictGraphVault.t.sol:70:28
+   │
+70 │         vm.deal(requester, 10 ether);
+   │                            ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ evm/test/VerdictGraphVault.t.sol:71:27
+   │
+71 │         vm.deal(provider, 10 ether);
+   │                           ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ evm/test/VerdictGraphVault.t.sol:72:26
+   │
+72 │         _activate(vault, 11, requester, provider, PRINCIPAL, BOND);
+   │                          ━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+   ╭▸ evm/test/VerdictGraphVault.t.sol:95:25
+   │
+95 │                         44,
+   │                         ━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:101:43
+    │
+101 │                         block.timestamp + 1 days,
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:102:43
+    │
+102 │                         block.timestamp + 7 days
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:107:38
+    │
+107 │         require(fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.NONE), "unauthorized state written");
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:115:76
+    │
+115 │             address(fresh).call(abi.encodeCall(fresh.apply_final_verdict, (91, 1, 44, POLICY, uint256(2), VERDICT)));
+    │                                                                            ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:115:83
+    │
+115 │             address(fresh).call(abi.encodeCall(fresh.apply_final_verdict, (91, 1, 44, POLICY, uint256(2), VERDICT)));
+    │                                                                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[unwrapped-modifier-logic]: wrap modifier logic to reduce code size
+    ╭▸ evm/contracts/VerdictGraphVault.sol:95:5
+    │
+ 95 │ ┏     modifier onlyAdjudicatorCore() {
+ 96 │ ┃         if (msg.sender != adjudicator_core) revert OnlyAdjudicatorCore();
+ 97 │ ┃         _;
+ 98 │ ┃     }
+    │ ┗━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unwrapped-modifier-logic
+help: wrap modifier logic to reduce code size
+    ╭╴
+ 95 ±     modifier onlyAdjudicatorCore() {
+ 96 +         _onlyAdjudicatorCore();
+ 97 +         _;
+ 98 +     }
+ 99 + 
+100 +     function _onlyAdjudicatorCore() internal {
+101 +         if (msg.sender != adjudicator_core) revert OnlyAdjudicatorCore();
+102 +     }
+    ╰╴
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:120:84
+    │
+120 │             address(fresh).call(abi.encodeCall(fresh.apply_handoff_completion, (1, 44, POLICY, DELIVERY)));
+    │                                                                                    ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:132:25
+    │
+132 │                         44,
+    │                         ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:138:43
+    │
+138 │                         block.timestamp + 1 days,
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[unwrapped-modifier-logic]: wrap modifier logic to reduce code size
+    ╭▸ evm/contracts/VerdictGraphVault.sol:100:5
+    │
+100 │ ┏     modifier nonReentrant() {
+101 │ ┃         if (_withdrawLock != 1) revert ReentrantCall();
+102 │ ┃         _withdrawLock = 2;
+103 │ ┃         _;
+104 │ ┃         _withdrawLock = 1;
+105 │ ┃     }
+    │ ┗━━━━━┛
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/unwrapped-modifier-logic
+help: wrap modifier logic to reduce code size
+    ╭╴
+100 ±     modifier nonReentrant() {
+101 +         _nonReentrantBefore();
+102 +         _;
+103 +         _nonReentrantAfter();
+104 +     }
+105 + 
+106 +     function _nonReentrantBefore() internal {
+107 +         if (_withdrawLock != 1) revert ReentrantCall();
+108 +         _withdrawLock = 2;
+109 +     }
+110 + 
+111 +     function _nonReentrantAfter() internal {
+112 +         _withdrawLock = 1;
+113 +     }
+    ╰╴
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:139:43
+    │
+139 │                         block.timestamp + 7 days
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:152:25
+    │
+152 │                         45,
+    │                         ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:158:43
+    │
+158 │                         block.timestamp + 1 days,
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:159:43
+    │
+159 │                         block.timestamp + 7 days
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:174:25
+    │
+174 │                         44,
+    │                         ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:180:43
+    │
+180 │                         block.timestamp + 1 days,
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:181:43
+    │
+181 │                         block.timestamp + 7 days
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:191:25
+    │
+191 │                     (1, 45, POLICY, requester, provider, 0, BOND, block.timestamp + 1 days, block.timestamp + 7 days)
+    │                         ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:191:85
+    │
+191 │                     (1, 45, POLICY, requester, provider, 0, BOND, block.timestamp + 1 days, block.timestamp + 7 days)
+    │                                                                                     ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:191:111
+    │
+191 │                     (1, 45, POLICY, requester, provider, 0, BOND, block.timestamp + 1 days, block.timestamp + 7 days)
+    │                                                                                                               ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:199:26
+    │
+199 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:200:26
+    │
+200 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:202:34
+    │
+202 │             fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.REGISTERED),
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:209:26
+    │
+209 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:216:25
+    │
+216 │                         44,
+    │                         ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:222:43
+    │
+222 │                         block.timestamp + 1 days,
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:223:43
+    │
+223 │                         block.timestamp + 7 days
+    │                                           ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:232:26
+    │
+232 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:233:28
+    │
+233 │         vm.deal(requester, 10 ether);
+    │                            ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:234:27
+    │
+234 │         vm.deal(outsider, 10 ether);
+    │                           ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:237:110
+    │
+237 │         (bool wrongRequesterOk,) = address(fresh).call{value: PRINCIPAL}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                                                                                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:241:111
+    │
+241 │         (bool wrongAmountOk,) = address(fresh).call{value: PRINCIPAL - 1}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                                                                                               ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:245:46
+    │
+245 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │                                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:246:38
+    │
+246 │         require(fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.FUNDED), "correct funding failed");
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:251:26
+    │
+251 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:252:28
+    │
+252 │         vm.deal(requester, 10 ether);
+    │                            ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:253:27
+    │
+253 │         vm.deal(provider, 10 ether);
+    │                           ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:254:27
+    │
+254 │         vm.deal(outsider, 10 ether);
+    │                           ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:256:46
+    │
+256 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │                                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:259:101
+    │
+259 │         (bool wrongProviderOk,) = address(fresh).call{value: BOND}(abi.encodeCall(fresh.post_bond, (44)));
+    │                                                                                                     ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:263:103
+    │
+263 │         (bool wrongAmountOk,) = address(fresh).call{value: BOND - 1}(abi.encodeCall(fresh.post_bond, (44)));
+    │                                                                                                       ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:267:38
+    │
+267 │         fresh.post_bond{value: BOND}(44);
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:268:38
+    │
+268 │         require(fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.ACTIVE), "correct bond failed");
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:273:26
+    │
+273 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:274:28
+    │
+274 │         vm.deal(requester, 10 ether);
+    │                            ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:275:35
+    │
+275 │         vm.warp(block.timestamp + 2 days);
+    │                                   ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:277:96
+    │
+277 │         (bool ok,) = address(fresh).call{value: PRINCIPAL}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                                                                                ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:282:43
+    │
+282 │         vault.apply_handoff_completion(1, 11, POLICY, DELIVERY);
+    │                                           ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:284:38
+    │
+284 │         require(vault.handoff_status(11) == uint256(VerdictGraphVault.EscrowStatus.SETTLED), "not settled");
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:288:98
+    │
+288 │         (bool shortOk,) = address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, POLICY, "abcd")));
+    │                                                                                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:292:84
+    │
+292 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, POLICY, uppercase)));
+    │                                                                                    ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:295:34
+    │
+295 │             vault.handoff_status(11) == uint256(VerdictGraphVault.EscrowStatus.ACTIVE), "malformed digest changed state"
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:300:43
+    │
+300 │         vault.apply_handoff_completion(1, 11, POLICY, DELIVERY);
+    │                                           ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:301:43
+    │
+301 │         vault.apply_handoff_completion(1, 11, POLICY, DELIVERY);
+    │                                           ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:307:84
+    │
+307 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (2, 11, POLICY, DELIVERY)));
+    │                                                                                    ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:311:84
+    │
+311 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, otherPolicy, DELIVERY)));
+    │                                                                                    ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ evm/contracts/VerdictGraphVault.sol:141:20
+    │
+141 │                 || fundingDeadline <= block.timestamp || recoveryDeadline <= fundingDeadline
+    │                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:314:34
+    │
+314 │             vault.handoff_status(11) == uint256(VerdictGraphVault.EscrowStatus.ACTIVE), "bad completion changed state"
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:321:84
+    │
+321 │             address(vault).call(abi.encodeCall(vault.apply_handoff_completion, (1, 11, POLICY, DELIVERY)));
+    │                                                                                    ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:327:76
+    │
+327 │             address(vault).call(abi.encodeCall(vault.apply_final_verdict, (91, 1, 11, POLICY, breachRule, VERDICT)));
+    │                                                                            ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ evm/contracts/VerdictGraphVault.sol:177:13
+    │
+177 │         if (block.timestamp > escrow.fundingDeadline) revert FundingWindowClosed();
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:327:83
+    │
+327 │             address(vault).call(abi.encodeCall(vault.apply_final_verdict, (91, 1, 11, POLICY, breachRule, VERDICT)));
+    │                                                                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:332:35
+    │
+332 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_RELEASE_PROVIDER(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:332:42
+    │
+332 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_RELEASE_PROVIDER(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:338:35
+    │
+338 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:338:42
+    │
+338 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:344:35
+    │
+344 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_NEUTRAL_RECOVERY(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:344:42
+    │
+344 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_NEUTRAL_RECOVERY(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:353:49
+    │
+353 │                     vault.apply_final_verdict, (91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), "abcd")
+    │                                                 ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:353:56
+    │
+353 │                     vault.apply_final_verdict, (91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), "abcd")
+    │                                                        ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:357:39
+    │
+357 │         require(!vault.processedCases(91), "malformed verdict consumed case id");
+    │                                       ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:360:76
+    │
+360 │             address(vault).call(abi.encodeCall(vault.apply_final_verdict, (91, 1, 11, POLICY, 99, VERDICT)));
+    │                                                                            ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:360:83
+    │
+360 │             address(vault).call(abi.encodeCall(vault.apply_final_verdict, (91, 1, 11, POLICY, 99, VERDICT)));
+    │                                                                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:362:39
+    │
+362 │         require(!vault.processedCases(91), "invalid consequence consumed case id");
+    │                                       ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:366:35
+    │
+366 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:366:42
+    │
+366 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:367:35
+    │
+367 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:367:42
+    │
+367 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:372:35
+    │
+372 │         vm.warp(block.timestamp + 8 days);
+    │                                   ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:373:30
+    │
+373 │         vault.recover_active(11);
+    │                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:376:35
+    │
+376 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:376:42
+    │
+376 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:378:34
+    │
+378 │             vault.handoff_status(11) == uint256(VerdictGraphVault.EscrowStatus.RECOVERED),
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:387:26
+    │
+387 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:388:35
+    │
+388 │         vm.warp(block.timestamp + 2 days);
+    │                                   ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:389:35
+    │
+389 │         fresh.recover_unactivated(44);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:391:34
+    │
+391 │             fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.RECOVERED),
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:399:26
+    │
+399 │         _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:400:28
+    │
+400 │         vm.deal(requester, 10 ether);
+    │                            ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:402:46
+    │
+402 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │                                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:403:35
+    │
+403 │         vm.warp(block.timestamp + 2 days);
+    │                                   ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:404:35
+    │
+404 │         fresh.recover_unactivated(44);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:407:34
+    │
+407 │             fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.RECOVERED), "funded escrow not recovered"
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:412:80
+    │
+412 │         (bool ok,) = address(vault).call(abi.encodeCall(vault.recover_active, (11)));
+    │                                                                                ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:415:34
+    │
+415 │             vault.handoff_status(11) == uint256(VerdictGraphVault.EscrowStatus.ACTIVE), "early recovery changed state"
+    │                                  ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:420:35
+    │
+420 │         vm.warp(block.timestamp + 8 days);
+    │                                   ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:421:30
+    │
+421 │         vault.recover_active(11);
+    │                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:427:35
+    │
+427 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                   ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:427:42
+    │
+427 │         vault.apply_final_verdict(91, 1, 11, POLICY, vault.CONSEQUENCE_PROVIDER_BREACH(), VERDICT);
+    │                                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:442:26
+    │
+442 │         _register(fresh, 44, requester, address(receiver), PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:443:28
+    │
+443 │         vm.deal(requester, 10 ether);
+    │                            ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:444:36
+    │
+444 │         vm.deal(address(receiver), 10 ether);
+    │                                    ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:446:46
+    │
+446 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │                                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:448:38
+    │
+448 │         fresh.post_bond{value: BOND}(44);
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:449:43
+    │
+449 │         fresh.apply_handoff_completion(1, 44, POLICY, DELIVERY);
+    │                                           ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:462:26
+    │
+462 │         _register(fresh, 44, requester, address(receiver), PRINCIPAL, BOND);
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:463:28
+    │
+463 │         vm.deal(requester, 10 ether);
+    │                            ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:464:36
+    │
+464 │         vm.deal(address(receiver), 10 ether);
+    │                                    ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:466:46
+    │
+466 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │                                              ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:468:38
+    │
+468 │         fresh.post_bond{value: BOND}(44);
+    │                                      ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ evm/contracts/VerdictGraphVault.sol:188:13
+    │
+188 │         if (block.timestamp > escrow.fundingDeadline) revert FundingWindowClosed();
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:469:43
+    │
+469 │         fresh.apply_handoff_completion(1, 44, POLICY, DELIVERY);
+    │                                           ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:489:26
+    │
+489 │         _register(fresh, 77, fuzzRequester, fuzzProvider, uint256(principal), uint256(bond));
+    │                          ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:493:55
+    │
+493 │         fresh.fund_handoff{value: uint256(principal)}(77);
+    │                                                       ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:495:47
+    │
+495 │         fresh.post_bond{value: uint256(bond)}(77);
+    │                                               ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:496:43
+    │
+496 │         fresh.apply_handoff_completion(1, 77, POLICY, DELIVERY);
+    │                                           ━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:516:31
+    │
+516 │             block.timestamp + 1 days,
+    │                               ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+note[literal-instead-of-constant]: this literal appears multiple times in the contract; declare a named constant for it
+    ╭▸ evm/test/VerdictGraphVault.t.sol:517:31
+    │
+517 │             block.timestamp + 7 days
+    │                               ━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/literal-instead-of-constant
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ evm/contracts/VerdictGraphVault.sol:284:13
+    │
+284 │         if (block.timestamp <= escrow.fundingDeadline) revert RecoveryNotReady();
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+    ╭▸ evm/contracts/VerdictGraphVault.sol:302:13
+    │
+302 │         if (block.timestamp <= escrow.recoveryDeadline) revert RecoveryNotReady();
+    │             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[reentrancy-eth]: uncapped ETH transfer can be reentered before `_withdrawLock` is updated
+    ╭▸ evm/contracts/VerdictGraphVault.sol:315:22
+    │
+315 │         (bool ok,) = payable(msg.sender).call{value: amount}("");
+    │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-eth
+
+warning[reentrancy-events]: event emitted after an external call; reentrancy can reorder or fabricate logs that off-chain consumers rely on
+    ╭▸ evm/contracts/VerdictGraphVault.sol:318:9
+    │
+318 │         emit Withdrawal(msg.sender, amount);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/reentrancy-events
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:237:36
+    │
+237 │         (bool wrongRequesterOk,) = address(fresh).call{value: PRINCIPAL}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:241:33
+    │
+241 │         (bool wrongAmountOk,) = address(fresh).call{value: PRINCIPAL - 1}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:245:9
+    │
+245 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:256:9
+    │
+256 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:259:35
+    │
+259 │         (bool wrongProviderOk,) = address(fresh).call{value: BOND}(abi.encodeCall(fresh.post_bond, (44)));
+    │                                   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:263:33
+    │
+263 │         (bool wrongAmountOk,) = address(fresh).call{value: BOND - 1}(abi.encodeCall(fresh.post_bond, (44)));
+    │                                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:267:9
+    │
+267 │         fresh.post_bond{value: BOND}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:277:22
+    │
+277 │         (bool ok,) = address(fresh).call{value: PRINCIPAL}(abi.encodeCall(fresh.fund_handoff, (44)));
+    │                      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:402:9
+    │
+402 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[incorrect-strict-equality]: dangerous strict equality check on an externally-influenced value
+    ╭▸ evm/test/VerdictGraphVault.t.sol:431:17
+    │
+431 │         require(requester.balance == beforeBalance + PRINCIPAL + BOND, "withdrawal amount mismatch");
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/incorrect-strict-equality
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:446:9
+    │
+446 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:448:9
+    │
+448 │         fresh.post_bond{value: BOND}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[incorrect-strict-equality]: dangerous strict equality check on an externally-influenced value
+    ╭▸ evm/test/VerdictGraphVault.t.sol:455:17
+    │
+455 │         require(address(receiver).balance == beforeBalance + PRINCIPAL + BOND, "receiver payout mismatch");
+    │                 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/incorrect-strict-equality
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:466:9
+    │
+466 │         fresh.fund_handoff{value: PRINCIPAL}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:468:9
+    │
+468 │         fresh.post_bond{value: BOND}(44);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:478:29
+    │
+478 │         (bool receiveOk,) = address(vault).call{value: 1 wei}("");
+    │                             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:480:30
+    │
+480 │         (bool fallbackOk,) = address(vault).call{value: 1 wei}(hex"1234");
+    │                              ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:493:9
+    │
+493 │         fresh.fund_handoff{value: uint256(principal)}(77);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:495:9
+    │
+495 │         fresh.post_bond{value: uint256(bond)}(77);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:530:9
+    │
+530 │         target.fund_handoff{value: principal_}(handoffId);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+warning[arbitrary-send-eth]: ETH is sent to a user-controlled destination; restrict the destination or the caller
+    ╭▸ evm/test/VerdictGraphVault.t.sol:532:9
+    │
+532 │         target.post_bond{value: bond_}(handoffId);
+    │         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/arbitrary-send-eth
+
+note[modifier-used-only-once]: this modifier is used only once; consider inlining its checks into the function
+   ╭▸ evm/contracts/VerdictGraphVault.sol:95:5
+   │
+95 │     modifier onlyAdjudicatorCore() {
+   │     ━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/modifier-used-only-once
+
+note[modifier-used-only-once]: this modifier is used only once; consider inlining its checks into the function
+    ╭▸ evm/contracts/VerdictGraphVault.sol:100:5
+    │
+100 │     modifier nonReentrant() {
+    │     ━━━━━━━━
+    │
+    ╰ help: https://getfoundry.sh/forge/linting/modifier-used-only-once
+
+No files changed, compilation skipped
+
+Ran 30 tests for evm/test/VerdictGraphVault.t.sol:VerdictGraphVaultTest
+[PASS] testBondRequiresProviderAndExactBond() (gas: 471262)
+[PASS] testCompletionRejectsMalformedDeliveryDigest() (gas: 84474)
+[PASS] testConflictingDuplicateRegistrationReverts() (gas: 351742)
+[PASS] testConstructorRejectsZeroController() (gas: 52850)
+[PASS] testDirectNativeTransfersAreRejected() (gas: 63923)
+[PASS] testDuplicateCompletionIsIdempotent() (gas: 168199)
+[PASS] testDuplicateVerdictIsIdempotent() (gas: 204905)
+[PASS] testExplicitCompletionReleasesPrincipalAndBondToProvider() (gas: 113013)
+[PASS] testFundingAndBondWindowCloseAfterDeadline() (gas: 343801)
+[PASS] testFundingRequiresRequesterAndExactPrincipal() (gas: 427784)
+[PASS] testFuzzExactProviderRelease(uint128,uint128) (runs: 256, μ: 487745, ~: 487720)
+[PASS] testIdenticalRegistrationIsIdempotent() (gas: 362070)
+[PASS] testLateVerdictCannotReopenRecoveredEscrow() (gas: 225069)
+[PASS] testNeutralConsequenceReturnsPrincipalAndBondSeparately() (gas: 168057)
+[PASS] testNeutralRecoveryReturnsPrincipalAndBondSeparately() (gas: 106966)
+[PASS] testOnlyBoundControllersCanApplyCompletionOrVerdict() (gas: 74874)
+[PASS] testOnlyRegistryCoreCanRegisterHandoff() (gas: 40544)
+[PASS] testProviderBreachTransfersExactPrincipalAndBondToRequester() (gas: 143836)
+[PASS] testRecoveryCannotRunBeforeDeadline() (gas: 34689)
+[PASS] testRegistrationRejectsInvalidParticipantsAndTerms() (gas: 89913)
+[PASS] testRegistrationRejectsMalformedPolicyDigest() (gas: 66660)
+[PASS] testRegistryAndAdjudicatorRolesAreSeparated() (gas: 59014)
+[PASS] testReleaseProviderVerdictPaysExactPrincipalAndBond() (gas: 143824)
+[PASS] testUnactivatedFundedRecoveryReturnsPrincipal() (gas: 416960)
+[PASS] testUnactivatedUnfundedRecovery() (gas: 348942)
+[PASS] testVerdictRejectsMalformedDigestAndInvalidConsequence() (gas: 143472)
+[PASS] testWithdrawPaysClaimableExactlyOnce() (gas: 204195)
+[PASS] testWithdrawReentrancyCannotDoubleSpend() (gas: 972338)
+[PASS] testWithdrawalFailureRestoresClaimableBalance() (gas: 701247)
+[PASS] testWrongPolicyOrWorkflowCannotComplete() (gas: 78013)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 21.29ms (30.34ms CPU time)
+
+Ran 1 test suite in 22.14ms (21.29ms CPU time): 30 tests passed, 0 failed, 0 skipped (30 total tests)
+=== Dual-controller Vault bytecode identity ===
+VAULT_CREATION_BYTES=7657
+VAULT_CREATION_SHA256=77ed1e8ab728fcb2221f04c88d4c01ac4625d157fb8f288cc9dd6ff8502ecb58
+VAULT_RUNTIME_BYTES=7379
+VAULT_RUNTIME_SHA256=4d6024fcdc89ea5529c3d9c3f1adbb7120790cdd5ef7b10a221759457064a141
+=== Load exact Node runtime used by pinned GenLayerJS ===
+=== LIVE BRADBURY DEPLOYMENT ESTIMATES — BOTH NO SEND ===
+Error using provider for method eth_sendTransaction: Error: VERDICTGRAPH_STAGE4E_BLOCKED_SEND
+    at Object.request (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/scripts/stage4e_split_deploy_estimate.mjs:30:13)
+    at Object.request (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/node_modules/genlayer-js/dist/index.js:3589:35)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async withRetry.delay.count.count (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/node_modules/viem/_esm/utils/buildRequest.js:30:24)
+    at async attemptRetry (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/node_modules/viem/_esm/utils/promise/withRetry.js:24:30)
+RESULT=ACCEPTED kind=registry contract=contracts/verdict_graph_registry_deploy.py
+PASS Bradbury accepted eth_estimateGas for contracts/verdict_graph_registry_deploy.py
+PASS provider blocked transaction submission for 0x1f87ae197af539253978d435ad45ccf28fb95024
+PASS no private key, signature, or transaction was used by this probe
+Error using provider for method eth_sendTransaction: Error: VERDICTGRAPH_STAGE4E_BLOCKED_SEND
+    at Object.request (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/scripts/stage4e_split_deploy_estimate.mjs:30:13)
+    at Object.request (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/node_modules/genlayer-js/dist/index.js:3589:35)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async withRetry.delay.count.count (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/node_modules/viem/_esm/utils/buildRequest.js:30:24)
+    at async attemptRetry (file:///Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/node_modules/viem/_esm/utils/promise/withRetry.js:24:30)
+RESULT=ACCEPTED kind=adjudicator contract=contracts/verdict_graph_adjudicator_deploy.py
+PASS Bradbury accepted eth_estimateGas for contracts/verdict_graph_adjudicator_deploy.py
+PASS provider blocked transaction submission for 0x1f87ae197af539253978d435ad45ccf28fb95024
+PASS no private key, signature, or transaction was used by this probe
+=== Final source / reviewer / ABI / hygiene gates ===
+/Users/mralbert/Downloads/verdictgraph-stage1/verdictgraph/verification/source-manifest.json
+Manifested 98 source/config/documentation files
+SOURCE_SET_SHA256=5eb30c8c4f5b482751ac6c3172f750ff160f84c639df9c2f7d317d1e22a7e154
+PASS 98 critical source hashes match the manifest
+PASS deterministic source-set digest = 5eb30c8c4f5b482751ac6c3172f750ff160f84c639df9c2f7d317d1e22a7e154
+PASS  current GenVM dependency pinned
+PASS  custom nondeterministic validator
+PASS  validator independently re-evaluates
+PASS  exact decision binding
+PASS  exact rule binding
+PASS  exact consequence binding
+PASS  evidence authority address binding
+PASS  publisher boundary binding
+PASS  publisher diversity counts distinct HTTPS origins
+PASS  minimum two issuers
+PASS  zero-address evidence authority rejected
+PASS  authority lists are bounded
+PASS  workflow graph is bounded
+PASS  stable evidence id anti-reuse
+PASS  freshness rechecked at review
+PASS  corroboration group bound
+PASS  corroboration requires distinct bytes
+PASS  response bytes hash-verified
+PASS  repair state persisted
+PASS  fresh revision path
+PASS  evidence-only repair revision
+PASS  repair carries valid corroborators forward
+PASS  failed stable record repair requires higher version
+PASS  stable repair remains issuer-bound
+PASS  review has post-review response window
+PASS  settlement is separate from review
+PASS  settlement binds latest verdict
+PASS  queued settlement blocks fresh revision
+PASS  deadline recovery path
+PASS  policy fingerprint in verdict
+PASS  EVM boundary used for custody
+PASS  vault binding verified on-chain
+PASS  no accepted-stage EVM effect
+PASS  vault enforces split controller roles
+PASS  vault binds policy fingerprint
+PASS  vault idempotent case processing
+PASS  vault registration idempotent for identical terms
+PASS  vault deadline recovery
+PASS  vault uses pull withdrawal
+PASS  happy path delivery is hash pinned
+PASS  requester acceptance is explicit
+PASS  accepted handoff cannot be disputed
+PASS  disputed handoff cannot be directly accepted
+PASS  happy path release is finality-only Core to Vault
+PASS  semantic review can verify provider delivery bytes
+PASS  delivery repairs preserve version history
+PASS  transient fetch failures can retry same revision
+PASS  finalized happy-path message can retry idempotently
+PASS  finalized dispute settlement can retry idempotently
+PASS  Core can synchronize terminal Vault state
+PASS  no percentage payout tolerance
+PASS  genlayer-py commit pinned
+PASS  genlayer-test commit pinned
+PASS  genvm-linter commit pinned
+PASS  frontend GenLayer SDK fee-aware commit pinned
+PASS  frontend never floats GenLayer SDK main
+PASS  frontend simulates write fees
+PASS  frontend forwards message fee allocations
+PASS  frontend uses current read transaction variants
+PASS  frontend Core calldata uses exact GenLayer SDK encodable type
+PASS  frontend transaction hashes use exact GenLayer SDK hash type
+PASS  frontend distinguishes provisional state
+PASS  frontend Vault address matches bound Core
+PASS  frontend env names match client
+PASS  creator-scoped ID lookups avoid global count inference
+PASS  fatal validation helper is typed non-returning
+PASS  web response status is compatible with production and Direct Mode shapes
+PASS  optional web bodies are handled before hashing or decoding
+PASS  EVM interface arguments are positional-only
+PASS  vault canonical SHA-256 bindings
+PASS  vault rejects direct native transfers without payable receive/fallback
+PASS  vault rejects malformed verdict before case consumption
+PASS  vault adversarial test suite expanded
+PASS  vault tests cover reentrancy and failed withdrawals
+PASS  vault tests avoid removed Foundry testFail convention
+PASS  vault zero-controller constructor tests capture expected reverts
+PASS  vault only-Core verdict test does not consume prank on getter
+PASS  vault tests cover exact consequence arithmetic
+PASS  vault tests include fuzzed exact release arithmetic
+PASS  Stage 2 pins Foundry stable release
+PASS  Stage 2 compiles and executes Vault tests
+PASS  source manifest survives Direct Mode artifact cleanup
+PASS  source manifest recursively covers frontend and reviewer sources
+PASS  frontend pins supported Node LTS exactly
+PASS  frontend pins npm package manager exactly
+PASS  frontend uses patched Next active-LTS build
+PASS  frontend uses patched React 19.2 line
+PASS  frontend viem aligns with current GenLayer SDK major
+PASS  unused Wagmi and Radix dependency surface removed
+PASS  generated TypeScript build cache is ignored
+PASS  Stage 3 pins exact Node and npm runtime
+PASS  Stage 3 loads nvm without premature .nvmrc auto-use
+PASS  Stage 3 preserves user npmrc while isolating nvm activation
+PASS  Stage 3 is compatible with macOS Bash 3.2 env normalization
+PASS  Stage 3 creates then reuses lockfile reproducibly
+PASS  Stage 3 verifies exact GenLayer SDK lock provenance
+PASS  Stage 3 executes typecheck production build and audit
+PASS  all useSearchParams routes are protected by Suspense
+PASS  Next TypeScript config includes generated dev route types
+PASS  Stage 3 whitespace gate works without Git metadata
+PASS  Stage 4A is keyless and non-destructive
+PASS  Stage 4A binds both Bradbury RPC endpoints and chain id
+PASS  Stage 4A live-probes PUSH0 support
+PASS  Stage 4A pins Foundry and compiles exact Vault
+PASS  Stage 4A rejects documented unsupported EVM opcodes
+PASS  Stage 4A verifies Core-Vault deployment order
+PASS  source manifest exposes deterministic deployment source-set digest
+PASS  Bradbury deployment template reflects split architecture and no stale Vault hash
+PASS  Stage 4B preflight is non-destructive
+PASS  Stage 4B pins stable Bradbury CLI and active account read
+PASS  Stage 4B refuses Vault artifact drift before Core deployment
+PASS  deployment Core parity is constrained by deterministic Stage 4D models
+PASS  deployment Core is materially smaller without touching canonical source
+PASS  deployment artifact builder hard-fails on AST or size drift
+PASS  Direct Mode can target the exact deployment artifact
+PASS  Stage 4C re-runs GenVM and Direct Mode on deployment artifact
+PASS  Stage 4C Bradbury estimator is cryptographically keyless and blocks sends
+PASS  Stage 4C never invokes a deployment CLI or cast send
+PASS  Stage 4D generates progressively smaller Core candidates
+PASS  Stage 4D exact candidate retains executable AST
+PASS  Stage 4D diagnostic compaction cannot alter persistent failure codes
+PASS  Stage 4D private symbol compaction is reversible
+PASS  Stage 4D preserves public ABI and storage surface
+PASS  Stage 4D live estimator blocks every send path
+PASS  Stage 4D probes least-transformed candidate first
+PASS  Stage 4D re-verifies selected source before any deployment
+PASS  Stage 4E split keeps dispute lock on Registry
+PASS  Stage 4E Adjudicator only accepts finalized Registry initialization
+PASS  Stage 4E evidence authority remains Registry-bound
+PASS  Stage 4E Vault Registry role is narrow
+PASS  Stage 4E Vault Adjudicator role is narrow
+PASS  Stage 4E deployment artifacts are AST-equivalent
+PASS  Stage 4E live estimator is no-send
+PASS  Stage 4E Direct Mode covers split binding dispute lock authority and validator parity
+PASS  Stage 4E Direct Mode mocks only documented cross-contract boundary requests
+PASS  Stage 4E Registry split fixture uses two distinct evidence issuers
+PASS  Stage 4E split address assertions normalize representations
+PASS  Stage 4E Direct address helper is SDK-independent before first deployment
+PASS  Stage 4E Direct Mode isolates split ICs by process without loader mutation
+PASS  Stage 4E verifier rechecks both split ICs and all Direct tests
+PASS  Stage 4E re-verifies dual-controller Vault and records bytecode hashes
+PASS  Stage 4E probes both split deployments with sends blocked
+PASS  Stage 4E Registry can retry finalized case initialization
+PASS  Stage 4E disputed handoffs can synchronize terminal Vault recovery
+PASS  Stage 4E all split-to-Vault effects use finalized-default emission
+
+145/145 source-level reviewer gates passed.
+PASS split Registry/Adjudicator EVM interfaces and dual-controller Vault ABI remain aligned
+PASS whitespace/source hygiene across 98 manifested files
+=== STAGE 4E PASS ===
+Both split IC deployment payloads passed Bradbury eth_estimateGas with sends blocked; GenVM, Direct Mode, and dual-controller Vault verification passed.
+DO NOT DEPLOY YET.

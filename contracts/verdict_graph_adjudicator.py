@@ -387,7 +387,7 @@ class VerdictGraphAdjudicator(gl.Contract):
     case_count: u256
 
     def __init__(self, registry_address: str):
-        registry = Address(registry_address)
+        registry = Address(str(registry_address))
         if registry == ZERO_ADDRESS: _fail("Registry cannot be the zero address")
         self.owner = gl.message.sender_address; self.registry_address_value = registry; self.vault_address = ZERO_ADDRESS
         self.next_evidence_id = u256(1); self.next_verdict_id = u256(1); self.case_count = u256(0)

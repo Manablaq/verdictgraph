@@ -305,7 +305,7 @@ class VerdictGraphAdjudicator(gl.Contract):
     case_count: u256
 
     def __init__(self, registry_address: str):
-        registry = Address(registry_address)
+        registry = Address(str(registry_address))
         if registry == ZERO_ADDRESS:
             _fail('Registry cannot be the zero address')
         self.owner = gl.message.sender_address
@@ -630,7 +630,7 @@ class VerdictGraphAdjudicator(gl.Contract):
         for index in range(int(revision.evidence_count)):
             evidence_id = self.revision_evidence_index[_revision_key(case_id, case.current_revision, 'evidence:' + str(index))]
             evidence_records.append((int(evidence_id), gl.storage.copy_to_memory(self.evidence[evidence_id])))
-        for evidence_id_int, record in evidence_records:
+        for (evidence_id_int, record) in evidence_records:
             failure_code = ''
             if int(now) - int(record.observed_at) > int(context['max_evidence_age_seconds']):
                 failure_code = 'EVIDENCE_STALE_AT_REVIEW'
@@ -697,7 +697,7 @@ class VerdictGraphAdjudicator(gl.Contract):
                     return {'status': 'REPAIR_REQUIRED', 'failure_code': 'RESPONSE_NOT_UTF8', 'failed_evidence_id': 0, 'observed_sha256': response_observed_sha256}
             fetched: list[dict] = []
             total_bytes = 0
-            for evidence_id_int, record in evidence_records:
+            for (evidence_id_int, record) in evidence_records:
                 try:
                     response = gl.nondet.web.request(record.source_uri, method='GET')
                 except Exception:
