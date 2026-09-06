@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-06T18:16:11.708922+00:00",
-  "source_set_sha256": "be9721510ff3b497f253098742eaee584531bdf9379e5aecc663b80671b5671e",
+  "generated_at": "2026-09-06T18:25:46.919946+00:00",
+  "source_set_sha256": "e53cb9a7168f02418cfbb165f601064cc6ac9e74da5586a46065f90571f03899",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -16,8 +16,8 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "27327417147cbf9cb279f0a8d7476e9c37b581941c27aef005bf5c797615a6e3",
-      "bytes": 7499
+      "sha256": "c882b0762c2aa08742eb5d04b07f04a4209c551484d4c1538d22a22e9fc8ad54",
+      "bytes": 7759
     },
     "contracts/verdict_graph_adjudicator.py": {
       "sha256": "b60432a65f31072cc4408c4177b4902f887a98f9cbf3bb1fc8fe59a149bee5fd",

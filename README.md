@@ -108,7 +108,7 @@ Completed before Stage 4E:
 - Stage 4C: 70,836-byte exact-AST deployment artifact passed GenVM + 35/35 Direct Mode but Bradbury no-send estimate rejected it.
 - Stage 4D: 69,197 / 62,050 / 57,721-byte candidates were all rejected by live Bradbury estimation with signing/sending blocked.
 
-Stage 4E source is prepared but is **not yet claimed complete until the macOS verifier passes**. Current split deployment artifacts are approximately 43.5 KB Registry and 52.6 KB Adjudicator after the latest liveness hardening.
+Stage 4E is **complete and verified on macOS**. Both split Intelligent Contract deployment payloads passed live Bradbury `eth_estimateGas` with signing/sending blocked; both ICs passed GenVM validation; Direct Mode passed **40/40** tests (35 canonical + 2 Registry + 3 Adjudicator); the dual-controller Vault passed **30/30** Foundry tests; and the reviewer gate passed **145/145** checks. The verified deployment artifacts are 43,424 bytes for Registry and 52,552 bytes for Adjudicator.
 
 See [`docs/BUILD_STATUS.md`](docs/BUILD_STATUS.md).
 
