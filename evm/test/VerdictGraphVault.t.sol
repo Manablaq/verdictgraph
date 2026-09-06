@@ -76,6 +76,31 @@ contract VerdictGraphVaultTest {
         return new VerdictGraphVault(registryCore_, adjudicatorCore_);
     }
 
+    function testPrematureVerdictDoesNotConsumeCaseAndCanRetryAfterActivation() public {
+        VerdictGraphVault fresh = new VerdictGraphVault(address(this), address(this));
+        _register(fresh, 44, requester, provider, PRINCIPAL, BOND);
+
+        uint256 breachRule = fresh.CONSEQUENCE_PROVIDER_BREACH();
+
+        fresh.apply_final_verdict(99, 1, 44, POLICY, breachRule, VERDICT);
+
+        require(!fresh.processedCases(99), "premature verdict consumed case");
+        require(
+            fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.REGISTERED),
+            "premature verdict changed escrow"
+        );
+
+        _activate(fresh, 44, requester, provider, PRINCIPAL, BOND);
+
+        fresh.apply_final_verdict(99, 1, 44, POLICY, breachRule, VERDICT);
+
+        require(fresh.processedCases(99), "active retry did not consume case");
+        require(
+            fresh.handoff_status(44) == uint256(VerdictGraphVault.EscrowStatus.SETTLED), "active retry did not settle"
+        );
+        require(fresh.claimable(requester) == PRINCIPAL + BOND, "active retry payout mismatch");
+    }
+
     function testGenLayerCamelCaseControllerGetters() public {
         require(vault.registryCore() == address(this), "camel registry controller mismatch");
         require(vault.adjudicatorCore() == address(this), "camel adjudicator controller mismatch");

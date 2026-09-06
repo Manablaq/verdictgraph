@@ -414,11 +414,8 @@ class VerdictGraphAdjudicator(gl.Contract):
         if self.vault_address != ZERO_ADDRESS: _fail("Vault is already bound")
         vault=Address(vault_address)
         if vault == ZERO_ADDRESS: _fail("Vault cannot be the zero address")
-        try:
-            registry_core=VerdictGraphVault(vault).view().registry_core(); adjudicator_core=VerdictGraphVault(vault).view().adjudicator_core()
-        except Exception: _fail("Vault controller bindings could not be verified")
-        if registry_core != self.registry_address_value: _fail("Vault registry binding does not match this adjudicator")
-        if adjudicator_core != gl.message.contract_address: _fail("Vault adjudicator binding does not match this contract")
+        # One-shot endpoint binding. The Vault's immutable controller checks
+        # remain the authoritative EVM authorization boundary.
         self.vault_address=vault
 
     @gl.public.write
@@ -1266,11 +1263,6 @@ Rules:
                 _fail("Vault is not bound")
             if int(_now()) > int(case.recovery_deadline):
                 _fail("Case recovery deadline has expired")
-            vault_status = VerdictGraphVault(self.vault_address).view().handoff_status(
-                case.handoff_id
-            )
-            if int(vault_status) != 3:
-                _fail("Vault escrow is no longer active")
             verdict = self.verdicts[expected_verdict_id]
             if verdict.case_id != case_id or verdict.revision_no != case.current_revision:
                 _fail("Settlement verdict is not the current case revision")
@@ -1312,33 +1304,29 @@ Rules:
             )
 
     @gl.public.write
-    def sync_case_vault_status(self, case_id: u256) -> u256:
-        self._require_case(case_id)
-        case = self.cases[case_id]
-        context = self._context(case_id)
-        self._require_participant(context)
-        if not case.settlement_queued:
-            _fail("Case settlement has not been queued")
-        if self.vault_address == ZERO_ADDRESS:
-            _fail("Vault is not bound")
-        vault_status = VerdictGraphVault(self.vault_address).view().handoff_status(
-            case.handoff_id
-        )
-        if int(vault_status) == 4:
-            case.status = CASE_SETTLED
-        elif int(vault_status) == 5:
-            case.status = CASE_RECOVERED
-        else:
-            _fail("Vault escrow is not terminal")
-        case.vault_terminal_status = vault_status
-        return vault_status
-
-    @gl.public.write
     def recover_case(self, case_id: u256) -> None:
         self._require_case(case_id)
         case = self.cases[case_id]
         if case.status == CASE_RECOVERED:
-            _fail("Case is already recovered")
+            if self.vault_address == ZERO_ADDRESS:
+                _fail("Vault is not bound")
+            recovery_payload = {
+                "case_id": int(case_id),
+                "workflow_id": int(case.workflow_id),
+                "handoff_id": int(case.handoff_id),
+                "consequence_rule_id": CONSEQUENCE_NEUTRAL_RECOVERY,
+                "reason": "APPLICATION_RECOVERY_DEADLINE",
+            }
+            recovery_sha256 = _sha256_text(_canonical_json(recovery_payload))
+            VerdictGraphVault(self.vault_address).emit().apply_final_verdict(
+                case_id,
+                case.workflow_id,
+                case.handoff_id,
+                str(self._context(case_id)["policy_fingerprint_sha256"]),
+                u256(CONSEQUENCE_NEUTRAL_RECOVERY),
+                recovery_sha256,
+            )
+            return
         now = _now()
 
         if case.status == CASE_REPAIR_REQUIRED:

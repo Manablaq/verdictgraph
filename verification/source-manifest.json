@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-06T21:09:43.528099+00:00",
-  "source_set_sha256": "a38242911fcc1e027c42bf6f2a8b5bea25415ee5abc6198d31993645ce80b4c8",
+  "generated_at": "2026-09-06T21:37:19.877523+00:00",
+  "source_set_sha256": "e1f00290a47d62fc4a341ec685f7249c2e0641710985ab6b5c106d3e83a2ebf0",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -20,12 +20,12 @@
       "bytes": 8301
     },
     "contracts/verdict_graph_adjudicator.py": {
-      "sha256": "c3336206d9334d170b1887b35195aa644f4285aa55810b3d20a1c39d6d7b992a",
-      "bytes": 60725
+      "sha256": "973c13d882341a53b3f0e2712c0b64a4cf76f0fb1006fdb226186ebe70f82149",
+      "bytes": 60123
     },
     "contracts/verdict_graph_adjudicator_deploy.py": {
-      "sha256": "d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1",
-      "bytes": 52561
+      "sha256": "5e0206c44b62cc38963e1090cb1f9ef939a42f83a3cb64940a90f8ee5714f61f",
+      "bytes": 51614
     },
     "contracts/verdict_graph_core.py": {
       "sha256": "59200fc916ed4a61b91aa27593cb773418ceb60d47f1fc269f1361a67aae92da",
@@ -36,12 +36,12 @@
       "bytes": 70836
     },
     "contracts/verdict_graph_registry.py": {
-      "sha256": "5dcf88d3859d88cd63aebfdc8e79a7b1a92e732bfc28d2396341d059efdf7901",
-      "bytes": 45520
+      "sha256": "62f2a28e02ca2c7040cf2ac57c43c7efafb4fa4211c5e200a8ace4812bf51443",
+      "bytes": 43193
     },
     "contracts/verdict_graph_registry_deploy.py": {
-      "sha256": "33eed3c7865cf180e3179128962c1d68253368ebef983428e0b294bed6d0c5f3",
-      "bytes": 43424
+      "sha256": "b59c942e17eee43a739f23666ebaae097894c0759fb005bc32dad1b8a51369c2",
+      "bytes": 40827
     },
     "deploy/bradbury.template.json": {
       "sha256": "a14a747e15bb7a1533a8cf099a819efff0c90d304daf16f708767fcac64ca94d",
@@ -76,12 +76,12 @@
       "bytes": 3810
     },
     "evm/contracts/VerdictGraphVault.sol": {
-      "sha256": "e8ae647d517b52470eae9f12e78a51517b0c031297f44c0ca313de457fe80145",
-      "bytes": 16761
+      "sha256": "b4ff0e535a0993584970657bf104f428035a9015656f1e3d1b15c5a22d37b283",
+      "bytes": 16928
     },
     "evm/test/VerdictGraphVault.t.sol": {
-      "sha256": "66e6da45c383f2476e9b193a73c712216893b712e389c10166f2f3bb3d8df744",
-      "bytes": 26434
+      "sha256": "d260417ebfb6515f1d4503a19f2a32446f32a04cb774ff0a21fdf96cfae37f1d",
+      "bytes": 27545
     },
     "foundry.toml": {
       "sha256": "47d7d6e95e4c8ee0df5811d02dd17aff87dc9d9099de24f1fe12136e8c3f3e75",
@@ -328,12 +328,12 @@
       "bytes": 4511
     },
     "scripts/mac_stage4e_split_architecture_verify.sh": {
-      "sha256": "865acdc585b8e13e2f3db15c6b9dad38860b3c1bc6d75c179bb60a010817d861",
+      "sha256": "791b1fe596a72bb0edae4490c01d0806ffd54a3b2df9e226d7ea0e12ce00b4c3",
       "bytes": 9927
     },
     "scripts/reviewer_gate.py": {
-      "sha256": "93b9582f81ca37994dc86941ca8cbf1537a39891b39abf03cc7664bdabb02001",
-      "bytes": 30602
+      "sha256": "064f3eb8ac78cf14c2facaef2e54f7055a4e5122478a9a0d2bbb705e21112ad4",
+      "bytes": 31353
     },
     "scripts/source_manifest.py": {
       "sha256": "45d410107b5398ad731cf6540a0fe5e2254ac91c9ed3e956041c260ae78827f7",
@@ -384,16 +384,16 @@
       "bytes": 21840
     },
     "tests/direct/test_split_adjudicator.py": {
-      "sha256": "916fc74d1eb7456558eefd632adf4179616b1f0769d4ac522672efc2f36f1cea",
-      "bytes": 7666
+      "sha256": "45f2b57859e6aa291e32b932fa0b091ef6fed1337d5d811f548454e989dd5737",
+      "bytes": 8200
     },
     "tests/direct/test_split_architecture.py": {
       "sha256": "b2f09a9dad4dc6b599a46e69f089b8409cd3ffdd8bef76d1bcad909e8132cb88",
       "bytes": 331
     },
     "tests/direct/test_split_registry.py": {
-      "sha256": "83aea9562d54cca7088cfc49ab2a66a97a877f1ffbcc768ddd0834e26ebb5dda",
-      "bytes": 5173
+      "sha256": "3143f8389681f63fc0cd5c8cd0d5e8fe57baf50f39503aa05900a637a535a181",
+      "bytes": 6040
     }
   },
   "deployment": {

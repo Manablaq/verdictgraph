@@ -192,7 +192,7 @@ VERDICTGRAPH_SPLIT_DIRECT_ROLE=registry python -m pytest tests/direct/test_split
 
 printf '%s\n' "=== Direct Mode split regression: Adjudicator isolated process ==="
 VERDICTGRAPH_SPLIT_DIRECT_ROLE=adjudicator python -m pytest tests/direct/test_split_adjudicator.py -v
-printf '%s\n' "PASS Direct Mode total = 35 canonical + 2 Registry + 3 Adjudicator = 40 tests"
+printf '%s\n' "PASS Direct Mode total = 35 canonical + 3 Registry + 4 Adjudicator = 42 tests"
 
 printf '%s\n' "=== Dual-controller Vault re-verification ==="
 export PATH="$HOME/.foundry/bin:$PATH"

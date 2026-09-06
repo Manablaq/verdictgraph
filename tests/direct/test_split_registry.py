@@ -105,6 +105,28 @@ def _build_disputed_handoff(registry, vm, owner, requester, provider, issuer, ad
     return handoff, case_id, calls, posts
 
 
+def test_split_vault_binding_is_one_shot_without_ethcall(
+    direct_vm, direct_deploy, direct_owner, direct_alice, direct_bob
+):
+    direct_vm.warp(TEST_TIME_ISO)
+    direct_vm.sender = direct_owner
+    registry = direct_deploy(REGISTRY)
+
+    # Registry intentionally requires its Adjudicator to be bound first.
+    # The existing Direct boundary hook supplies the Adjudicator's
+    # registry_address() response without introducing any EVM Vault EthCall.
+    calls, _ = _install_adjudicator_boundary_hook(direct_vm)
+    registry.bind_adjudicator(to_hex(direct_alice))
+
+    assert any(method == "registry_address" for _, method in calls)
+
+    registry.bind_vault(to_hex(direct_bob))
+    assert to_hex(registry.get_vault_address()) == to_hex(direct_bob)
+
+    with direct_vm.expect_revert("Vault is already bound"):
+        registry.bind_vault(to_hex(direct_owner))
+
+
 def test_split_dispute_lock_blocks_direct_acceptance(
     direct_vm, direct_deploy, direct_owner, direct_alice, direct_bob, direct_charlie
 ):

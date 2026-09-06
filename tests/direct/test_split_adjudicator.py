@@ -127,6 +127,20 @@ def _deploy_and_initialize(
     return adjudicator, context, calls
 
 
+def test_split_adjudicator_vault_binding_is_one_shot_without_ethcall(
+    direct_vm, direct_deploy, direct_owner, direct_alice, direct_charlie
+):
+    direct_vm.warp(TEST_TIME_ISO)
+    direct_vm.sender = direct_charlie
+    adjudicator = direct_deploy(ADJUDICATOR, to_hex(direct_owner))
+
+    adjudicator.bind_vault(to_hex(direct_alice))
+    assert adjudicator.get_vault_address().lower() == to_hex(direct_alice).lower()
+
+    with direct_vm.expect_revert("Vault is already bound"):
+        adjudicator.bind_vault(to_hex(direct_owner))
+
+
 def test_split_binding_and_finalized_case_receiver(
     direct_vm, direct_deploy, direct_owner, direct_alice, direct_bob, direct_charlie
 ):

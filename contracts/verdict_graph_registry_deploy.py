@@ -325,15 +325,6 @@ class VerdictGraphRegistry(gl.Contract):
         vault = Address(vault_address)
         if vault == ZERO_ADDRESS:
             _fail('Vault cannot be the zero address')
-        try:
-            registry_core = VerdictGraphVault(vault).view().registry_core()
-            adjudicator_core = VerdictGraphVault(vault).view().adjudicator_core()
-        except Exception:
-            _fail('Vault controller bindings could not be verified')
-        if registry_core != gl.message.contract_address:
-            _fail('Vault registry binding does not match this contract')
-        if adjudicator_core != self.adjudicator_address:
-            _fail('Vault adjudicator binding does not match the bound adjudicator')
         self.vault_address = vault
 
     @gl.public.write
@@ -539,10 +530,6 @@ class VerdictGraphRegistry(gl.Contract):
             _fail('Disputed handoff cannot be accepted directly')
         if int(_now()) > int(handoff.recovery_deadline):
             _fail('Handoff recovery deadline has expired')
-        if self.vault_address != ZERO_ADDRESS:
-            vault_status = VerdictGraphVault(self.vault_address).view().handoff_status(handoff_id)
-            if int(vault_status) != 3:
-                _fail('Vault escrow must be active before accepting delivery')
         policy = self.policies[workflow.policy_id]
         handoff.delivery_accepted_at = _now()
         handoff.completion_queued = True
@@ -563,29 +550,11 @@ class VerdictGraphRegistry(gl.Contract):
             _fail('Vault is not bound')
         if int(_now()) > int(handoff.recovery_deadline):
             _fail('Handoff recovery deadline has expired')
-        vault_status = VerdictGraphVault(self.vault_address).view().handoff_status(handoff_id)
-        if int(vault_status) != 3:
-            _fail('Vault escrow is no longer active')
         workflow = self.workflows[handoff.workflow_id]
         policy = self.policies[workflow.policy_id]
         handoff.completion_attempt_count = u256(int(handoff.completion_attempt_count) + 1)
         handoff.completion_last_attempt_at = _now()
         VerdictGraphVault(self.vault_address).emit().apply_handoff_completion(handoff.workflow_id, handoff_id, policy.fingerprint_sha256, handoff.delivery_sha256)
-
-    @gl.public.write
-    def sync_handoff_vault_status(self, handoff_id: u256) -> u256:
-        self._require_handoff(handoff_id)
-        handoff = self.handoffs[handoff_id]
-        self._require_handoff_participant(handoff)
-        if not handoff.completion_queued:
-            _fail('Handoff completion has not been queued')
-        if self.vault_address == ZERO_ADDRESS:
-            _fail('Vault is not bound')
-        vault_status = VerdictGraphVault(self.vault_address).view().handoff_status(handoff_id)
-        if int(vault_status) not in (4, 5):
-            _fail('Vault escrow is not terminal')
-        handoff.vault_terminal_status = vault_status
-        return vault_status
 
     @gl.public.write
     def add_handoff_dependency(self, handoff_id: u256, depends_on_handoff_id: u256) -> None:
@@ -799,8 +768,6 @@ class VerdictGraphRegistry(gl.Contract):
             _fail('Only the workflow owner or handoff participants can open a case')
         if handoff_id in self.handoff_case_id:
             _fail('Handoff already has a dispute case')
-        if self.vault_address != ZERO_ADDRESS and int(VerdictGraphVault(self.vault_address).view().handoff_status(handoff_id)) != 3:
-            _fail('Vault escrow must be active before opening a case')
         policy = self.policies[workflow.policy_id]
         now = _now()
         recovery_deadline = u256(int(now) + int(policy.review_recovery_seconds))
@@ -834,22 +801,6 @@ class VerdictGraphRegistry(gl.Contract):
         if int(_now()) > int(context['recovery_deadline']):
             _fail('Case recovery deadline has expired')
         VerdictGraphAdjudicator(self.adjudicator_address).emit().initialize_case(case_id)
-
-    @gl.public.write
-    def sync_disputed_handoff_vault_status(self, handoff_id: u256) -> u256:
-        self._require_handoff(handoff_id)
-        handoff = self.handoffs[handoff_id]
-        self._require_handoff_participant(handoff)
-        if handoff_id not in self.handoff_case_id:
-            _fail('Handoff has no dispute case')
-        if self.vault_address == ZERO_ADDRESS:
-            _fail('Vault is not bound')
-        vault_status = VerdictGraphVault(self.vault_address).view().handoff_status(handoff_id)
-        if int(vault_status) not in (4, 5):
-            _fail('Vault escrow is not terminal')
-        handoff.vault_terminal_status = vault_status
-        handoff.active = False
-        return vault_status
 
     @gl.public.view
     def get_case_context(self, case_id: u256) -> str:

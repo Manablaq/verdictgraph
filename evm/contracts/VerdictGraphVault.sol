@@ -350,7 +350,6 @@ contract VerdictGraphVault {
             emit VerdictIgnored(caseId, handoffId, "CASE_ALREADY_PROCESSED");
             return;
         }
-        processedCases[caseId] = true;
 
         if (escrow.status == EscrowStatus.SETTLED || escrow.status == EscrowStatus.RECOVERED) {
             emit VerdictIgnored(caseId, handoffId, "ESCROW_ALREADY_TERMINAL");
@@ -364,6 +363,10 @@ contract VerdictGraphVault {
         if (consequenceRuleId < CONSEQUENCE_RELEASE_PROVIDER || consequenceRuleId > CONSEQUENCE_NEUTRAL_RECOVERY) {
             revert InvalidConsequence();
         }
+
+        // Consume the case only when the exact consequence can actually execute.
+        // A premature finalized message remains safely retryable after activation.
+        processedCases[caseId] = true;
 
         uint256 principal = escrow.principalRequired;
         uint256 bond = escrow.providerBondRequired;
