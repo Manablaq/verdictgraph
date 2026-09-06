@@ -1,0 +1,17 @@
+{
+  "schema": "verdictgraph-bradbury-core-preflight-v1",
+  "generatedAt": "2026-09-06T14:18:20.113307+00:00",
+  "network": "bradbury",
+  "chainId": 4221,
+  "genlayerRpc": "https://rpc-bradbury.genlayer.com",
+  "genlayerChainRpc": "https://rpc.testnet-chain.genlayer.com",
+  "genlayerCli": "0.39.2",
+  "sourceSetSha256": "a59562e47bbf853aab8b51f3d5a2d28ee42d7600f2bc22195270e7568fb8e097",
+  "coreSourceSha256": "59200fc916ed4a61b91aa27593cb773418ceb60d47f1fc269f1361a67aae92da",
+  "vaultCreationSha256": "0956176b1a1e64c69a1618fcb9bc31ab9b15774330e4d1feec62bce0139e4599",
+  "vaultRuntimeSha256": "cbf65e327170b32110859713c577fe62a1993ce2b811258962ebf3f9a70507e0",
+  "deployerAddress": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+  "deployerBalanceWeiAtPreflight": "8923937615653681346",
+  "coreAddress": null,
+  "coreDeployTransaction": null
+}

@@ -1,0 +1,330 @@
+- Setting up the deployment environment...
+[genlayer-js] initializeConsensusSmartContract() is deprecated and will be removed in a future release. The consensus contract is now resolved from the static chain definition.
+
+Deployment Parameters:
+{
+  code: '# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }\n' +
+    'from dataclasses import dataclass\n' +
+    'from datetime import datetime, timezone\n' +
+    'import hashlib\n' +
+    'import json\n' +
+    'from typing import NoReturn\n' +
+    'from genlayer import *\n' +
+    "ZERO_ADDRESS = Address('0x0000000000000000000000000000000000000000')\n" +
+    'MAX_TITLE_CHARS = 160\n' +
+    'MAX_TEXT_CHARS = 4000\n' +
+    'MAX_URI_CHARS = 768\n' +
+    'MAX_ID_CHARS = 160\n' +
+    'MAX_PUBLISHER_PREFIX_CHARS = 512\n' +
+    'MAX_EVIDENCE_ITEMS = 8\n' +
+    'MAX_EVIDENCE_BYTES = 24000\n' +
+    'MAX_RESPONSE_BYTES = 24000\n' +
+    'MAX_DELIVERY_BYTES = 48000\n' +
+    'MAX_TOTAL_EVIDENCE_BYTES = 96000\n' +
+    'MAX_CRITERIA = 16\n' +
+    'MAX_POLICY_ISSUERS = 16\n' +
+    'MAX_POLICY_PUBLISHERS = 16\n' +
+    'MAX_HANDOFFS_PER_WORKFLOW = 32\n' +
+    'MAX_DEPENDENCIES_PER_HANDOFF = 16\n' +
+    'MAX_SUMMARY_CHARS = 1200\n' +
+    "CASE_OPEN = 'OPEN'\n" +
+    "CASE_REVIEWED = 'REVIEWED'\n" +
+    "CASE_REPAIR_REQUIRED = 'REPAIR_REQUIRED'\n" +
+    "CASE_RECOVERED = 'RECOVERED'\n" +
+    "CASE_SETTLED = 'SETTLED'\n" +
+    "REVISION_OPEN = 'OPEN'\n" +
+    "REVISION_REVIEWED = 'REVIEWED'\n" +
+    "REVISION_REPAIR_REQUIRED = 'REPAIR_REQUIRED'\n" +
+    "WORKFLOW_DRAFT = 'DRAFT'\n" +
+    "WORKFLOW_ACTIVE = 'ACTIVE'\n" +
+    "WORKFLOW_CLOSED = 'CLOSED'\n" +
+    "DECISIONS = ('NO_BREACH', 'BREACH', 'UNDETERMINED')\n" +
+    "FAULT_CLASSES = ('INCOMPLETE_DELIVERY', 'INCORRECT_DELIVERY', 'MISSED_DEADLINE', 'SOURCE_FAILURE', 'VERIFICATION_FAILURE', 'POLICY_BREACH', 'MISUSE_OF_VALID_INPUT', 'OTHER_MATERIAL_BREACH')\n" +
+    'CONSEQUENCE_RELEASE_PROVIDER = 1\n' +
+    'CONSEQUENCE_PROVIDER_BREACH = 2\n' +
+    'CONSEQUENCE_NEUTRAL_RECOVERY = 3\n' +
+    'CONSEQUENCE_RULES = (CONSEQUENCE_RELEASE_PROVIDER, CONSEQUENCE_PROVIDER_BREACH, CONSEQUENCE_NEUTRAL_RECOVERY)\n' +
+    '\n' +
+    'def _fail(message: str) -> NoReturn:\n' +
+    '    raise gl.vm.UserError(message)\n' +
+    '\n' +
+    'def _now() -> u256:\n' +
+    '    return u256(int(datetime.now(timezone.utc).timestamp()))\n' +
+    '\n' +
+    'def _http_status(response) -> int:\n' +
+    "    status = getattr(response, 'status_code', None)\n" +
+    '    if status is None:\n' +
+    "        status = getattr(response, 'status', None)\n" +
+    '    if not isinstance(status, int) or isinstance(status, bool):\n' +
+    '        return 0\n' +
+    '    return status\n' +
+    '\n' +
+    'def _canonical_json(value) -> str:\n' +
+    "    return json.dumps(value, sort_keys=True, separators=(',', ':'))\n" +
+    '\n' +
+    'def _sha256_bytes(value: bytes) -> str:\n' +
+    '    return hashlib.sha256(value).hexdigest()\n' +
+    '\n' +
+    'def _sha256_text(value: str) -> str:\n' +
+    "    return _sha256_bytes(value.encode('utf-8'))\n" +
+    '\n' +
+    'def _is_lower_hex_64(value: str) -> bool:\n' +
+    '    if len(value) != 64:\n' +
+    '        return False\n' +
+    '    for char in value:\n' +
+    "        if char not in '0123456789abcdef':\n" +
+    '            return False\n' +
+    '    return True\n' +
+    '\n' +
+    'def _bounded_text(value: str, label: str, maximum: int, allow_empty: bool=False) -> str:\n' +
+    '    value = value.strip()\n' +
+    '    if not allow_empty and (not value) or len(value) > maximum:\n' +
+    "        _fail(f'{label} is empty or too long')\n" +
+    '    return value\n' +
+    '\n' +
+    'def _address_key(address: Address) -> str:\n' +
+    '    return address.as_hex.lower()\n' +
+    '\n' +
+    'def _policy_key(policy_id: u256, suffix: str) -> str:\n' +
+    "    return f'{int(policy_id)}:{suffix}'\n" +
+    '\n' +
+    'def _revision_key(case_id: u256, revision_no: u256, suffix: str) -> str:\n' +
+    "    return f'{int(case_id)}:{int(revision_no)}:{suffix}'\n" +
+    '\n' +
+    'def _publisher_origin(publisher_prefix: str) -> str:\n' +
+    "    if not publisher_prefix.startswith('https://'):\n" +
+    "        _fail('Publisher prefix must use HTTPS')\n" +
+    "    remainder = publisher_prefix[len('https://'):]\n" +
+    "    host = remainder.split('/', 1)[0].strip().lower()\n" +
+    "    if not host or '@' in host or '?' in host or ('#' in host) or (' ' in host) or ('\\t' in host) or ('\\n' in host):\n" +
+    "        _fail('Publisher prefix has an invalid HTTPS origin')\n" +
+    "    return 'https://' + host\n" +
+    '\n' +
+    'def _normalize_criteria(criteria_json: str) -> list[dict]:\n' +
+    '    try:\n' +
+    '        raw = json.loads(criteria_json)\n' +
+    '    except Exception:\n' +
+    "        _fail('Criteria must be valid JSON')\n" +
+    '    if not isinstance(raw, list) or not raw or len(raw) > MAX_CRITERIA:\n' +
+    "        _fail('Criteria must be a non-empty bounded JSON array')\n" +
+    '    seen: list[int] = []\n' +
+    '    normalized: list[dict] = []\n' +
+    '    for item in raw:\n' +
+    '        if not isinstance(item, dict):\n' +
+    "            _fail('Each criterion must be an object')\n" +
+    "        rule_id = item.get('id')\n" +
+    "        text = item.get('text')\n" +
+    "        fault_class = item.get('fault_class')\n" +
+    "        consequence_rule_id = item.get('consequence_rule_id')\n" +
+    '        if not isinstance(rule_id, int) or isinstance(rule_id, bool) or rule_id <= 0:\n' +
+    "            _fail('Criterion id must be a positive integer')\n" +
+    '        if rule_id in seen:\n' +
+    "            _fail('Criterion ids must be unique')\n" +
+    '        seen.append(rule_id)\n' +
+    '        if not isinstance(text, str):\n' +
+    "            _fail('Criterion text must be a string')\n" +
+    "        text = _bounded_text(text, 'Criterion text', 1200)\n" +
+    '        if not isinstance(fault_class, str):\n' +
+    "            _fail('Criterion fault_class must be a string')\n" +
+    '        fault_class = fault_class.strip().upper()\n' +
+    '        if fault_class not in FAULT_CLASSES:\n' +
+    "            _fail('Unsupported criterion fault_class')\n" +
+    '        if not isinstance(consequence_rule_id, int) or isinstance(consequence_rule_id, bool) or consequence_rule_id not in CONSEQUENCE_RULES or (consequence_rule_id == CONSEQUENCE_RELEASE_PROVIDER):\n' +
+    "            _fail('Breach criteria must map to a supported breach/recovery consequence')\n" +
+    "        normalized.append({'id': rule_id, 'text': text, 'fault_class': fault_class, 'consequence_rule_id': consequence_rule_id})\n" +
+    "    normalized.sort(key=lambda item: item['id'])\n" +
+    '    return normalized\n' +
+    '\n' +
+    'def _criterion_by_id(criteria: list[dict], rule_id: int):\n' +
+    '    for criterion in criteria:\n' +
+    "        if criterion['id'] == rule_id:\n" +
+    '            return criterion\n' +
+    '    return None\n' +
+    '\n' +
+    '@allow_storage\n' +
+    '@dataclass\n' +
+    'class EvidencePolicy:\n' +
+    '    owner: Address\n' +
+    '    title: str\n' +
+    '    version: u256\n' +
+    '    max_evidence_age_seconds: u256\n' +
+    '    minimum_remaining_validity_seconds: u256\n' +
+    '    minimum_distinct_issuers: u256\n' +
+    '    minimum_distinct_publishers: u256\n' +
+    '    response_window_seconds: u256\n' +
+    '    repair_window_seconds: u256\n' +
+    '    review_recovery_seconds: u256\n' +
+    '    issuer_count: u256\n' +
+    '    publisher_count: u256\n' +
+    '    sealed: bool\n' +
+    '    fingerprint_sha256: str\n' +
+    '    created_at: str\n' +
+    '\n' +
+    '@allow_storage\n' +
+    '@dataclass\n' +
+    'class Workflow:\n' +
+    '    owner: Address\n' +
+    '    title: str\n' +
+    '    mission: str\n' +
+    '    policy_id: u256\n' +
+    '    status: str\n' +
+    '    handoff_count: u256\n' +
+    '    deadline: u256\n' +
+    '    created_at: str\n' +
+    '\n' +
+    '@allow_storage\n' +
+    '@dataclass\n' +
+    'class DeliveryRecord:\n' +
+    '    handoff_id: u256\n' +
+    '    version: u256\n' +
+    '    provider: Address\n' +
+    '    delivery_uri: str\n' +
+    '    delivery_sha256: str\n' +
+    '    submitted_at: u256\n' +
+    '    created_at: str\n' +
+    '\n' +
+    '@allow_storage\n' +
+    '@dataclass\n' +
+    'class Handoff:\n' +
+    '    workflow_id: u256\n' +
+    '    ordinal: u256\n' +
+    '    requester: Address\n' +
+    '    provider: Address\n' +
+    '    responsibility: str\n' +
+    '    criteria_json: str\n' +
+    '    principal_required: u256\n' +
+    '    provider_bond_required: u256\n' +
+    '    funding_deadline: u256\n' +
+    '    deadline: u256\n' +
+    '    recovery_deadline: u256\n' +
+    '    dependency_count: u256\n' +
+    '    delivery_version: u256\n' +
+    '    delivery_uri: str\n' +
+    '    delivery_sha256: str\n' +
+    '    delivery_submitted_at: u256\n' +
+    '    delivery_accepted_at: u256\n' +
+    '    completion_queued: bool\n' +
+    '    completion_attempt_count: u256\n' +
+    '    completion_last_attempt_at: u256\n' +
+    '    vault_terminal_status: u256\n' +
+    '    active: bool\n' +
+    '\n' +
+    '@gl.evm.contract_interface\n' +
+    'class VerdictGraphVault:\n' +
+    '\n' +
+    '    class View:\n' +
+    '\n' +
+    '        def registry_core(self) -> Address:\n' +
+    '            ...\n' +
+    '\n' +
+    '        def adjudicator_core(self) -> Address:\n' +
+    '            ...\n' +
+    '\n' +
+    '        def handoff_status(self, handoff_id: u256, /) -> u256:\n' +
+    '            ...\n' +
+    '\n' +
+    '    class Write:\n' +
+    '\n' +
+    '        def register_handoff(self, workflow_id: u256, handoff_id: u256, policy_fingerprint_sha256: str, requester: Address, provider: Address, principal_required: u256, provider_bond_required: u256, funding_deadline: u256, recovery_deadline: u256, /) -> None:\n' +
+    '            ...\n' +
+    '\n' +
+    '        def apply_handoff_completion(self, workflow_id: u256, handoff_id: u256, policy_fingerprint_sha256: str, delivery_sha256: str, /) -> None:\n' +
+    '            ...\n' +
+    '\n' +
+    '@gl.contract_interface\n' +
+    'class VerdictGraphAdjudicator:\n' +
+    '\n' +
+    '    class View:\n' +
+    '\n' +
+    '        def registry_address(self) -> Address:\n' +
+    '            ...\n' +
+    '\n' +
+    '        def get_case_repair_snapshot(self, case_id: u256, /) -> str:\n' +
+    '            ...\n' +
+    '\n' +
+    '    class Write:\n' +
+    '\n' +
+    '        def initialize_case(self, case_id: u256, /) -> None:\n' +
+    '            ...\n' +
+    '\n' +
+    'class VerdictGraphRegistry(gl.Contract):\n' +
+    '    owner: Address\n' +
+    '    vault_address: Address\n' +
+    '    adjudicator_address: Address\n' +
+    '    policies: TreeMap[u256, EvidencePolicy]\n' +
+    '    latest_policy_by_owner: TreeMap[Address, u256]\n' +
+    '    policy_issuer_index: TreeMap[str, Address]\n' +
+    '    policy_issuers: TreeMap[str, bool]\n' +
+    '    policy_publisher_index: TreeMap[str, str]\n' +
+    '    policy_publishers: TreeMap[str, bool]\n' +
+    '    policy_publisher_origins: TreeMap[str, bool]\n' +
+    '    workflows: TreeMap[u256, Workflow]\n' +
+    '    latest_workflow_by_owner: TreeMap[Address, u256]\n' +
+    '    handoffs: TreeMap[u256, Handoff]\n' +
+    '    deliveries: TreeMap[str, DeliveryRecord]\n' +
+    '    latest_handoff_by_workflow: TreeMap[u256, u256]\n' +
+    '    workflow_handoff_index: TreeMap[str, u256]\n' +
+    '    handoff_dependency_index: TreeMap[str, u256]\n' +
+    '    handoff_dependency_seen: TreeMap[str, bool]\n' +
+    '    handoff_case_id: TreeMap[u256, u256]\n' +
+    '    case_context_json: TreeMap[u256, str]\n' +
+    '    latest_case_by_opener: TreeMap[Address, u256]\n' +
+    '    next_policy_id: u256\n' +
+    '    next_workflow_id: u256\n' +
+    '    next_handoff_id: u256\n' +
+    '    next_case_id: u256\n' +
+    '\n' +
+    '    def __init__(self):\n' +
+    '        self.owner = gl.message.sender_address\n' +
+    '        self.vault_address = ZERO_ADDRESS\n' +
+    '        self.adjudicator_address = ZERO_ADDRESS\n' +
+    '        self.next_policy_id = u256(1)\n' +
+    '        self.next_workflow_id = u256(1)\n' +
+    '        self.next_handoff_id = u256(1)\n' +
+    '        self.next_case_id = u256(1)\n' +
+    '\n' +
+    '    def _require_policy(self, policy_id: u256) -> None:\n' +
+    '        if policy_id not in self.policies:\n' +
+    "            _fail('Unknown evidence policy')\n" +
+    '\n' +
+    '    def _require_workflow(self, workflow_id: u256) -> None:\n' +
+    '        if workflow_id not in self.workflows:\n' +
+    "            _fail('Unknown workflow')\n" +
+    '\n' +
+    '    def _require_handoff(self, handoff_id: u256) -> None:\n' +
+    '        if handoff_id not in self.handoffs:\n' +
+    "            _fail('Unknown handoff')\n" +
+    '\n' +
+    '    def _delivery_storage_key(self, handoff_id: u256, version: u256) -> str:\n' +
+    "        return f'{int(handoff_id)}:{int(version)}'\n" +
+    '\n' +
+    '    def _require_handoff_participant(self, handoff: Handoff) -> None:\n' +
+    '        if gl.message.sender_address not in (handoff.requester, handoff.provider):\n' +
+    "            _fail('Only a "... 33424 more characters,
+  args: [],
+  leaderOnly: false
+}
+GenLayer RPC error (eth_sendRawTransaction): server returned an error response: error code -32005: transaction gas rate limit exceeded: node is at capacity, retry in ~241ms, data: {"retryAfterMs":241}
+
+Error:
+_LimitExceededRpcError: Request exceeds defined limit.
+
+Details: server returned an error response: error code -32005: transaction gas rate limit exceeded: node is at capacity, retry in ~241ms, data: {"retryAfterMs":241}
+Version: viem@2.37.2
+    at withRetry.delay.count.count (file:///Users/mralbert/.npm-global/lib/node_modules/genlayer/dist/index.js:27059:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async attemptRetry (file:///Users/mralbert/.npm-global/lib/node_modules/genlayer/dist/index.js:25476:22) {
+  details: 'server returned an error response: error code -32005: transaction gas rate limit exceeded: node is at capacity, retry in ~241ms, data: {"retryAfterMs":241}',
+  docsPath: undefined,
+  metaMessages: undefined,
+  shortMessage: 'Request exceeds defined limit.',
+  version: '2.37.2',
+  code: -32005,
+  [cause]: {
+    code: -32005,
+    message: 'server returned an error response: error code -32005: transaction gas rate limit exceeded: node is at capacity, retry in ~241ms, data: {"retryAfterMs":241}',
+    data: { retryAfterMs: 241 }
+  }
+}
+
+✖ Error deploying contract

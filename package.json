@@ -1,0 +1,21 @@
+{
+  "name": "verdictgraph",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "lint": "cd frontend && npm run lint",
+    "contract:lint": "genvm-lint check contracts/verdict_graph_core.py",
+    "test:direct": "pytest tests/direct -v",
+    "gate": "python3 scripts/reviewer_gate.py && python3 scripts/abi_surface_gate.py && python3 scripts/verify_manifest.py"
+  },
+  "engines": {
+    "node": "24.20.0",
+    "npm": "11.19.0"
+  },
+  "packageManager": "npm@11.19.0"
+}
