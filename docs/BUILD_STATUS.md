@@ -96,63 +96,58 @@ Stage 4E runtime proof completed successfully:
 7. Reviewer gate passed **145/145** checks; ABI, manifest and hygiene gates passed.
 8. Exact marker `=== STAGE 4E PASS ===` was produced.
 
-## Stage 4F — live Bradbury deployment in progress
+## Stage 4F–4AA — live Bradbury deployment and end-to-end proof complete
 
-### Registry
+The final Bradbury topology is:
 
-Registry deployment succeeded and is Finalized.
+- Registry: `0xCb031FbCEb219079608740fb77BC636F9447E7f5`
+- Adjudicator: `0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`
+- Vault: `0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
 
-- Address: `0x65c4acaD8Cfa4a531B5459e7C1f109443734860F`
-- Deployment transaction: `0x87a72fa228f91c3f846cb09b0b08d7ec792e6f8c8eaf81515d0a191f3e1c2db2`
-- Verified status: `Finalized` / status code `7`
+Final deployment/binding transactions:
 
-### Adjudicator attempt 1 — failed execution
+- Registry deployment: `0x115417d925140b03dddbea6e5a6137c846ddb0778e4b9d45641e1a7e9762c8d6`
+- Adjudicator deployment: `0x89a572ef5a68b37c09353c1939b8785e8caa019294b18c9b785b2825d91c12c7`
+- Registry → Adjudicator binding: `0xaf07125aa16c94900629fadb7c88821a80c566278cc7e140cd25ee939be2b1e6`
+- Vault deployment: `0x346da1c607bead1157cbfe0760b3bfb131bea922f311e9359ea109b6de14b321`
+- Registry → Vault binding: `0x714ea444b88affe6387206d824b57a32b56cf14b914ce767d76e5a9c8dd07866`
+- Adjudicator → Vault binding: `0x3ee2166841437cc933328ac7f500ca3d2c04ff96e5051a5facdecca64950e3d4`
 
-The first Adjudicator transaction was:
+Verified six-way topology:
 
-`0x01b7edddf5dcda53a6d6ff2b3a2ee2da1b191148d1c03b9248d81dc80bc23ea4`
+1. Registry → Adjudicator equals the final Adjudicator.
+2. Adjudicator → Registry equals the final Registry.
+3. Registry → Vault equals the final Vault.
+4. Adjudicator → Vault equals the final Vault.
+5. Vault `registry_core()` equals the final Registry.
+6. Vault `adjudicator_core()` equals the final Adjudicator.
 
-Its proposed address was:
+Fresh end-to-end reviewer proof:
 
-`0xfdB5213510eEE10c6cC5f46842Ace79468a368B0`
+- happy-path completion retry parent is `Finalized` / status code `7`;
+- evidence A and B registration parents are `Finalized` / status code `7`;
+- requester-ready and provider-ready parents are `Finalized` / status code `7`;
+- case 2 resolution parent is `Finalized` / status code `7`;
+- case 2 settlement parent `0x0070d5452c6fd68d4ce2ef84c32b87172519dd1e8635e8f3d615425a2f9b6777` is `Finalized` / status code `7`;
+- fresh happy handoff 3 and disputed handoff 4 are both Vault status `SETTLED (4)`;
+- provider withdrawal `0xeb4f81ca0966127f8a33307b154cf1aebc7567e5815de42e9fb35a609b5079db` succeeded;
+- requester withdrawal `0x158a5da046c6a15bf33c4d491fe0c9a3d61111c8c0b71813496eff8a54e79116` succeeded;
+- provider claimable = `0`;
+- requester claimable = `0`;
+- Vault native balance = `0`.
 
-Consensus reached Accepted, but execution ended `FINISHED_WITH_ERROR`. No valid contract state exists at that proposed address, so it **must never be bound or used**.
+The exact deployed Intelligent Contract source remains the source committed at `0e2855d14e142edc6e215c5935f3993eee59be21`. Post-deployment frontend/reviewer-documentation changes do not modify `contracts/` or `evm/contracts/`.
 
-The live trace identified the constructor boundary failure:
+The frontend has been migrated from the temporary single-Core abstraction to explicit Registry and Adjudicator clients. It hard-locks the exact final Registry, Adjudicator and Vault addresses and verifies the full six-way topology before Vault operations.
 
-`Address(registry_address)` received an already-decoded GenLayer `Address`, causing `TypeError: cannot convert 'Address' object to bytes`.
+Current reviewer gate: **152/152**.
 
-The corrected constructor is:
+Current deterministic source identity is recorded in `verification/source-manifest.json`.
 
-`Address(str(registry_address))`
+## Remaining submission packaging
 
-The exact pinned SDK locally reproduces the old failure and proves the corrected normalization preserves the Registry address.
+The on-chain/economic proof is complete. Remaining work is packaging only:
 
-Corrected Adjudicator artifact:
-
-- bytes: **52,561**
-- SHA-256: `d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1`
-- GenVM validation: passed
-- Direct Mode total: **40/40**
-- Vault tests: **30/30**
-- reviewer gates: **145/145**
-- Bradbury no-send estimate: accepted
-
-No corrected Adjudicator redeployment has been sent yet.
-
-## Still unverified / blocked
-
-- Successful corrected Adjudicator deployment.
-- Corrected Adjudicator execution result `FINISHED_WITH_RETURN`.
-- Corrected Adjudicator finality.
-- Registry binding to the successful finalized Adjudicator.
-- Live dual-controller Vault deployment using the Finalized Registry and successful Adjudicator addresses.
-- Registry → Vault binding.
-- Adjudicator → Vault binding.
-- Verification of all controller/back-reference relationships.
-- Finalized live happy-path and dispute-flow execution evidence.
-- Frontend migration from the old single-Core client to Registry + Adjudicator.
-- Browser E2E against the exact deployed split addresses.
-- Explorer/source/manifest/frontend/submission parity.
-
-The failed Adjudicator proposed address `0xfdB5213510eEE10c6cC5f46842Ace79468a368B0` is not a valid deployment and must never be used in later Stage 4F operations.
+- deploy/test the final frontend build in the intended public hosting environment if required;
+- recheck public Explorer/frontend URLs;
+- ensure the final submission form links point only to the exact Registry, Adjudicator, Vault and final frontend deployment.

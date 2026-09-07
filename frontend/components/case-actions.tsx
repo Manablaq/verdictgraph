@@ -6,7 +6,13 @@ import { CheckCircle2, Gavel, LoaderCircle, RefreshCcw, RotateCcw, Send, ShieldA
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { explorerTx, getVaultAddress, waitForFinalized, writeCore, type CoreArgs } from "@/lib/genlayer/client";
+import {
+  type ContractArgs,
+  getVaultAddress,
+  writeAdjudicator,
+  waitForFinalized,
+  explorerTx,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import { readVaultStatus } from "@/lib/genlayer/vault";
 import { asNumber } from "@/lib/format";
@@ -59,12 +65,12 @@ export function CaseActions({
     return null;
   }
 
-  async function run(name: string, functionName: string, args: CoreArgs, finality = false) {
+  async function run(name: string, functionName: string, args: ContractArgs, finality = false) {
     const activeAccount = await getAccount();
     if (!activeAccount) return;
     setBusy(name);
     try {
-      const { hash } = await writeCore(activeAccount, functionName, args);
+      const { hash } = await writeAdjudicator(activeAccount, functionName, args);
       if (finality) {
         toast.message("Accepted by consensus; waiting for finalization…");
         const result = await waitForFinalized(hash);
@@ -91,7 +97,7 @@ export function CaseActions({
     if (!activeAccount) return;
     setBusy("repair-revision");
     try {
-      await writeCore(activeAccount, "begin_revision", [BigInt(caseId), "", ""]);
+      await writeAdjudicator(activeAccount, "begin_revision", [BigInt(caseId), "", ""]);
       toast.success("Repair revision opened; valid corroborators were carried forward");
       await queryClient.invalidateQueries({ queryKey: ["case", caseId] });
       const failed = asNumber(revision.failed_evidence_id);

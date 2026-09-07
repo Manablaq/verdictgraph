@@ -1,0 +1,24 @@
+[genlayer-js] initializeConsensusSmartContract() is deprecated and will be removed in a future release. The consensus contract is now resolved from the static chain definition.
+- Calling method get_case on contract at 0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868...
+
+Result:
+{
+  claim: 'The submitted package.json is not the materially complete reviewer-compliance artifact required by handoff 4 for VerdictGraph commit 0e2855d14e142edc6e215c5935f3993eee59be21. The immutable delivery is unrelated to the required compliance proof and therefore triggers the VERIFICATION_FAILURE criterion.',
+  created_at: '2026-09-07T15:08:59Z',
+  current_revision: 1,
+  handoff_id: 4,
+  latest_verdict_id: 2,
+  opener: '0x1f87ae197af539253978d435ad45ccf28fb95024',
+  recovery_deadline: 1788880139,
+  repair_deadline: 0,
+  response_deadline: 1788794039,
+  settlement_attempt_count: 0,
+  settlement_earliest_at: 1788798851,
+  settlement_last_attempt_at: 0,
+  settlement_queued: false,
+  status: 'REVIEWED',
+  vault_terminal_status: 0,
+  workflow_id: 2
+}
+
+✔ Read operation successfully executed

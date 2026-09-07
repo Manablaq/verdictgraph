@@ -9,7 +9,11 @@ import { AppShell } from "@/components/app-shell";
 import { FileHashHelper } from "@/components/file-hash-helper";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import { SnapshotNotice } from "@/components/snapshot-notice";
-import { getCoreAddress, readCore, writeCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readAdjudicator,
+  writeAdjudicator,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import type { CaseRecord, RevisionRecord } from "@/lib/types";
 
@@ -33,13 +37,13 @@ function CaseResponseContent() {
   const [sha, setSha] = useState("");
   const [mode, setMode] = useState<"loading" | "initial" | "revision" | "blocked">("loading");
   const [detail, setDetail] = useState("");
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
 
   async function inspect() {
     if (!configured) return;
     try {
-      const c = await readCore<CaseRecord>("get_case", [BigInt(caseId)], stateStatus);
-      const revision = await readCore<RevisionRecord>("get_revision", [BigInt(caseId), c.current_revision], stateStatus);
+      const c = await readAdjudicator<CaseRecord>("get_case", [BigInt(caseId)], stateStatus);
+      const revision = await readAdjudicator<RevisionRecord>("get_revision", [BigInt(caseId), c.current_revision], stateStatus);
       if (c.status === "OPEN") {
         if (revision.response_author && !/^0x0{40}$/i.test(revision.response_author)) {
           setMode("blocked");
@@ -70,7 +74,7 @@ function CaseResponseContent() {
     setBusy(true);
     try {
       const functionName = mode === "initial" ? "submit_response" : "begin_revision";
-      await writeCore(account, functionName, [BigInt(caseId), uri, sha.toLowerCase()]);
+      await writeAdjudicator(account, functionName, [BigInt(caseId), uri, sha.toLowerCase()]);
       toast.success(mode === "initial" ? "Response accepted" : "Fresh revision accepted");
       router.push(`/cases/${caseId}?state=accepted`);
     } catch (error) {

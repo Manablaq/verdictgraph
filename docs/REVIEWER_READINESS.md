@@ -1,60 +1,68 @@
 # Reviewer-readiness hard gates
 
-A submission is **blocked** if any item below is false.
+A submission is blocked if a required item below is false. Checked items are supported by the repository's reproducible gates and/or persisted Bradbury evidence. The final submission-link item intentionally remains a submission-time check.
 
 ## Evidence and trust
 
-- [ ] Approved real-world evidence authorities are explicitly documented and their on-chain issuer addresses match the sealed policy.
-- [ ] At least two genuinely independent approved issuers are used in the reviewer demo.
-- [ ] At least two genuinely independent approved publishers are used.
-- [ ] Every consequential source is immutable/versioned or byte-pinned with a stable record ID.
-- [ ] Freshness/expiry remains valid at the actual review transaction time.
-- [ ] All sources for the revision share the intended corroboration group.
-- [ ] Corroborating records use different stable IDs and different content digests; duplicate bytes do not satisfy corroboration.
-- [ ] Fetch/hash failures demonstrably persist as repairable state.
-- [ ] The failed stable evidence record is repaired with the same stable ID, a strictly higher version, and the same authenticated issuer; unaffected corroborators are carried forward.
+- [x] Approved evidence authorities are policy-bound on-chain; the live reviewer flow used the two approved issuer accounts recorded in the Stage 4 live evidence.
+- [x] At least two distinct approved issuers were used in the fresh reviewer flow.
+- [x] At least two distinct HTTPS publisher origins were required and used.
+- [x] Consequential evidence is versioned/byte-pinned and bound to stable evidence identifiers.
+- [x] Freshness and expiry are rechecked at review time.
+- [x] Revision evidence is bound to its corroboration group.
+- [x] Corroboration requires distinct stable records and distinct content digests.
+- [x] Fetch/hash failures persist as repairable state.
+- [x] Stable-record repair requires a higher version from the same authenticated issuer while valid unaffected corroborators can be carried forward.
 
 ## Consensus
 
-- [ ] Leader and validator independently fetch/review evidence.
-- [ ] Validator disagreement test proves contradictory consequential outputs are rejected.
-- [ ] Exact `decision`, `violated_rule_id`, `fault_class`, `consequence_rule_id`, and source-set digest are validator-bound.
-- [ ] No tolerance allows two different economic consequences to validate.
-- [ ] Prompt-injection regressions treat evidence/party responses as untrusted content.
+- [x] Leader and validator independently evaluate fetched evidence.
+- [x] Validator disagreement tests reject contradictory consequential outputs.
+- [x] Exact `decision`, `violated_rule_id`, `fault_class`, `consequence_rule_id`, and source-set digest are consensus-bound.
+- [x] No economic percentage/tolerance permits different consequences to validate.
+- [x] Prompt-injection regressions treat evidence and party responses as untrusted content.
 
 ## Liveness and settlement
 
-- [ ] Every funded Vault state has a deadline escape path.
-- [ ] Case review and repair paths cannot outlive the handoff recovery horizon.
-- [ ] Finalized Registry→Adjudicator case initialization is retryable/idempotent and cannot leave escrow without the Vault recovery deadline escape.
-- [ ] Registry + Adjudicator → Vault bindings are proven on Bradbury and `registry_core` / `adjudicator_core` equal the exact deployed ghost addresses.
-- [ ] Reviewed verdict enters the bounded post-review response window before settlement can be queued.
-- [ ] A fresh revision resets the current verdict and prevents the superseded verdict from settlement.
-- [ ] `queue_settlement` binds the exact latest verdict and its finality-only message is proven on Bradbury.
-- [ ] Duplicate/late settlement messages are idempotent.
-- [ ] A failed/underfunded finalized completion or settlement message can be retried while the Vault remains ACTIVE and before recovery expiry.
-- [ ] Registry/Adjudicator terminal state can be synchronized from deterministic Vault `SETTLED`/`RECOVERED` status.
-- [ ] Registry and Adjudicator writes use verified fee estimation and preserve child/external-message fee allocations; no guessed fee fallback is used.
-- [ ] Repeated identical handoff registration is idempotent; changed terms are rejected.
-- [ ] Withdrawals are pull-based and tested for failure/reentrancy behavior.
+- [x] Every funded Vault state has a deadline escape/recovery path.
+- [x] Case review and repair horizons cannot outlive handoff recovery.
+- [x] Finalized Registry→Adjudicator initialization is retryable/idempotent.
+- [x] Registry + Adjudicator → Vault bindings are proven and Vault immutable controllers equal the exact final IC addresses.
+- [x] Reviewed verdicts enter a bounded post-review response window before settlement.
+- [x] Fresh revision state supersedes the previous verdict and blocks settlement of superseded state.
+- [x] `queue_settlement` binds the exact latest verdict; the fresh settlement parent is Finalized/status `7`.
+- [x] Duplicate/late settlement effects are idempotent.
+- [x] Failed finalized completion/settlement messages are retryable while Vault state remains recoverable.
+- [x] Registry/Adjudicator terminal state can synchronize from deterministic Vault terminal state.
+- [x] Registry and Adjudicator writes use SDK fee estimation and preserve message allocations.
+- [x] Repeated identical Vault registration is idempotent and changed terms are rejected.
+- [x] Withdrawals are pull-based and covered by failure/reentrancy tests.
 
 ## Finality / UX
 
-- [ ] UI distinguishes finalized explorer state from explicitly labeled accepted/provisional workspace state.
-- [ ] UI distinguishes contract state from consensus status.
-- [ ] UI never labels `Accepted` as permanent/final.
-- [ ] Successful paths verify `FINISHED_WITH_RETURN`, not consensus status alone.
-- [ ] Appeal/finality path is visible before irreversible outcome presentation.
+- [x] UI distinguishes finalized state from explicitly accepted/provisional state.
+- [x] UI distinguishes contract state from consensus status.
+- [x] UI never presents `Accepted` as final/permanent.
+- [x] Successful write flows verify execution result rather than consensus status alone.
+- [x] Finality is required before irreversible economic outcome presentation.
 
 ## Deployment/source parity
 
-- [ ] `scripts/reviewer_gate.py` passes.
-- [ ] `scripts/verify_manifest.py` passes.
-- [ ] GenVM lint/typecheck passes on the exact deployed source.
-- [ ] Direct Mode suite passes on the exact deployed source.
-- [ ] Solidity Vault compiles/tests from the exact deployed source.
-- [ ] Bradbury Registry and Adjudicator addresses match the deployment manifest.
-- [ ] GenLayer Chain dual-controller Vault address and both immutable controller getters match the deployment manifest.
-- [ ] Explorer source matches repository commit and SHA-256 manifest.
-- [ ] Frontend points only to those exact addresses.
-- [ ] Submission links point only to those exact deployments.
+- [x] `scripts/reviewer_gate.py` passes: **152/152**.
+- [x] `scripts/verify_manifest.py` passes.
+- [x] GenVM validation passed on the exact deployed Registry and Adjudicator source.
+- [x] Direct Mode passed on the exact deployed split source.
+- [x] Solidity Vault compile/tests passed on the exact deployed Vault source.
+- [x] Final Bradbury Registry and Adjudicator addresses match the persisted topology evidence.
+- [x] Final Vault and immutable `registry_core` / `adjudicator_core` values match the persisted topology evidence.
+- [x] Deployed contract source is byte-stable relative to deployment commit `0e2855d14e142edc6e215c5935f3993eee59be21`; post-deployment frontend/docs work does not modify contract source.
+- [x] Frontend accepts only the exact final Registry, Adjudicator and Vault addresses and verifies all six topology edges.
+- [ ] Final external submission form/public links are rechecked immediately before submission and must point only to the exact final deployments and final frontend build.
+
+## Final Bradbury topology
+
+- Registry: `0xCb031FbCEb219079608740fb77BC636F9447E7f5`
+- Adjudicator: `0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`
+- Vault: `0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
+
+The machine-readable finality record is `deploy/bradbury.finality.json`.

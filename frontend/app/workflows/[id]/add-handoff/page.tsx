@@ -7,7 +7,11 @@ import { ArrowLeft, GitCommitHorizontal, LoaderCircle, Plus, Trash2 } from "luci
 import { parseEther } from "viem";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
-import { getCoreAddress, readCore, writeCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  writeRegistry,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 
 function unix(value: string) { return BigInt(Math.floor(new Date(value).getTime() / 1000)); }
@@ -36,7 +40,7 @@ export default function AddHandoffPage() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!getCoreAddress()) return;
+    if (!isProtocolConfigured()) return;
     if (!account) { await connect(); return; }
     const normalized = criteria.map((criterion) => ({
       id: Number(criterion.id),
@@ -48,8 +52,8 @@ export default function AddHandoffPage() {
     if (normalized.some((criterion) => !Number.isInteger(criterion.id) || criterion.id <= 0 || !criterion.text)) { toast.error("Every criterion needs a positive integer rule ID and non-empty text"); return; }
     setBusy(true);
     try {
-      await writeCore(account, "add_handoff", [workflowId, form.requester, form.provider, form.responsibility, JSON.stringify(normalized), parseEther(form.principal), parseEther(form.bond), unix(form.funding), unix(form.deadline), unix(form.recovery)]);
-      const id = await readCore<bigint>("get_latest_handoff_for_workflow", [workflowId], "accepted");
+      await writeRegistry(account, "add_handoff", [workflowId, form.requester, form.provider, form.responsibility, JSON.stringify(normalized), parseEther(form.principal), parseEther(form.bond), unix(form.funding), unix(form.deadline), unix(form.recovery)]);
+      const id = await readRegistry<bigint>("get_latest_handoff_for_workflow", [workflowId], "accepted");
       toast.success(`Handoff #${id.toString()} accepted`);
       router.push(`/workflows/${params.id}?state=accepted`);
     } catch (error) {

@@ -8,7 +8,14 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { FileHashHelper } from "@/components/file-hash-helper";
 import { SnapshotNotice } from "@/components/snapshot-notice";
-import { getCoreAddress, readCore, waitForFinalized, writeCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  readAdjudicator,
+  writeRegistry,
+  writeAdjudicator,
+  waitForFinalized,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import { asNumber, shortAddress } from "@/lib/format";
 import type { CaseRecord, HandoffRecord, RevisionRecord } from "@/lib/types";
@@ -28,7 +35,7 @@ function RepairDeliveryContent() {
   const caseId = Number(params.id);
   const stateStatus: "accepted" | "finalized" = search.get("state") === "accepted" ? "accepted" : "finalized";
   const { account, connect } = useWallet();
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const [handoff, setHandoff] = useState<HandoffRecord | null>(null);
   const [failureCode, setFailureCode] = useState("");
   const [uri, setUri] = useState("https://");
@@ -40,10 +47,10 @@ function RepairDeliveryContent() {
     if (!configured || !Number.isInteger(caseId) || caseId <= 0) return;
     void (async () => {
       try {
-        const c = await readCore<CaseRecord>("get_case", [BigInt(caseId)], stateStatus);
+        const c = await readAdjudicator<CaseRecord>("get_case", [BigInt(caseId)], stateStatus);
         const [h, r] = await Promise.all([
-          readCore<HandoffRecord>("get_handoff", [c.handoff_id], stateStatus),
-          readCore<RevisionRecord>("get_revision", [BigInt(caseId), c.current_revision], stateStatus),
+          readRegistry<HandoffRecord>("get_handoff", [c.handoff_id], stateStatus),
+          readAdjudicator<RevisionRecord>("get_revision", [BigInt(caseId), c.current_revision], stateStatus),
         ]);
         if (c.status !== "REPAIR_REQUIRED" || !r.failure_code.startsWith("DELIVERY_")) {
           throw new Error("Current case state does not contain a repairable delivery finding");
@@ -63,11 +70,11 @@ function RepairDeliveryContent() {
     if (!account) { await connect(); return; }
     setBusy(true);
     try {
-      const repaired = await writeCore(account, "repair_handoff_delivery", [BigInt(caseId), uri, sha.trim().toLowerCase()]);
+      const repaired = await writeRegistry(account, "repair_handoff_delivery", [BigInt(caseId), uri, sha.trim().toLowerCase()]);
       toast.message("Delivery repair accepted; waiting for finality before opening the new review revision…");
       const final = await waitForFinalized(repaired.hash);
       if (!final.executionSucceeded) throw new Error("Finalized delivery repair did not finish with return");
-      await writeCore(account, "begin_revision", [BigInt(caseId), "", ""]);
+      await writeAdjudicator(account, "begin_revision", [BigInt(caseId), "", ""]);
       toast.success("Versioned delivery repair recorded and fresh review revision opened");
       router.push(`/cases/${caseId}?state=accepted`);
     } catch (e) {

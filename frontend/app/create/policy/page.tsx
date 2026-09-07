@@ -7,7 +7,11 @@ import { ArrowLeft, Check, LoaderCircle, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
-import { getCoreAddress, readCore, writeCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  writeRegistry,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 
 function seconds(value: string) { return BigInt(Math.max(1, Number(value || 0))); }
@@ -15,7 +19,7 @@ function seconds(value: string) { return BigInt(Math.max(1, Number(value || 0)))
 export default function CreatePolicyPage() {
   const router = useRouter();
   const { account, connect } = useWallet();
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const [busy, setBusy] = useState(false);
   const [step, setStep] = useState("Ready");
   const [form, setForm] = useState({
@@ -32,16 +36,16 @@ export default function CreatePolicyPage() {
     setBusy(true);
     try {
       setStep("Creating policy");
-      await writeCore(account, "create_evidence_policy", [form.title, 1n, seconds(form.maxAge), seconds(form.minValidity), 2n, 2n, seconds(form.response), seconds(form.repair), seconds(form.recovery)]);
-      const policyId = await readCore<bigint>("get_latest_policy_for_owner", [account], "accepted");
+      await writeRegistry(account, "create_evidence_policy", [form.title, 1n, seconds(form.maxAge), seconds(form.minValidity), 2n, 2n, seconds(form.response), seconds(form.repair), seconds(form.recovery)]);
+      const policyId = await readRegistry<bigint>("get_latest_policy_for_owner", [account], "accepted");
       setStep("Binding issuer identities");
-      await writeCore(account, "add_policy_issuer", [policyId, form.issuer1]);
-      await writeCore(account, "add_policy_issuer", [policyId, form.issuer2]);
+      await writeRegistry(account, "add_policy_issuer", [policyId, form.issuer1]);
+      await writeRegistry(account, "add_policy_issuer", [policyId, form.issuer2]);
       setStep("Binding publisher boundaries");
-      await writeCore(account, "add_policy_publisher", [policyId, form.publisher1]);
-      await writeCore(account, "add_policy_publisher", [policyId, form.publisher2]);
+      await writeRegistry(account, "add_policy_publisher", [policyId, form.publisher1]);
+      await writeRegistry(account, "add_policy_publisher", [policyId, form.publisher2]);
       setStep("Sealing policy fingerprint");
-      await writeCore(account, "seal_evidence_policy", [policyId]);
+      await writeRegistry(account, "seal_evidence_policy", [policyId]);
       toast.success(`Policy #${policyId.toString()} accepted and sealed`);
       router.push(`/create/workflow?policy=${policyId.toString()}`);
     } catch (error) {

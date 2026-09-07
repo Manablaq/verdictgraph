@@ -9,7 +9,12 @@ import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import { FileHashHelper } from "@/components/file-hash-helper";
 import { SnapshotNotice } from "@/components/snapshot-notice";
-import { getCoreAddress, readCore, writeCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  readAdjudicator,
+  writeAdjudicator,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import { asNumber, shortAddress } from "@/lib/format";
 import type { CaseRecord, EvidencePolicyRecord, EvidenceRecord, WorkflowRecord } from "@/lib/types";
@@ -35,7 +40,7 @@ function RegisterEvidenceContent() {
   const stateStatus: "accepted" | "finalized" = search.get("state") === "accepted" ? "accepted" : "finalized";
   const repairEvidenceId = Number(search.get("repairEvidenceId") ?? "0");
   const { account, connect } = useWallet();
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const [busy, setBusy] = useState(false);
   const [authority, setAuthority] = useState<Authority | null>(null);
   const [repairRecord, setRepairRecord] = useState<EvidenceRecord | null>(null);
@@ -47,14 +52,14 @@ function RegisterEvidenceContent() {
     if (!configured || !Number.isInteger(caseId) || caseId <= 0) return;
     (async () => {
       try {
-        const c = await readCore<CaseRecord>("get_case", [BigInt(caseId)], stateStatus);
-        const workflow = await readCore<WorkflowRecord>("get_workflow", [c.workflow_id], stateStatus);
-        const policy = await readCore<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus);
-        const issuers = await Promise.all(Array.from({ length: asNumber(policy.issuer_count) }, (_, i) => readCore<string>("get_policy_issuer", [workflow.policy_id, BigInt(i)], stateStatus)));
-        const publishers = await Promise.all(Array.from({ length: asNumber(policy.publisher_count) }, (_, i) => readCore<string>("get_policy_publisher", [workflow.policy_id, BigInt(i)], stateStatus)));
+        const c = await readAdjudicator<CaseRecord>("get_case", [BigInt(caseId)], stateStatus);
+        const workflow = await readRegistry<WorkflowRecord>("get_workflow", [c.workflow_id], stateStatus);
+        const policy = await readRegistry<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus);
+        const issuers = await Promise.all(Array.from({ length: asNumber(policy.issuer_count) }, (_, i) => readRegistry<string>("get_policy_issuer", [workflow.policy_id, BigInt(i)], stateStatus)));
+        const publishers = await Promise.all(Array.from({ length: asNumber(policy.publisher_count) }, (_, i) => readRegistry<string>("get_policy_publisher", [workflow.policy_id, BigInt(i)], stateStatus)));
         setAuthority({ policy, issuers, publishers });
         if (repairEvidenceId > 0) {
-          const prior = await readCore<EvidenceRecord>("get_evidence", [BigInt(repairEvidenceId)], stateStatus);
+          const prior = await readAdjudicator<EvidenceRecord>("get_evidence", [BigInt(repairEvidenceId)], stateStatus);
           if (asNumber(prior.case_id) !== caseId) throw new Error("Repair evidence does not belong to this case");
           setRepairRecord(prior);
           setForm((current) => ({
@@ -78,7 +83,7 @@ function RegisterEvidenceContent() {
     if (!account) { await connect(); return; }
     setBusy(true);
     try {
-      await writeCore(account, "register_evidence", [BigInt(caseId), form.stableId, form.publisher, form.uri, form.sha.toLowerCase(), BigInt(form.version), unix(form.issuedAt), unix(form.observedAt), unix(form.expiresAt), form.group]);
+      await writeAdjudicator(account, "register_evidence", [BigInt(caseId), form.stableId, form.publisher, form.uri, form.sha.toLowerCase(), BigInt(form.version), unix(form.issuedAt), unix(form.observedAt), unix(form.expiresAt), form.group]);
       toast.success("Evidence record accepted");
       router.push(`/cases/${caseId}?state=accepted`);
     } catch (e) { toast.error(e instanceof Error ? e.message : "Evidence registration failed"); }

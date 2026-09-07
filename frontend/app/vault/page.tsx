@@ -6,7 +6,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
-import { getVaultAddress } from "@/lib/genlayer/client";
+import {
+  getVaultAddress,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import { readClaimable, waitForVaultReceipt, writeVault } from "@/lib/genlayer/vault";
 import { formatGen, shortAddress } from "@/lib/format";

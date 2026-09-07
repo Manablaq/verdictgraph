@@ -8,7 +8,11 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import { SnapshotNotice } from "@/components/snapshot-notice";
-import { getCoreAddress, readCore, writeCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  writeRegistry,
+} from "@/lib/genlayer/client";
 import { asNumber } from "@/lib/format";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import type { HandoffRecord, WorkflowRecord } from "@/lib/types";
@@ -36,7 +40,7 @@ function WorkflowDependenciesContent() {
   const [upstream, setUpstream] = useState("");
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
 
   useEffect(() => {
     if (!configured || !Number.isInteger(workflowId) || workflowId <= 0) return;
@@ -44,11 +48,11 @@ function WorkflowDependenciesContent() {
     async function load() {
       setLoading(true);
       try {
-        const w = await readCore<WorkflowRecord>("get_workflow", [BigInt(workflowId)], stateStatus);
+        const w = await readRegistry<WorkflowRecord>("get_workflow", [BigInt(workflowId)], stateStatus);
         const loaded = await Promise.all(Array.from({ length: asNumber(w.handoff_count) }, async (_, index) => {
-          const id = asNumber(await readCore<bigint>("get_workflow_handoff", [BigInt(workflowId), BigInt(index)], stateStatus));
-          const h = await readCore<HandoffRecord>("get_handoff", [BigInt(id)], stateStatus);
-          const dependencies = await Promise.all(Array.from({ length: asNumber(h.dependency_count) }, (_, dependencyIndex) => readCore<bigint>("get_handoff_dependency", [BigInt(id), BigInt(dependencyIndex)], stateStatus).then(asNumber)));
+          const id = asNumber(await readRegistry<bigint>("get_workflow_handoff", [BigInt(workflowId), BigInt(index)], stateStatus));
+          const h = await readRegistry<HandoffRecord>("get_handoff", [BigInt(id)], stateStatus);
+          const dependencies = await Promise.all(Array.from({ length: asNumber(h.dependency_count) }, (_, dependencyIndex) => readRegistry<bigint>("get_handoff_dependency", [BigInt(id), BigInt(dependencyIndex)], stateStatus).then(asNumber)));
           return { id, ordinal: asNumber(h.ordinal), responsibility: h.responsibility, dependencies };
         }));
         if (!cancelled) {
@@ -85,7 +89,7 @@ function WorkflowDependenciesContent() {
     if (!downstream || !upstream) return;
     setBusy(true);
     try {
-      await writeCore(account, "add_handoff_dependency", [BigInt(downstream), BigInt(upstream)]);
+      await writeRegistry(account, "add_handoff_dependency", [BigInt(downstream), BigInt(upstream)]);
       toast.success(`Dependency #${upstream} → #${downstream} accepted`);
       router.refresh();
       setItems((current) => current.map((item) => item.id === Number(downstream) ? { ...item, dependencies: [...item.dependencies, Number(upstream)] } : item));

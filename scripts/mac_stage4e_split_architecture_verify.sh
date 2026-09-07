@@ -69,7 +69,8 @@ setup_sdk_paths(contract)
 from genlayer.py import calldata
 from genlayer.py.types import Address
 
-registry_hex = "0x65c4acaD8Cfa4a531B5459e7C1f109443734860F"
+# Synthetic non-deployment address: this regression tests Address calldata normalization only.
+registry_hex = "0x1111111111111111111111111111111111111111"
 
 original = Address(registry_hex)
 encoded = calldata.encode({"args": [original]})

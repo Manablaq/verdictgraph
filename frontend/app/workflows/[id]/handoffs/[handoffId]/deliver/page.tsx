@@ -7,7 +7,9 @@ import { ArrowLeft, LoaderCircle, PackageCheck } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { FileHashHelper } from "@/components/file-hash-helper";
-import { writeCore } from "@/lib/genlayer/client";
+import {
+  writeRegistry,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 
 export default function SubmitDeliveryPage() {
@@ -26,7 +28,7 @@ export default function SubmitDeliveryPage() {
     }
     setBusy(true);
     try {
-      await writeCore(account, "submit_handoff_delivery", [BigInt(params.handoffId), uri, sha.trim().toLowerCase()]);
+      await writeRegistry(account, "submit_handoff_delivery", [BigInt(params.handoffId), uri, sha.trim().toLowerCase()]);
       toast.success("Delivery submitted to VerdictGraph");
       router.push(`/workflows/${params.id}?state=accepted`);
     } catch (error) {

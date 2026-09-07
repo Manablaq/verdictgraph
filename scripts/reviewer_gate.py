@@ -26,6 +26,7 @@ FRONTEND_PACKAGE = (ROOT / "frontend/package.json").read_text()
 FRONTEND_VAULT = (ROOT / "frontend/lib/genlayer/vault.ts").read_text()
 FRONTEND_CLIENT = (ROOT / "frontend/lib/genlayer/client.ts").read_text()
 FRONTEND_ENV = (ROOT / "frontend/.env.example").read_text()
+FRONTEND_ALL = "\n".join(p.read_text() for p in (ROOT / "frontend").rglob("*") if p.suffix in {".ts", ".tsx"})
 SOURCE_MANIFEST_SCRIPT = (ROOT / "scripts/source_manifest.py").read_text()
 VERIFY_MANIFEST_SCRIPT = (ROOT / "scripts/verify_manifest.py").read_text()
 VAULT_TESTS = (ROOT / "evm/test/VerdictGraphVault.t.sol").read_text()
@@ -142,11 +143,60 @@ checks = {
     "frontend simulates write fees": "estimateTransactionFeesForWrite" in FRONTEND_CLIENT,
     "frontend forwards message fee allocations": "messageAllocations: recommended.messageAllocations" in FRONTEND_CLIENT,
     "frontend uses current read transaction variants": "TransactionHashVariant.LATEST_FINAL" in FRONTEND_CLIENT and "TransactionHashVariant.LATEST_NONFINAL" in FRONTEND_CLIENT,
-    "frontend Core calldata uses exact GenLayer SDK encodable type": "type CalldataEncodable" in FRONTEND_CLIENT and "export type CoreArgs = CalldataEncodable[];" in FRONTEND_CLIENT and "args: CoreArgs = []" in FRONTEND_CLIENT and "args: unknown[] = []" not in FRONTEND_CLIENT,
+    "frontend split calldata uses exact GenLayer SDK encodable type": "type CalldataEncodable" in FRONTEND_CLIENT and "export type ContractArgs = CalldataEncodable[];" in FRONTEND_CLIENT and "args: ContractArgs = []" in FRONTEND_CLIENT and "args: unknown[] = []" not in FRONTEND_CLIENT,
     "frontend transaction hashes use exact GenLayer SDK hash type": "type TransactionHash" in FRONTEND_CLIENT and "export type TxHash = TransactionHash;" in FRONTEND_CLIENT and "const hash = await client.writeContract" in FRONTEND_CLIENT,
     "frontend distinguishes provisional state": "SnapshotNotice" in "".join(p.read_text() for p in (ROOT / "frontend").rglob("*.tsx")),
-    "frontend Vault address matches bound Core": "Frontend Vault address does not match the Vault bound in finalized Core state" in FRONTEND_VAULT,
-    "frontend env names match client": "NEXT_PUBLIC_VERDICTGRAPH_CORE_ADDRESS" in FRONTEND_ENV and "NEXT_PUBLIC_VERDICTGRAPH_VAULT_ADDRESS" in FRONTEND_ENV,
+    "frontend exposes explicit split controller clients": all(
+        token in FRONTEND_CLIENT
+        for token in (
+            "getRegistryAddress",
+            "getAdjudicatorAddress",
+            "readRegistry",
+            "readAdjudicator",
+            "writeRegistry",
+            "writeAdjudicator",
+        )
+    ),
+    "frontend removes generic Core compatibility": all(
+        token not in FRONTEND_ALL
+        for token in (
+            "getCoreAddress",
+            "readCore",
+            "writeCore",
+            "CoreArgs",
+            "NEXT_PUBLIC_VERDICTGRAPH_CORE_ADDRESS",
+        )
+    ),
+    "frontend locks exact audited Bradbury topology": all(
+        address in FRONTEND_CLIENT
+        for address in (
+            "0xCb031FbCEb219079608740fb77BC636F9447E7f5",
+            "0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
+            "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
+        )
+    ),
+    "frontend verifies Registry-Adjudicator reciprocal binding": (
+        '"get_adjudicator_address"' in FRONTEND_VAULT
+        and '"registry_address"' in FRONTEND_VAULT
+        and "Registry finalized Adjudicator binding does not match" in FRONTEND_VAULT
+        and "Adjudicator immutable Registry binding does not match" in FRONTEND_VAULT
+    ),
+    "frontend verifies both finalized Vault bindings": (
+        "Registry finalized Vault binding does not match" in FRONTEND_VAULT
+        and "Adjudicator finalized Vault binding does not match" in FRONTEND_VAULT
+    ),
+    "frontend verifies immutable Vault controllers": (
+        'functionName: "registry_core"' in FRONTEND_VAULT
+        and 'functionName: "adjudicator_core"' in FRONTEND_VAULT
+        and "Vault immutable Registry controller does not match" in FRONTEND_VAULT
+        and "Vault immutable Adjudicator controller does not match" in FRONTEND_VAULT
+    ),
+    "frontend env names match split topology": (
+        "NEXT_PUBLIC_VERDICTGRAPH_REGISTRY_ADDRESS" in FRONTEND_ENV
+        and "NEXT_PUBLIC_VERDICTGRAPH_ADJUDICATOR_ADDRESS" in FRONTEND_ENV
+        and "NEXT_PUBLIC_VERDICTGRAPH_VAULT_ADDRESS" in FRONTEND_ENV
+        and "NEXT_PUBLIC_VERDICTGRAPH_CORE_ADDRESS" not in FRONTEND_ENV
+    ),
     "creator-scoped ID lookups avoid global count inference": "get_latest_workflow_for_owner" in CORE and "get_latest_case_for_opener" in CORE and "get_latest_handoff_for_workflow" in CORE,
     "fatal validation helper is typed non-returning": "def _fail(message: str) -> NoReturn:" in CORE,
     "web response status is compatible with production and Direct Mode shapes": all(token in CORE for token in (

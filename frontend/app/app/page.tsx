@@ -6,22 +6,26 @@ import { Activity, ArrowRight, FileCheck2, GitFork, Scale, ShieldCheck } from "l
 import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import { MetricCard } from "@/components/metric-card";
-import { getCoreAddress, readCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  readAdjudicator,
+} from "@/lib/genlayer/client";
 import { asNumber } from "@/lib/format";
 
 async function loadCounts() {
   const [workflows, handoffs, cases, evidence, verdicts] = await Promise.all([
-    readCore<bigint>("get_workflow_count"),
-    readCore<bigint>("get_handoff_count"),
-    readCore<bigint>("get_case_count"),
-    readCore<bigint>("get_evidence_count"),
-    readCore<bigint>("get_verdict_count"),
+    readRegistry<bigint>("get_workflow_count"),
+    readRegistry<bigint>("get_handoff_count"),
+    readAdjudicator<bigint>("get_case_count"),
+    readAdjudicator<bigint>("get_evidence_count"),
+    readAdjudicator<bigint>("get_verdict_count"),
   ]);
   return { workflows, handoffs, cases, evidence, verdicts };
 }
 
 export default function DashboardPage() {
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const query = useQuery({ queryKey: ["protocol-counts"], queryFn: loadCounts, enabled: configured });
   return (
     <AppShell>

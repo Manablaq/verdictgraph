@@ -12,28 +12,32 @@ import { ConsensusTimeline } from "@/components/consensus-timeline";
 import { EvidenceTrustPanel } from "@/components/evidence-trust-panel";
 import { SnapshotNotice } from "@/components/snapshot-notice";
 import { StatusBadge } from "@/components/status-badge";
-import { getCoreAddress, readCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+  readAdjudicator,
+} from "@/lib/genlayer/client";
 import { asNumber, formatUnix, shortAddress } from "@/lib/format";
 import type { CaseRecord, EvidencePolicyRecord, EvidenceRecord, HandoffRecord, RevisionRecord, VerdictRecord, WorkflowRecord } from "@/lib/types";
 
 async function loadCase(id: number, stateStatus: "accepted" | "finalized") {
-  const caseRecord = await readCore<CaseRecord>("get_case", [BigInt(id)], stateStatus);
-  const workflow = await readCore<WorkflowRecord>("get_workflow", [caseRecord.workflow_id], stateStatus);
+  const caseRecord = await readAdjudicator<CaseRecord>("get_case", [BigInt(id)], stateStatus);
+  const workflow = await readRegistry<WorkflowRecord>("get_workflow", [caseRecord.workflow_id], stateStatus);
   const [policy, handoff, revision] = await Promise.all([
-    readCore<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus),
-    readCore<HandoffRecord>("get_handoff", [caseRecord.handoff_id], stateStatus),
-    readCore<RevisionRecord>("get_revision", [BigInt(id), caseRecord.current_revision], stateStatus),
+    readRegistry<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus),
+    readRegistry<HandoffRecord>("get_handoff", [caseRecord.handoff_id], stateStatus),
+    readAdjudicator<RevisionRecord>("get_revision", [BigInt(id), caseRecord.current_revision], stateStatus),
   ]);
   const evidence = await Promise.all(
     Array.from({ length: asNumber(revision.evidence_count) }, async (_, index) => {
       const evidenceId = asNumber(
-        await readCore<bigint>("get_revision_evidence_id", [BigInt(id), caseRecord.current_revision, BigInt(index)], stateStatus),
+        await readAdjudicator<bigint>("get_revision_evidence_id", [BigInt(id), caseRecord.current_revision, BigInt(index)], stateStatus),
       );
-      return { id: evidenceId, value: await readCore<EvidenceRecord>("get_evidence", [BigInt(evidenceId)], stateStatus) };
+      return { id: evidenceId, value: await readAdjudicator<EvidenceRecord>("get_evidence", [BigInt(evidenceId)], stateStatus) };
     }),
   );
   const verdict = asNumber(caseRecord.latest_verdict_id) > 0
-    ? await readCore<VerdictRecord>("get_verdict", [caseRecord.latest_verdict_id], stateStatus)
+    ? await readAdjudicator<VerdictRecord>("get_verdict", [caseRecord.latest_verdict_id], stateStatus)
     : null;
   return { caseRecord, workflow, policy, handoff, revision, evidence, verdict };
 }
@@ -51,7 +55,7 @@ function CaseContent() {
   const search = useSearchParams();
   const stateStatus: "accepted" | "finalized" = search.get("state") === "accepted" ? "accepted" : "finalized";
   const id = Number(params.id);
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const query = useQuery({
     queryKey: ["case", id, stateStatus],
     queryFn: () => loadCase(id, stateStatus),

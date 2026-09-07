@@ -6,17 +6,20 @@ import { ArrowRight, GitFork, Plus } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import { StatusBadge } from "@/components/status-badge";
-import { getCoreAddress, readCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+} from "@/lib/genlayer/client";
 import { asNumber, formatUnix, shortAddress } from "@/lib/format";
 import type { WorkflowRecord } from "@/lib/types";
 
 async function loadWorkflows() {
-  const count = asNumber(await readCore<bigint>("get_workflow_count"));
-  return Promise.all(Array.from({ length: count }, async (_, i) => ({ id: i + 1, value: await readCore<WorkflowRecord>("get_workflow", [BigInt(i + 1)]) })));
+  const count = asNumber(await readRegistry<bigint>("get_workflow_count"));
+  return Promise.all(Array.from({ length: count }, async (_, i) => ({ id: i + 1, value: await readRegistry<WorkflowRecord>("get_workflow", [BigInt(i + 1)]) })));
 }
 
 export default function WorkflowsPage() {
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const query = useQuery({ queryKey: ["workflows"], queryFn: loadWorkflows, enabled: configured });
   return (
     <AppShell>

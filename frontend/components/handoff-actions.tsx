@@ -16,10 +16,10 @@ import {
 import { toast } from "sonner";
 import { useState } from "react";
 import {
+  type ContractArgs,
   getVaultAddress,
+  writeRegistry,
   waitForFinalized,
-  writeCore,
-  type CoreArgs,
 } from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import {
@@ -73,10 +73,10 @@ export function HandoffActions({
     return null;
   }
 
-  async function runCoreFinality(
+  async function runRegistryFinality(
     busyKey: string,
     functionName: string,
-    args: CoreArgs,
+    args: ContractArgs,
     acceptedMessage: string,
     finalMessage: string,
   ) {
@@ -84,11 +84,11 @@ export function HandoffActions({
     if (!activeAccount) return;
     setBusy(busyKey);
     try {
-      const { hash } = await writeCore(activeAccount, functionName, args);
+      const { hash } = await writeRegistry(activeAccount, functionName, args);
       toast.message(acceptedMessage);
       const final = await waitForFinalized(hash);
       if (!final.executionSucceeded) {
-        throw new Error("Finalized Core transaction did not finish with return");
+        throw new Error("Finalized Registry transaction did not finish with return");
       }
       toast.success(finalMessage);
       await Promise.all([
@@ -96,14 +96,14 @@ export function HandoffActions({
         queryClient.invalidateQueries({ queryKey: ["workflow", workflowId] }),
       ]);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Core transaction failed");
+      toast.error(error instanceof Error ? error.message : "Registry transaction failed");
     } finally {
       setBusy(null);
     }
   }
 
   async function register() {
-    await runCoreFinality(
+    await runRegistryFinality(
       "register",
       "register_handoff_in_vault",
       [BigInt(handoffId)],
@@ -113,7 +113,7 @@ export function HandoffActions({
   }
 
   async function acceptDelivery() {
-    await runCoreFinality(
+    await runRegistryFinality(
       "accept-delivery",
       "accept_handoff_delivery",
       [BigInt(handoffId)],
@@ -123,7 +123,7 @@ export function HandoffActions({
   }
 
   async function retryCompletion() {
-    await runCoreFinality(
+    await runRegistryFinality(
       "retry-completion",
       "retry_handoff_completion",
       [BigInt(handoffId)],
@@ -133,12 +133,12 @@ export function HandoffActions({
   }
 
   async function syncCompletion() {
-    await runCoreFinality(
+    await runRegistryFinality(
       "sync-completion",
       "sync_handoff_vault_status",
       [BigInt(handoffId)],
       "Vault terminal-state sync accepted; waiting for finalization…",
-      "Core now records the terminal Vault state",
+      "Registry now records the terminal Vault state",
     );
   }
 

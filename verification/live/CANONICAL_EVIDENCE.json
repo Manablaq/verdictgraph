@@ -1,0 +1,111 @@
+{
+  "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
+  "files": [
+    {
+      "bytes": 570,
+      "path": "verification/live/stage4g-final-topology.txt",
+      "sha256": "b62fe68aeb2a6689359d884a0ec8bf1edf33e45c343fa6c97b85ba0eb5488fa1"
+    },
+    {
+      "bytes": 1013,
+      "path": "verification/live/stage4g-final-vault-deploy-receipt.json",
+      "sha256": "5aa32ba7232b15d8d4f4334a743b47656176ab0b6a071dd33b1ebb183a526de4"
+    },
+    {
+      "bytes": 1077,
+      "path": "verification/live/stage4w/case2-final.txt",
+      "sha256": "f6bc579e0af5bcbb9579314719b0a19393a83e2758300c67a012d56861ecfe28"
+    },
+    {
+      "bytes": 1446,
+      "path": "verification/live/stage4w/verdict2-final.txt",
+      "sha256": "f73d58226d40a49a0b13be4e9c81a65e8c4258476fe006e584dc5c848f2d5414"
+    },
+    {
+      "bytes": 66,
+      "path": "verification/live/stage4w/evidence-times.env",
+      "sha256": "9743e53c9b7f50b337f9a4b00f96af1f0a40ce508ac556ef511d6083a8dc5dbb"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4w/happy-retry-completion.tx",
+      "sha256": "dcebe21a43abd2f356d79c4894dbd6e9e988174bcb7b7c5e42ca9b1be0fe351e"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4w/evidence-a.tx",
+      "sha256": "960b6ce6ca5faeaaf8fe5aaefa08edf639ef6a6041e4d6d8ef158ed0cce2c66e"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4w/evidence-b.tx",
+      "sha256": "a0bbf88e50aa92c3e90d4864c3aeab729768c3fc3a08922c90a0ed33b9ea8b35"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4w/requester-ready.tx",
+      "sha256": "2d67d1742e5e257bff5c8353dbf3528e392c28fed51b68f58f78aab826873145"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4w/provider-ready.tx",
+      "sha256": "f4dcd45c2fea07a907debc31342012efaeb9152995863bc6e82dce1d11f9ad5d"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4w/resolve-case2.tx",
+      "sha256": "d9d7034b991f95e276e8847701382c1a72594dc4087af3b122f8483beb971993"
+    },
+    {
+      "bytes": 1077,
+      "path": "verification/live/stage4y/case2-prequeue.txt",
+      "sha256": "f6bc579e0af5bcbb9579314719b0a19393a83e2758300c67a012d56861ecfe28"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4y/queue-settlement-case2.tx",
+      "sha256": "a88d42485c121107d28afe8b3049888a55c6c43b24782237af81c9ca03b07928"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4y/queue-settlement-case2.outer-evm.tx",
+      "sha256": "e17cfb51d74154cc99290a006046dd456308625f22749157d64a964ca2b9e352"
+    },
+    {
+      "bytes": 960,
+      "path": "verification/live/stage4z/vault-logs.json",
+      "sha256": "bda3de560146783abfa048b21d211badd2e4073e7403189e503f70837cba6fd1"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4aa/PROVIDER-withdraw.tx",
+      "sha256": "bb6ca62b1d75da0ba630a80fad18dd2458d9ae82c7969672853131a3e1d0ca57"
+    },
+    {
+      "bytes": 1572,
+      "path": "verification/live/stage4aa/PROVIDER-withdraw.receipt.json",
+      "sha256": "20bc4bed60809f17343a8bd2e4d2491f6b333f8e6f7060da244b5daad54ade84"
+    },
+    {
+      "bytes": 67,
+      "path": "verification/live/stage4aa/REQUESTER-withdraw.tx",
+      "sha256": "084d8bb21379338d1ebe82f704b86ffe138154fbfa724fb8b71ade6ea5bcfa82"
+    },
+    {
+      "bytes": 1572,
+      "path": "verification/live/stage4aa/REQUESTER-withdraw.receipt.json",
+      "sha256": "3d93742141f35c297b32e838efd48d32ea14461945333ae5ca1829d7edc13f5e"
+    }
+  ],
+  "finality_record": {
+    "path": "deploy/bradbury.finality.json",
+    "sha256": "59212746a6fcf247e367324b78d2b4b2101d821b15ce46acfb3c4b298c92de7d"
+  },
+  "reviewer_source_set_sha256": "ae35cb8e4f26435d77dceb977c2192dff91830ac88b793e5bb1cc86f6e363864",
+  "schema": "verdictgraph-canonical-live-evidence-v1",
+  "scope": {
+    "historical_attempt_logs_included": false,
+    "network": "bradbury",
+    "purpose": "Minimal canonical reviewer evidence for the final deployed topology and fresh end-to-end economic proof."
+  }
+}

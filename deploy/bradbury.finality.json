@@ -1,0 +1,143 @@
+{
+  "addresses": {
+    "adjudicator": "0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
+    "registry": "0xCb031FbCEb219079608740fb77BC636F9447E7f5",
+    "vault": "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2"
+  },
+  "canonical_evidence": {
+    "case2_final": {
+      "path": "verification/live/stage4w/case2-final.txt",
+      "sha256": "f6bc579e0af5bcbb9579314719b0a19393a83e2758300c67a012d56861ecfe28"
+    },
+    "provider_withdraw_receipt": {
+      "path": "verification/live/stage4aa/PROVIDER-withdraw.receipt.json",
+      "sha256": "20bc4bed60809f17343a8bd2e4d2491f6b333f8e6f7060da244b5daad54ade84"
+    },
+    "requester_withdraw_receipt": {
+      "path": "verification/live/stage4aa/REQUESTER-withdraw.receipt.json",
+      "sha256": "3d93742141f35c297b32e838efd48d32ea14461945333ae5ca1829d7edc13f5e"
+    },
+    "topology": {
+      "path": "verification/live/stage4g-final-topology.txt",
+      "sha256": "b62fe68aeb2a6689359d884a0ec8bf1edf33e45c343fa6c97b85ba0eb5488fa1"
+    },
+    "vault_logs": {
+      "path": "verification/live/stage4z/vault-logs.json",
+      "sha256": "bda3de560146783abfa048b21d211badd2e4073e7403189e503f70837cba6fd1"
+    },
+    "verdict2_final": {
+      "path": "verification/live/stage4w/verdict2-final.txt",
+      "sha256": "f73d58226d40a49a0b13be4e9c81a65e8c4258476fe006e584dc5c848f2d5414"
+    }
+  },
+  "chain_id": 4221,
+  "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
+  "deployment": {
+    "adjudicator": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x89a572ef5a68b37c09353c1939b8785e8caa019294b18c9b785b2825d91c12c7"
+    },
+    "adjudicator_bind_vault": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x3ee2166841437cc933328ac7f500ca3d2c04ff96e5051a5facdecca64950e3d4"
+    },
+    "registry": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x115417d925140b03dddbea6e5a6137c846ddb0778e4b9d45641e1a7e9762c8d6"
+    },
+    "registry_bind_adjudicator": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0xaf07125aa16c94900629fadb7c88821a80c566278cc7e140cd25ee939be2b1e6"
+    },
+    "registry_bind_vault": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x714ea444b88affe6387206d824b57a32b56cf14b914ce767d76e5a9c8dd07866"
+    },
+    "vault": {
+      "evm_receipt_status": "0x1",
+      "transaction": "0x346da1c607bead1157cbfe0760b3bfb131bea922f311e9359ea109b6de14b321"
+    }
+  },
+  "final_economic_state": {
+    "disputed_handoff_4_status": 4,
+    "happy_handoff_3_status": 4,
+    "provider_claimable": 0,
+    "requester_claimable": 0,
+    "vault_native_balance": 0
+  },
+  "fresh_end_to_end_consensus": {
+    "evidence_a": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x1a6d5c2e20ebff549ebed6104db2c1ecb0f4ff9e518090085719bd253634df86"
+    },
+    "evidence_b": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0xfab6b231ce74af1e2054aa9bf044756239d485579adbb13dc364911335f5d8c4"
+    },
+    "happy_retry_completion": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0xe8f11cd43e963bc5dd6901d2cf29da98b9fe5c2eac8515671ec61c3f1f0f9b2c"
+    },
+    "provider_ready": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0xe1559f9e1c6d1a8db1df7112314e4faee9622dc78ce65c009aa284b45ee112f7"
+    },
+    "queue_settlement_case_2": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x0070d5452c6fd68d4ce2ef84c32b87172519dd1e8635e8f3d615425a2f9b6777"
+    },
+    "requester_ready": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0xf1afe4c9eaff8c020d6be4988030fb6af33bbbfe463a5e47342817478825c65a"
+    },
+    "resolve_case_2": {
+      "status": "Finalized",
+      "status_code": 7,
+      "transaction": "0x9091517e61232e68799613451e1a9b64dafeef634955a76035aaa85be064cb55"
+    }
+  },
+  "network": "bradbury",
+  "reviewer_source_set_sha256": "ae35cb8e4f26435d77dceb977c2192dff91830ac88b793e5bb1cc86f6e363864",
+  "reviewer_verification": {
+    "abi_gate": "passed",
+    "deployed_contract_source_modified": false,
+    "frontend_six_way_topology": "enforced",
+    "generic_core_frontend_api": "absent",
+    "manifest_file_count": 98,
+    "reviewer_gate": "152/152 passed"
+  },
+  "schema": "verdictgraph-bradbury-finality-v1",
+  "scope_note": "The deployed Registry, Adjudicator and Vault source remains bound to the deployment commit. The reviewer_source_set_sha256 separately binds the final frontend, configuration, scripts and reviewer-facing documentation.",
+  "six_way_topology": {
+    "adjudicator_to_registry": "0xCb031FbCEb219079608740fb77BC636F9447E7f5",
+    "adjudicator_to_vault": "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
+    "registry_to_adjudicator": "0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
+    "registry_to_vault": "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
+    "vault_to_adjudicator": "0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
+    "vault_to_registry": "0xCb031FbCEb219079608740fb77BC636F9447E7f5"
+  },
+  "verified_at": "2026-09-07T23:41:48Z",
+  "withdrawals": {
+    "provider": {
+      "block_number": "0x1409b32",
+      "evm_receipt_status": "0x1",
+      "transaction": "0xeb4f81ca0966127f8a33307b154cf1aebc7567e5815de42e9fb35a609b5079db"
+    },
+    "requester": {
+      "block_number": "0x1409b40",
+      "evm_receipt_status": "0x1",
+      "transaction": "0x158a5da046c6a15bf33c4d491fe0c9a3d61111c8c0b71813496eff8a54e79116"
+    }
+  }
+}

@@ -112,7 +112,7 @@ Stage 4E is **complete and verified on macOS**. Both split Intelligent Contract 
 
 See [`docs/BUILD_STATUS.md`](docs/BUILD_STATUS.md).
 
-Stage 4F live deployment is in progress. The Registry at `0x65c4acaD8Cfa4a531B5459e7C1f109443734860F` is Finalized. Adjudicator attempt 1 (`0x01b7edddf5dcda53a6d6ff2b3a2ee2da1b191148d1c03b9248d81dc80bc23ea4`) ended `FINISHED_WITH_ERROR`; proposed address `0xfdB5213510eEE10c6cC5f46842Ace79468a368B0` is invalid and must not be bound or used. The corrected Adjudicator artifact is 52,561 bytes with SHA-256 `d09c03112e0b3f42c5494bf9319f07f3813f001ba26f55f95807b8a814bf64a1`. Corrected redeployment and all subsequent bindings remain pending.
+Stage 4F through Stage 4AA live Bradbury verification is complete. The final deployed topology is Registry `0xCb031FbCEb219079608740fb77BC636F9447E7f5`, Adjudicator `0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`, and dual-controller Vault `0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`. Registry↔Adjudicator and both IC→Vault bindings were verified, and the Vault immutable controller getters point back to those exact IC addresses. Fresh happy-path and disputed handoffs reached terminal `SETTLED` state; the consequential settlement parent reached `Finalized` / status code `7`; both pull withdrawals succeeded; both claimable balances and final Vault balance are zero. The frontend now routes Registry and Adjudicator explicitly and fails closed unless all audited deployment addresses match.
 
 ## Submission rule
 

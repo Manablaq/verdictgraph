@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen, GitBranch, LayoutDashboard, Network, Plus, Scale, Settings2, Vault } from "lucide-react";
 import { WalletButton } from "./wallet-button";
-import { getCoreAddress } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+} from "@/lib/genlayer/client";
 
 const nav = [
   { href: "/app", label: "Overview", icon: LayoutDashboard },
@@ -17,7 +19,7 @@ const nav = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   return (
     <div className="min-h-screen bg-[#07090d] text-zinc-100">
       <header className="sticky top-0 z-50 border-b border-white/[.07] bg-[#07090d]/85 backdrop-blur-xl">

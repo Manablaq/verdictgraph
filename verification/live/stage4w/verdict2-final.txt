@@ -1,0 +1,22 @@
+[genlayer-js] initializeConsensusSmartContract() is deprecated and will be removed in a future release. The consensus contract is now resolved from the static chain definition.
+- Calling method get_verdict on contract at 0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868...
+
+Result:
+{
+  case_id: 2,
+  consequence_rule_id: 2,
+  decision: 'BREACH',
+  fault_class: 'VERIFICATION_FAILURE',
+  handoff_id: 4,
+  policy_fingerprint_sha256: '623b64d81ccc8411c997199fb298d1b37268ef7c8cc7f01e6b2f45368b2058dc',
+  policy_id: 1,
+  resolved_at: '2026-09-07T16:29:11Z',
+  revision_no: 1,
+  source_set_sha256: '65faf7b307b5190e0d541785e27252c14b9156d993b65e42e73d97ad36c52c21',
+  summary: 'The only delivered artifact shown is a package.json containing project metadata and scripts. The registered criterion requires a materially complete reviewer-compliance artifact for commit 0e2855d14e142edc6e215c5935f3993eee59be21, and the hash-verified evidence describes that artifact as including extensive compliance proof, verification status, deployment boundary details, and reviewer gates tied to that exact revision. On the registered evidence, the submitted package.json is incomplete and unrelated to the required compliance artifact, so this supports a material verification breach under rule 1.',
+  verdict_sha256: 'acfaf3ff570bcbb8cedc6ecd5b69263a6d50c1f22a085cc8743dec860142f846',
+  violated_rule_id: 1,
+  workflow_id: 2
+}
+
+✔ Read operation successfully executed

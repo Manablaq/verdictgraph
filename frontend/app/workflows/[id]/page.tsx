@@ -12,18 +12,21 @@ import { WorkflowGraph, type GraphHandoff } from "@/components/workflow-graph";
 import { WorkflowToolbar } from "@/components/workflow-toolbar";
 import { HandoffActions } from "@/components/handoff-actions";
 import { SnapshotNotice } from "@/components/snapshot-notice";
-import { getCoreAddress, readCore } from "@/lib/genlayer/client";
+import {
+  isProtocolConfigured,
+  readRegistry,
+} from "@/lib/genlayer/client";
 import { asNumber, formatGen, formatUnix, shortAddress } from "@/lib/format";
 import type { EvidencePolicyRecord, HandoffRecord, WorkflowRecord } from "@/lib/types";
 
 async function loadWorkflow(id: number, stateStatus: "accepted" | "finalized") {
-  const workflow = await readCore<WorkflowRecord>("get_workflow", [BigInt(id)], stateStatus);
-  const policy = await readCore<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus);
+  const workflow = await readRegistry<WorkflowRecord>("get_workflow", [BigInt(id)], stateStatus);
+  const policy = await readRegistry<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus);
   const handoffs = await Promise.all(Array.from({ length: asNumber(workflow.handoff_count) }, async (_, index) => {
-    const handoffId = asNumber(await readCore<bigint>("get_workflow_handoff", [BigInt(id), BigInt(index)], stateStatus));
-    const handoff = await readCore<HandoffRecord>("get_handoff", [BigInt(handoffId)], stateStatus);
-    const caseId = asNumber(await readCore<bigint>("get_handoff_case_id", [BigInt(handoffId)], stateStatus));
-    const dependencies = await Promise.all(Array.from({ length: asNumber(handoff.dependency_count) }, (_, dependencyIndex) => readCore<bigint>("get_handoff_dependency", [BigInt(handoffId), BigInt(dependencyIndex)], stateStatus).then(asNumber)));
+    const handoffId = asNumber(await readRegistry<bigint>("get_workflow_handoff", [BigInt(id), BigInt(index)], stateStatus));
+    const handoff = await readRegistry<HandoffRecord>("get_handoff", [BigInt(handoffId)], stateStatus);
+    const caseId = asNumber(await readRegistry<bigint>("get_handoff_case_id", [BigInt(handoffId)], stateStatus));
+    const dependencies = await Promise.all(Array.from({ length: asNumber(handoff.dependency_count) }, (_, dependencyIndex) => readRegistry<bigint>("get_handoff_dependency", [BigInt(handoffId), BigInt(dependencyIndex)], stateStatus).then(asNumber)));
     return { id: handoffId, value: handoff, caseId, dependencies };
   }));
   return { workflow, policy, handoffs };
@@ -42,7 +45,7 @@ function WorkflowDetailContent() {
   const search = useSearchParams();
   const stateStatus: "accepted" | "finalized" = search.get("state") === "accepted" ? "accepted" : "finalized";
   const id = Number(params.id);
-  const configured = Boolean(getCoreAddress());
+  const configured = Boolean(isProtocolConfigured());
   const query = useQuery({ queryKey: ["workflow", id, stateStatus], queryFn: () => loadWorkflow(id, stateStatus), enabled: configured && Number.isInteger(id) && id > 0 });
   const data = query.data;
   const graph: GraphHandoff[] = data?.handoffs.map(({ id: handoffId, value, caseId, dependencies }) => ({ id: handoffId, requester: value.requester, provider: value.provider, responsibility: value.responsibility, dependencies, caseId: caseId || undefined })) ?? [];

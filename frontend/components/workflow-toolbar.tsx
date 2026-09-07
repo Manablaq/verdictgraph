@@ -4,7 +4,10 @@ import { Archive, GitBranch, LoaderCircle, Play, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { waitForFinalized, writeCore } from "@/lib/genlayer/client";
+import {
+  writeRegistry,
+  waitForFinalized,
+} from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 
 export function WorkflowToolbar({
@@ -34,7 +37,7 @@ export function WorkflowToolbar({
     }
     setBusy(functionName);
     try {
-      const { hash } = await writeCore(account, functionName, [BigInt(workflowId)]);
+      const { hash } = await writeRegistry(account, functionName, [BigInt(workflowId)]);
       toast.message(`${label} accepted; waiting for finalization…`);
       const finalized = await waitForFinalized(hash);
       if (!finalized.executionSucceeded) {
