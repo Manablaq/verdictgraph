@@ -4,7 +4,7 @@ This file records the sources used to avoid version/API guessing during VerdictG
 
 ## GenLayer sources
 
-- Exact user-provided documentation snapshot: `genlayer-docs (1)(1).txt`, Library version 1, 19,846 lines, reviewed in full before this build.
+- A user-provided GenLayer documentation snapshot was reviewed in full before this build; public reproducibility is anchored to the pinned official source commits listed below rather than to a local snapshot filename.
 - Current official project boilerplate commit inspected: `e685f1f12c4c357787d48390692a654baf576f03`.
 - Official `genlayer-py` `v0.18` branch head: `a3dc35e04898e3889cbfa855bcaf7d2664675b8f`.
 - Official `genlayer-testing-suite` `v0.29` branch head: `9c09578b143905471fb0657dd53bdaf18da8e35f`.
@@ -33,11 +33,11 @@ This file records the sources used to avoid version/API guessing during VerdictG
 
 The latest published GitHub release is still v1.1.8, but that exact released source does not contain the current fee-aware write-estimation helpers. The current official source does. Because VerdictGraph emits finality-only EVM messages whose fees must be budgeted, the repository pins the exact verified current source commit rather than pretending the published artifact exposes APIs it does not have.
 
-This is an explicit, reproducible dependency choice. Before deployment, the exact pinned commit must be installed and the production build plus Bradbury fee paths must be executed successfully.
+This is an explicit, reproducible dependency choice. For the released build, the exact pinned commit was installed and the production build plus Bradbury fee paths were executed successfully; see `docs/BUILD_STATUS.md` and `deploy/public-hosting.finality.json`.
 
 ## Solidity baseline
 
-Current official GenLayer Solidity sources inspected during the build use `pragma solidity ^0.8.20` in the relevant contract set. VerdictGraph uses `^0.8.20` but does not claim compilation until a Solidity compiler is actually run against the source.
+Current official GenLayer Solidity sources inspected during the build use `pragma solidity ^0.8.20` in the relevant contract set. VerdictGraph uses `^0.8.20`. The final dual-controller Vault was compiled and tested with Solidity `0.8.20` under Foundry `1.8.1`; see `docs/BUILD_STATUS.md`.
 
 ## Rule for future edits
 

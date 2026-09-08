@@ -49,6 +49,18 @@ VerdictGraphVault.sol (GenLayer Chain / EVM)
 
 See [`docs/SPLIT_ARCHITECTURE_V1.md`](docs/SPLIT_ARCHITECTURE_V1.md).
 
+## Repository map
+
+- `contracts/verdict_graph_registry.py` and `contracts/verdict_graph_adjudicator.py` — canonical split Intelligent Contract sources.
+- `contracts/verdict_graph_registry_deploy.py` and `contracts/verdict_graph_adjudicator_deploy.py` — exact Bradbury deployment artifacts for the final split architecture.
+- `contracts/verdict_graph_core.py` and `contracts/verdict_graph_core_deploy.py` — retained historical single-Core artifacts; they are not the final deployed architecture.
+- `evm/contracts/VerdictGraphVault.sol` — final deterministic dual-controller custody and settlement contract.
+- `frontend/` — production Next.js client.
+- `docs/` — architecture, trust model, state machines, verification history, and reviewer-readiness documentation.
+- `verification/source-manifest.json` — deterministic reviewer source identity and deployment bindings.
+- `verification/live/CANONICAL_EVIDENCE.json` — canonical live-evidence index for the final Bradbury proof.
+- `deploy/` — machine-readable Bradbury finality and public-hosting records.
+
 ## Reviewer-derived hard gates
 
 - Approved issuer wallet addresses and approved HTTPS publisher boundaries are sealed into the evidence policy.
@@ -93,15 +105,11 @@ Vercel deployment ID: `dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS`.
 
 ## Verification commands
 
-Core historical baseline and current split preparation are reproducible through the staged scripts. The active split verification is:
+For the current committed reviewer package, run `npm run verify`.
 
-```bash
-bash scripts/mac_stage4e_split_architecture_verify.sh
-```
+The Stage 4E script is retained only for historical predeployment reproduction; it is not the canonical final-release verification command.
 
-That script is intentionally non-destructive: it re-verifies both split IC deployment artifacts, the Direct Mode suite, the dual-controller Vault, source/ABI integrity, and live Bradbury `eth_estimateGas` for both ICs with signing/sending blocked.
-
-## Current verification boundary
+## Verification history and current release boundary
 
 Completed before Stage 4E:
 

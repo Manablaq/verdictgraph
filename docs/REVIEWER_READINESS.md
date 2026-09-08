@@ -50,6 +50,8 @@ A submission is blocked if a required item below is false. Checked items are sup
 
 - [x] `scripts/reviewer_gate.py` passes: **152/152**.
 - [x] `scripts/verify_manifest.py` passes.
+- [x] Deterministic reviewer source identity and deployment bindings are persisted in `verification/source-manifest.json`.
+- [x] Canonical live-evidence navigation for the final Bradbury proof is persisted in `verification/live/CANONICAL_EVIDENCE.json`.
 - [x] GenVM validation passed on the exact deployed Registry and Adjudicator source.
 - [x] Direct Mode passed on the exact deployed split source.
 - [x] Solidity Vault compile/tests passed on the exact deployed Vault source.
@@ -77,3 +79,5 @@ The machine-readable finality record is `deploy/bradbury.finality.json`.
 - Adjudicator Explorer: `https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`
 - Vault Explorer: `https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
 - Public-hosting evidence: `deploy/public-hosting.finality.json`
+- Deterministic source manifest: `verification/source-manifest.json`
+- Canonical live-evidence index: `verification/live/CANONICAL_EVIDENCE.json`

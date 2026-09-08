@@ -9,9 +9,11 @@
     "dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
     "lint": "cd frontend && npm run lint",
-    "contract:lint": "genvm-lint check contracts/verdict_graph_core.py",
+    "contract:lint": "PATH=\"$PWD/.venv/bin:$PATH\" .venv/bin/genvm-lint check contracts/verdict_graph_registry_deploy.py && PATH=\"$PWD/.venv/bin:$PATH\" .venv/bin/genvm-lint check contracts/verdict_graph_adjudicator_deploy.py",
     "test:direct": "pytest tests/direct -v",
-    "gate": "python3 scripts/reviewer_gate.py && python3 scripts/abi_surface_gate.py && python3 scripts/verify_manifest.py"
+    "gate": "python3 scripts/reviewer_gate.py && python3 scripts/abi_surface_gate.py && python3 scripts/verify_manifest.py",
+    "contract:typecheck": "PATH=\"$PWD/.venv/bin:$PATH\" .venv/bin/genvm-lint typecheck contracts/verdict_graph_registry_deploy.py && PATH=\"$PWD/.venv/bin:$PATH\" .venv/bin/genvm-lint typecheck contracts/verdict_graph_adjudicator_deploy.py",
+    "verify": "npm run gate && python3 scripts/whitespace_gate.py"
   },
   "engines": {
     "node": "24.20.0",

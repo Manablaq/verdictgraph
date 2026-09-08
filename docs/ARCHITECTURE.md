@@ -60,13 +60,13 @@ The frontend is a client, never an adjudication authority. The production client
 
 The deployed client:
 
-- read finalized state or explicitly label latest-nonfinal state;
-- require `FINISHED_WITH_RETURN` before reporting accepted write execution success, and require finality before presenting irreversible economic outcomes;
-- use the exact pinned fee-aware GenLayerJS commit and simulation-backed fee estimation;
-- preserve child-message fee allocations;
-- use direct EVM transactions for Vault funding/bond/recovery/withdrawal;
-- expose initialization, delivery, authority, evidence, repair, retry, finality and Vault terminal state;
-- never substitute unlabeled illustrative data for missing chain state.
+- reads finalized state or explicitly labels latest-nonfinal state;
+- requires `FINISHED_WITH_RETURN` before reporting accepted write execution success, and requires finality before presenting irreversible economic outcomes;
+- uses the exact pinned fee-aware GenLayerJS commit and simulation-backed fee estimation;
+- preserves child-message fee allocations;
+- uses direct EVM transactions for Vault funding/bond/recovery/withdrawal;
+- exposes initialization, delivery, authority, evidence, repair, retry, finality and Vault terminal state;
+- never substitutes unlabeled illustrative data for missing chain state.
 
 ## Successful-handoff lifecycle
 
@@ -137,4 +137,4 @@ No model-selected arithmetic, percentages, tolerance bands or confidence-based p
 6. Independently verify both immutable Vault controller getters and the complete reciprocal Registry/Adjudicator/Vault topology.
 7. Verify finalized reads, code/source hashes and deployment records before enabling the frontend.
 
-Stage 4E performs no deployment; it first requires live no-send Bradbury gas-estimation acceptance for both exact IC deployment artifacts.
+Historical Stage 4E performed no deployment; it required live no-send Bradbury gas-estimation acceptance for both exact IC deployment artifacts before the later Bradbury deployment stages. The final deployed topology and transaction evidence are recorded in `deploy/bradbury.finality.json`.
