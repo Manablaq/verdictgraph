@@ -1,6 +1,6 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-08T01:50:14.033036+00:00",
+  "generated_at": "2026-09-08T01:59:49.398933+00:00",
   "source_set_sha256": "6212fe14bf1671b1b19fa697cc7bdf2a605c0ff3b645fedb4c5eb15595d82075",
   "files": {
     ".gitignore": {
@@ -409,7 +409,7 @@
     "immutable_frontend_url": "https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app",
     "vercel_deployment_id": "dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta",
     "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
-    "reviewer_source_commit": null,
-    "git_commit": null
+    "reviewer_source_commit": "4bca79240a873bae8d31edb860fe08cc5d03ca0e",
+    "git_commit": "4bca79240a873bae8d31edb860fe08cc5d03ca0e"
   }
 }
