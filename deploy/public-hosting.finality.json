@@ -1,14 +1,14 @@
 {
   "schema": "verdictgraph-public-hosting-finality-v1",
   "vercel_project_id": "prj_tVk4giE3TKaEHRV8MWtL0l7Zv7sa",
-  "deployment_id": "dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta",
-  "deployment_created_at_utc": "2026-09-08T01:00:45.687Z",
+  "deployment_id": "dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS",
+  "deployment_created_at_utc": "2026-09-08T03:49:07.411Z",
   "state": "READY",
   "target": "production",
-  "public_url": "https://verdictgraph-mr-albert-s-projects.vercel.app",
-  "immutable_url": "https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app",
+  "public_url": "https://verdictgraph.vercel.app",
+  "immutable_url": "https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app",
   "sso_protection": null,
-  "total_deployment_count": 4,
+  "total_deployment_count": 5,
   "public_routes_verified_http_200": [
     "/",
     "/app",
@@ -18,15 +18,16 @@
     "/workflows",
     "/create"
   ],
-  "public_access_verified_at_utc": "2026-09-08T01:29:14Z",
+  "public_access_verified_at_utc": "2026-09-08T04:05:39Z",
   "runtime_errors_observed": false,
-  "public_deployment_source_commit": "2526b91fcc648cfdd1a93042b91c2f248c68b3cb",
-  "source_archive_sha256": "a1c7fe234bd5ebf70600b8f67a77ede2aad0c17578fd5cd46e9a8120f1b5b55f",
-  "prebuilt_output_sha256": "96599d01649f6eb8540404e500e08131c8dd482cbcd2b81f9304dd322f189ed9",
-  "prebuilt_file_count": 174,
+  "public_deployment_source_commit": "46b636ffd4449234362d7cc78a8a0242a62ac755",
+  "source_archive_sha256": "6b1a4e7b111cd316ee47709a52cb482f04634328c6db0741982f5787eff05bf7",
+  "prebuilt_output_sha256": "2dee9df8e88eea3cff65211544fdaed948e7be5851c7c0d1b11b490a60309124",
+  "prebuilt_file_count": 242,
   "notes": [
-    "Vercel automatically assigned the project public alias during the successful prebuilt production deployment.",
-    "Vercel Authentication was disabled without creating another deployment.",
-    "A transient edge-propagation SSO redirect on /setup cleared before final public route verification."
+    "The production frontend was deployed from the exact source-bearing commit and frozen local Vercel prebuilt artifact recorded in this file.",
+    "The clean public alias verdictgraph.vercel.app was assigned to the already-verified immutable deployment without creating another deployment.",
+    "The hosted wallet chooser and connected-account UX were manually verified on the production release; final clean and immutable public route checks returned HTTP 200.",
+    "No Vercel Authentication or SSO barrier was encountered during final public-access verification."
   ]
 }
