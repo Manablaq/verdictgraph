@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-08T01:59:49.398933+00:00",
-  "source_set_sha256": "6212fe14bf1671b1b19fa697cc7bdf2a605c0ff3b645fedb4c5eb15595d82075",
+  "generated_at": "2026-09-08T03:23:17.781525+00:00",
+  "source_set_sha256": "7d505c62811ffdddbc7a2e289bf7c38ad62e131ea43fe058465b9a6eb46496fd",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -128,8 +128,8 @@
       "bytes": 3678
     },
     "frontend/app/globals.css": {
-      "sha256": "91d96db8930a3cd0644bb373cd8a6da0742c925e7829318fab487ed61750f8ae",
-      "bytes": 729
+      "sha256": "8f4882c45643128e78ba34de5b05dd236362e0250e803265fde25bf0a6913bf9",
+      "bytes": 713
     },
     "frontend/app/layout.tsx": {
       "sha256": "279821052a9f8a04e3a01666652a035f0378accfed0dea495b7402c4c5c11f9a",
@@ -216,8 +216,8 @@
       "bytes": 1087
     },
     "frontend/components/wallet-button.tsx": {
-      "sha256": "be1b1a1f8d7aef66f4ca23dfb317e9cb01240d294e4c084eb5f91250551b0a1a",
-      "bytes": 874
+      "sha256": "8433666d318dca5028dcf1cbadcf1a19a82b08d938744b34dcc22ee1a68be285",
+      "bytes": 18918
     },
     "frontend/components/workflow-graph.tsx": {
       "sha256": "906b6892db65a2584ac181e67f42c60be8a06229a4156fe15cb72c0276fbff67",
@@ -232,16 +232,16 @@
       "bytes": 967
     },
     "frontend/lib/genlayer/client.ts": {
-      "sha256": "6d10da31d469bc933d1f88f215c86d37b41304722a3ee52e56e50ceb2d66ef58",
-      "bytes": 7031
+      "sha256": "1aa552b8daa2ef00e353ad628619d7bb61da7bb64e20d2fa0b578f349388f505",
+      "bytes": 15034
     },
     "frontend/lib/genlayer/vault.ts": {
       "sha256": "1a468b297a57a2eed5e8c2672c1a5940ac18c68401a8d6efee0ca25a259e3c8a",
       "bytes": 6623
     },
     "frontend/lib/genlayer/wallet-context.tsx": {
-      "sha256": "055687fc5bcb428cfdbd9bb3bb4ab96b440ed81cbc38f4230347a40dbb9bbcbc",
-      "bytes": 1718
+      "sha256": "14b07c1e362d1120cdc161b9f9962f5d811422779b5f05e61fa8a7a54414381a",
+      "bytes": 8621
     },
     "frontend/lib/hash.ts": {
       "sha256": "1bc67b26827562d9e8ee8b2c60f6eb949bf6292594597b6d08b5309819436a61",
@@ -409,7 +409,7 @@
     "immutable_frontend_url": "https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app",
     "vercel_deployment_id": "dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta",
     "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
-    "reviewer_source_commit": "4bca79240a873bae8d31edb860fe08cc5d03ca0e",
-    "git_commit": "4bca79240a873bae8d31edb860fe08cc5d03ca0e"
+    "reviewer_source_commit": null,
+    "git_commit": null
   }
 }

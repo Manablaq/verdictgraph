@@ -17,8 +17,14 @@ export type ContractArgs = CalldataEncodable[];
 interface EthereumProvider {
   request(args: {
     method: string;
-    params?: unknown[];
+    params?: unknown[] | Record<string, unknown>;
   }): Promise<unknown>;
+
+  isMetaMask?: boolean;
+  isRabby?: boolean;
+  isBraveWallet?: boolean;
+  isCoinbaseWallet?: boolean;
+  providers?: EthereumProvider[];
 
   on?(
     event: string,
@@ -36,6 +42,28 @@ declare global {
     ethereum?: EthereumProvider;
   }
 }
+
+export type WalletOption = {
+  id: string;
+  name: string;
+  rdns: string;
+  icon: string | null;
+  provider: EthereumProvider;
+  isMetaMask: boolean;
+};
+
+type Eip6963ProviderDetail = {
+  info: {
+    uuid: string;
+    name: string;
+    icon: string;
+    rdns: string;
+  };
+  provider: EthereumProvider;
+};
+
+let activeEthereumProvider:
+  EthereumProvider | null = null;
 
 export const BRADBURY_RPC =
   "https://rpc-bradbury.genlayer.com";
@@ -68,7 +96,8 @@ function exactAddress(
     return null;
   }
 
-  return value.toLowerCase() === expected.toLowerCase()
+  return value.toLowerCase() ===
+    expected.toLowerCase()
     ? expected
     : null;
 }
@@ -104,17 +133,205 @@ export function isProtocolConfigured(): boolean {
   return Boolean(
     getRegistryAddress() &&
     getAdjudicatorAddress() &&
-    getVaultAddress()
+    getVaultAddress(),
+  );
+}
+
+function trueMetaMask(
+  provider: EthereumProvider,
+): boolean {
+  return Boolean(
+    provider.isMetaMask &&
+    !provider.isRabby &&
+    !provider.isBraveWallet,
+  );
+}
+
+function legacyIdentity(
+  provider: EthereumProvider,
+  index: number,
+) {
+  if (provider.isRabby) {
+    return {
+      name: "Rabby Wallet",
+      rdns: "io.rabby",
+    };
+  }
+
+  if (provider.isCoinbaseWallet) {
+    return {
+      name: "Coinbase Wallet",
+      rdns: "com.coinbase.wallet",
+    };
+  }
+
+  if (provider.isBraveWallet) {
+    return {
+      name: "Brave Wallet",
+      rdns: "com.brave.wallet",
+    };
+  }
+
+  if (trueMetaMask(provider)) {
+    return {
+      name: "MetaMask",
+      rdns: "io.metamask",
+    };
+  }
+
+  return {
+    name:
+      index === 0
+        ? "Browser wallet"
+        : `Browser wallet ${index + 1}`,
+    rdns: `injected.${index}`,
+  };
+}
+
+export async function discoverWallets():
+  Promise<WalletOption[]> {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const wallets: WalletOption[] = [];
+  const seen =
+    new Set<EthereumProvider>();
+
+  const add = (
+    provider: EthereumProvider,
+    info: {
+      id: string;
+      name: string;
+      rdns: string;
+      icon?: string | null;
+    },
+  ) => {
+    if (seen.has(provider)) {
+      return;
+    }
+
+    seen.add(provider);
+
+    wallets.push({
+      id: info.id,
+      name: info.name,
+      rdns: info.rdns,
+      icon:
+        info.icon?.startsWith("data:image/")
+          ? info.icon
+          : null,
+      provider,
+      isMetaMask:
+        info.rdns.toLowerCase() ===
+          "io.metamask" ||
+        trueMetaMask(provider),
+    });
+  };
+
+  const onProvider = (event: Event) => {
+    const detail = (
+      event as CustomEvent<Eip6963ProviderDetail>
+    ).detail;
+
+    if (
+      !detail?.provider ||
+      !detail?.info
+    ) {
+      return;
+    }
+
+    add(
+      detail.provider,
+      {
+        id:
+          detail.info.uuid ||
+          detail.info.rdns,
+        name:
+          detail.info.name ||
+          "Browser wallet",
+        rdns:
+          detail.info.rdns ||
+          "injected",
+        icon:
+          detail.info.icon,
+      },
+    );
+  };
+
+  window.addEventListener(
+    "eip6963:announceProvider",
+    onProvider,
+  );
+
+  window.dispatchEvent(
+    new Event("eip6963:requestProvider"),
+  );
+
+  await new Promise<void>(
+    (resolve) =>
+      window.setTimeout(resolve, 250),
+  );
+
+  window.removeEventListener(
+    "eip6963:announceProvider",
+    onProvider,
+  );
+
+  const root = window.ethereum;
+
+  if (root) {
+    const legacy =
+      Array.isArray(root.providers) &&
+      root.providers.length > 0
+        ? root.providers
+        : [root];
+
+    legacy.forEach(
+      (provider, index) => {
+        const identity =
+          legacyIdentity(
+            provider,
+            index,
+          );
+
+        add(
+          provider,
+          {
+            id:
+              `${identity.rdns}:legacy:${index}`,
+            name:
+              identity.name,
+            rdns:
+              identity.rdns,
+            icon:
+              null,
+          },
+        );
+      },
+    );
+  }
+
+  return wallets.sort(
+    (a, b) => {
+      if (a.isMetaMask !== b.isMetaMask) {
+        return a.isMetaMask ? -1 : 1;
+      }
+
+      return a.name.localeCompare(
+        b.name,
+      );
+    },
   );
 }
 
 export function getEthereumProvider():
   EthereumProvider | null {
-  if (typeof window === "undefined") {
-    return null;
-  }
+  return activeEthereumProvider;
+}
 
-  return window.ethereum ?? null;
+export function clearActiveWallet() {
+  activeEthereumProvider = null;
 }
 
 export const readClient = createClient({
@@ -124,11 +341,12 @@ export const readClient = createClient({
 export function createWriteClient(
   account: HexAddress,
 ) {
-  const provider = getEthereumProvider();
+  const provider =
+    getEthereumProvider();
 
   if (!provider) {
     throw new Error(
-      "No injected wallet provider found",
+      "No wallet is connected to VerdictGraph.",
     );
   }
 
@@ -139,38 +357,277 @@ export function createWriteClient(
   });
 }
 
-export async function connectWallet():
-  Promise<HexAddress> {
-  const provider = getEthereumProvider();
+const GENLAYER_SNAP_ID =
+  "npm:genlayer-wallet-plugin";
 
-  if (!provider) {
-    throw new Error(
-      "No injected wallet provider found",
-    );
+function walletErrorCode(
+  error: unknown,
+): number | null {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error
+  ) {
+    const value = (
+      error as {
+        code?: unknown;
+      }
+    ).code;
+
+    if (
+      typeof value === "number"
+    ) {
+      return value;
+    }
+
+    if (
+      typeof value === "string" &&
+      /^-?\d+$/.test(value)
+    ) {
+      return Number(value);
+    }
   }
 
-  const accounts = (
-    await provider.request({
-      method: "eth_requestAccounts",
-    })
-  ) as string[];
+  return null;
+}
+
+function walletErrorMessage(
+  error: unknown,
+): string {
+  if (
+    error instanceof Error &&
+    error.message
+  ) {
+    return error.message;
+  }
 
   if (
-    !accounts?.[0] ||
-    !/^0x[a-fA-F0-9]{40}$/.test(accounts[0])
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error
   ) {
+    const value = (
+      error as {
+        message?: unknown;
+      }
+    ).message;
+
+    if (
+      typeof value === "string" &&
+      value
+    ) {
+      return value;
+    }
+  }
+
+  return "Wallet connection failed";
+}
+
+async function ensureBradburyNetwork(
+  provider: EthereumProvider,
+) {
+  const chainId =
+    `0x${BRADBURY_CHAIN_ID.toString(16)}`;
+
+  const current = String(
+    await provider.request({
+      method: "eth_chainId",
+    }),
+  ).toLowerCase();
+
+  if (current === chainId) {
+    return;
+  }
+
+  try {
+    await provider.request({
+      method:
+        "wallet_switchEthereumChain",
+      params: [{ chainId }],
+    });
+  } catch (error) {
+    const code =
+      walletErrorCode(error);
+
+    if (code === 4001) {
+      throw new Error(
+        "Bradbury network switch was rejected.",
+      );
+    }
+
+    if (code !== 4902) {
+      throw new Error(
+        "This wallet could not switch to Bradbury. " +
+        walletErrorMessage(error),
+      );
+    }
+
+    await provider.request({
+      method:
+        "wallet_addEthereumChain",
+      params: [
+        {
+          chainId,
+          chainName:
+            testnetBradbury.name,
+          rpcUrls: [
+            BRADBURY_RPC,
+          ],
+          nativeCurrency:
+            testnetBradbury
+              .nativeCurrency,
+          blockExplorerUrls: [
+            BRADBURY_EXPLORER,
+          ],
+        },
+      ],
+    });
+
+    await provider.request({
+      method:
+        "wallet_switchEthereumChain",
+      params: [{ chainId }],
+    });
+  }
+
+  const verified = String(
+    await provider.request({
+      method: "eth_chainId",
+    }),
+  ).toLowerCase();
+
+  if (verified !== chainId) {
     throw new Error(
-      "Wallet did not return a valid account",
+      "Wallet did not switch to Bradbury.",
+    );
+  }
+}
+
+async function ensureGenLayerSnap(
+  provider: EthereumProvider,
+) {
+  let installed:
+    Record<
+      string,
+      { id?: string }
+    >;
+
+  try {
+    installed = (
+      await provider.request({
+        method:
+          "wallet_getSnaps",
+      })
+    ) as Record<
+      string,
+      { id?: string }
+    >;
+  } catch (error) {
+    throw new Error(
+      "MetaMask is connected, but its Snaps API is unavailable. " +
+      "Use a MetaMask version that supports Snaps. " +
+      walletErrorMessage(error),
     );
   }
 
-  const account = accounts[0] as HexAddress;
+  const installedAlready =
+    Object.values(
+      installed ?? {},
+    ).some(
+      (snap) =>
+        snap?.id ===
+        GENLAYER_SNAP_ID,
+    );
 
-  const client = createWriteClient(account);
+  if (installedAlready) {
+    return;
+  }
 
-  await client.connect("testnetBradbury");
+  try {
+    await provider.request({
+      method:
+        "wallet_requestSnaps",
+      params: {
+        [GENLAYER_SNAP_ID]:
+          {},
+      },
+    });
+  } catch (error) {
+    if (
+      walletErrorCode(error) ===
+      4001
+    ) {
+      throw new Error(
+        "GenLayer Snap installation was rejected.",
+      );
+    }
 
-  return account;
+    throw new Error(
+      "Could not install the GenLayer wallet Snap. " +
+      walletErrorMessage(error),
+    );
+  }
+}
+
+export async function connectWallet(
+  wallet: WalletOption,
+): Promise<HexAddress> {
+  const provider =
+    wallet.provider;
+
+  try {
+    const accounts = (
+      await provider.request({
+        method:
+          "eth_requestAccounts",
+      })
+    ) as string[];
+
+    const candidate =
+      accounts?.[0];
+
+    if (
+      !candidate ||
+      !/^0x[a-fA-F0-9]{40}$/.test(
+        candidate,
+      )
+    ) {
+      throw new Error(
+        `${wallet.name} did not return a valid account.`,
+      );
+    }
+
+    await ensureBradburyNetwork(
+      provider,
+    );
+
+    /*
+     * MetaMask follows GenLayer's
+     * published Snap integration.
+     *
+     * Other EIP-1193 providers are
+     * kept on the standard provider
+     * signing path used by the pinned
+     * GenLayer SDK transport.
+     */
+    if (wallet.isMetaMask) {
+      await ensureGenLayerSnap(
+        provider,
+      );
+    }
+
+    activeEthereumProvider =
+      provider;
+
+    return candidate as HexAddress;
+  } catch (error) {
+    activeEthereumProvider =
+      null;
+
+    throw new Error(
+      walletErrorMessage(error),
+    );
+  }
 }
 
 async function readAt<T>(
