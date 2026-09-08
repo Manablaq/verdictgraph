@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-08T04:05:39.716444+00:00",
-  "source_set_sha256": "7d505c62811ffdddbc7a2e289bf7c38ad62e131ea43fe058465b9a6eb46496fd",
+  "generated_at": "2026-09-08T05:11:07.864815+00:00",
+  "source_set_sha256": "e6d2383337440decbd1e01c9f4c91d07636e7fc053724885d46727ff04646916",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -16,8 +16,8 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "9b6538d4d7c30510d49730246f8a5cb3bd3ccdfc8cea20acc1fb5333fc1e7342",
-      "bytes": 9935
+      "sha256": "41a004ea69c50464a230e34e2a476273494c5ae89413f84b75aad49e5e5e148a",
+      "bytes": 9851
     },
     "contracts/verdict_graph_adjudicator.py": {
       "sha256": "973c13d882341a53b3f0e2712c0b64a4cf76f0fb1006fdb226186ebe70f82149",
@@ -48,20 +48,20 @@
       "bytes": 1036
     },
     "docs/ARCHITECTURE.md": {
-      "sha256": "f48fd8d4ebfdf3160097340277b9e9ff00a2f577fd5a798af83f88d8cae0fcae",
-      "bytes": 6565
+      "sha256": "d58b12510fb3b444d9d5124b0daa3e1356dda8edd985169f8559eb75e3f77494",
+      "bytes": 6947
     },
     "docs/BUILD_STATUS.md": {
-      "sha256": "13a72660ad7696a106e97f49e751a095c2092f2812c928cd1dc5534d8643a2d5",
-      "bytes": 9491
+      "sha256": "e35160771575474057b6195bf4652dd3e0b5bde8e5e325e91bd975263b87aabf",
+      "bytes": 9521
     },
     "docs/REVIEWER_READINESS.md": {
-      "sha256": "88a7814da6aa1af595eb0e7f5ec0dce089e91c772f13cf6ccd62746816caa0b7",
-      "bytes": 5369
+      "sha256": "531aea209b67b880f9674ab0a708cfe9627fa812039193425f8bce3b92d8cf23",
+      "bytes": 5413
     },
     "docs/SPLIT_ARCHITECTURE_V1.md": {
-      "sha256": "e8fb91c0465a765d64ae8d52df69d144c70ef0d5fec9d8c466b5e9dd7fc9b642",
-      "bytes": 3181
+      "sha256": "7eb96f202a1fb579be954784af250629d92469f0bc0593e9b14c75576e4f3395",
+      "bytes": 3481
     },
     "docs/STATE_MACHINE.md": {
       "sha256": "c5b03c3c4cbdd1ae0c89fa4904f35b551ad77c48e10deff34906e6c30bba6ff2",
@@ -409,7 +409,7 @@
     "immutable_frontend_url": "https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app",
     "vercel_deployment_id": "dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS",
     "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
-    "reviewer_source_commit": "46b636ffd4449234362d7cc78a8a0242a62ac755",
-    "git_commit": "46b636ffd4449234362d7cc78a8a0242a62ac755"
+    "reviewer_source_commit": "4048cfff4ef9bf9d8ed0f57c0ac767a79a3ef921",
+    "git_commit": "4048cfff4ef9bf9d8ed0f57c0ac767a79a3ef921"
   }
 }
