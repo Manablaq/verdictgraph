@@ -85,11 +85,11 @@ See [`docs/VERIFIED_BASELINE.md`](docs/VERIFIED_BASELINE.md).
 
 The frontend is migrated to explicit Registry + Adjudicator clients, hard-locks the exact audited Bradbury Registry, Adjudicator and Vault addresses, defaults protocol reads to finalized state, and verifies the full six-way deployment topology before Vault operations.
 
-Public production frontend: [https://verdictgraph-mr-albert-s-projects.vercel.app](https://verdictgraph-mr-albert-s-projects.vercel.app)
+Public production frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
 
-Immutable Vercel deployment: [https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app](https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app)
+Immutable Vercel deployment: [https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app](https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app)
 
-Vercel deployment ID: `dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta`.
+Vercel deployment ID: `dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS`.
 
 ## Verification commands
 
@@ -124,7 +124,7 @@ Stage 4F through Stage 4AA live Bradbury verification is complete. The final dep
 
 Use only these final public links:
 
-- Frontend: [https://verdictgraph-mr-albert-s-projects.vercel.app](https://verdictgraph-mr-albert-s-projects.vercel.app)
+- Frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
 - Registry: [https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5](https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5)
 - Adjudicator: [https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868](https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868)
 - Vault: [https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2](https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2)

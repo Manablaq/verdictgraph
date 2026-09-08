@@ -52,16 +52,16 @@ It also provides:
 - neutral deadline recovery via `recover_unactivated` / `recover_active`;
 - pull withdrawals with local reentrancy protection.
 
-Both ICs refuse to bind an arbitrary Vault. Registry and Adjudicator each synchronously read **both** immutable controller getters and require them to match the exact deployed Registry and Adjudicator ghost addresses.
+Registry and Adjudicator expose owner-only, one-shot Vault bindings. The Vault itself is the authoritative EVM authorization boundary: its immutable `registry_core` and `adjudicator_core` controllers restrict consequential calls. Deployment verification proves those immutables match the exact deployed Registry and Adjudicator ghost addresses, and the frontend re-verifies the full six-way topology before Vault operations.
 
 ## Frontend
 
-The frontend is a client, never an adjudication authority. The Stage-3 production build is verified, but its current wiring still targets the historical single-Core interface. Split Registry/Adjudicator client migration and browser E2E are required before live deployment/submission parity can be claimed.
+The frontend is a client, never an adjudication authority. The production client is migrated to the explicit split Registry/Adjudicator architecture, hard-locks the exact audited Registry, Adjudicator and Vault addresses, defaults protocol reads to finalized state, and re-verifies the full six-way topology before Vault operations.
 
-The final client must:
+The deployed client:
 
 - read finalized state or explicitly label latest-nonfinal state;
-- require `FINISHED_WITH_RETURN` as well as consensus finality for successful writes;
+- require `FINISHED_WITH_RETURN` before reporting accepted write execution success, and require finality before presenting irreversible economic outcomes;
 - use the exact pinned fee-aware GenLayerJS commit and simulation-backed fee estimation;
 - preserve child-message fee allocations;
 - use direct EVM transactions for Vault funding/bond/recovery/withdrawal;
@@ -133,8 +133,8 @@ No model-selected arithmetic, percentages, tolerance bands or confidence-based p
 2. Deploy Adjudicator with the exact Registry address.
 3. Registry binds Adjudicator after verifying its immutable Registry back-reference.
 4. Deploy Vault with exact Registry and Adjudicator ghost addresses.
-5. Registry binds Vault and verifies both controller getters.
-6. Adjudicator binds Vault and verifies both controller getters.
+5. Registry and Adjudicator perform their owner-only, one-shot Vault bindings.
+6. Independently verify both immutable Vault controller getters and the complete reciprocal Registry/Adjudicator/Vault topology.
 7. Verify finalized reads, code/source hashes and deployment records before enabling the frontend.
 
 Stage 4E performs no deployment; it first requires live no-send Bradbury gas-estimation acceptance for both exact IC deployment artifacts.

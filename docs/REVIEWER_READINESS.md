@@ -58,7 +58,7 @@ A submission is blocked if a required item below is false. Checked items are sup
 - [x] Deployed contract source is byte-stable relative to deployment commit `0e2855d14e142edc6e215c5935f3993eee59be21`; post-deployment frontend/docs work does not modify contract source.
 - [x] Frontend accepts only the exact final Registry, Adjudicator and Vault addresses and verifies all six topology edges.
 - [x] Final public frontend and Bradbury Explorer address links were rechecked during final packaging and point only to the exact audited deployments.
-- [x] Public production frontend is `https://verdictgraph-mr-albert-s-projects.vercel.app`, backed by READY production deployment `dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta`.
+- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS` from exact deployed frontend source commit `46b636ffd4449234362d7cc78a8a0242a62ac755`.
 - [x] Public-hosting evidence is persisted in `deploy/public-hosting.finality.json`.
 - [ ] The external submission form itself must be populated with the exact final links below immediately before the user submits it.
 
@@ -72,7 +72,7 @@ The machine-readable finality record is `deploy/bradbury.finality.json`.
 
 ## Final public links
 
-- Frontend: `https://verdictgraph-mr-albert-s-projects.vercel.app`
+- Frontend: `https://verdictgraph.vercel.app`
 - Registry Explorer: `https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5`
 - Adjudicator Explorer: `https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`
 - Vault Explorer: `https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
