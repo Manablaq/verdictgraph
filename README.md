@@ -83,7 +83,13 @@ See [`docs/VERIFIED_BASELINE.md`](docs/VERIFIED_BASELINE.md).
 
 ## App routes
 
-The existing frontend routes remain implemented, but frontend wiring is still based on the pre-split single-Core client and **must be adapted to Registry + Adjudicator before deployment**. No submission or live deployment should claim split-architecture frontend parity until that work and browser E2E are complete.
+The frontend is migrated to explicit Registry + Adjudicator clients, hard-locks the exact audited Bradbury Registry, Adjudicator and Vault addresses, defaults protocol reads to finalized state, and verifies the full six-way deployment topology before Vault operations.
+
+Public production frontend: [https://verdictgraph-mr-albert-s-projects.vercel.app](https://verdictgraph-mr-albert-s-projects.vercel.app)
+
+Immutable Vercel deployment: [https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app](https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app)
+
+Vercel deployment ID: `dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta`.
 
 ## Verification commands
 
@@ -114,6 +120,17 @@ See [`docs/BUILD_STATUS.md`](docs/BUILD_STATUS.md).
 
 Stage 4F through Stage 4AA live Bradbury verification is complete. The final deployed topology is Registry `0xCb031FbCEb219079608740fb77BC636F9447E7f5`, Adjudicator `0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`, and dual-controller Vault `0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`. Registry↔Adjudicator and both IC→Vault bindings were verified, and the Vault immutable controller getters point back to those exact IC addresses. Fresh happy-path and disputed handoffs reached terminal `SETTLED` state; the consequential settlement parent reached `Finalized` / status code `7`; both pull withdrawals succeeded; both claimable balances and final Vault balance are zero. The frontend now routes Registry and Adjudicator explicitly and fails closed unless all audited deployment addresses match.
 
+## Reviewer submission links
+
+Use only these final public links:
+
+- Frontend: [https://verdictgraph-mr-albert-s-projects.vercel.app](https://verdictgraph-mr-albert-s-projects.vercel.app)
+- Registry: [https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5](https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5)
+- Adjudicator: [https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868](https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868)
+- Vault: [https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2](https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2)
+- Machine-readable Bradbury finality: [`deploy/bradbury.finality.json`](deploy/bradbury.finality.json)
+- Machine-readable public-hosting evidence: [`deploy/public-hosting.finality.json`](deploy/public-hosting.finality.json)
+
 ## Submission rule
 
-Submission remains blocked until repository source, deterministic manifest, deployed Registry/Adjudicator/Vault artifacts, Explorer evidence, frontend addresses, finalized execution evidence, and submission links all refer to the exact same verified revision.
+The repository, deterministic source-set identity, deployed Bradbury topology, frontend address locks, finalized economic evidence and public hosting evidence must remain aligned. The external submission form itself is the final human publication step: copy only the exact links above and re-open them immediately before submitting.

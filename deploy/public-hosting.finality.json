@@ -1,0 +1,32 @@
+{
+  "schema": "verdictgraph-public-hosting-finality-v1",
+  "vercel_project_id": "prj_tVk4giE3TKaEHRV8MWtL0l7Zv7sa",
+  "deployment_id": "dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta",
+  "deployment_created_at_utc": "2026-09-08T01:00:45.687Z",
+  "state": "READY",
+  "target": "production",
+  "public_url": "https://verdictgraph-mr-albert-s-projects.vercel.app",
+  "immutable_url": "https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app",
+  "sso_protection": null,
+  "total_deployment_count": 4,
+  "public_routes_verified_http_200": [
+    "/",
+    "/app",
+    "/docs",
+    "/setup",
+    "/vault",
+    "/workflows",
+    "/create"
+  ],
+  "public_access_verified_at_utc": "2026-09-08T01:29:14Z",
+  "runtime_errors_observed": false,
+  "public_deployment_source_commit": "2526b91fcc648cfdd1a93042b91c2f248c68b3cb",
+  "source_archive_sha256": "a1c7fe234bd5ebf70600b8f67a77ede2aad0c17578fd5cd46e9a8120f1b5b55f",
+  "prebuilt_output_sha256": "96599d01649f6eb8540404e500e08131c8dd482cbcd2b81f9304dd322f189ed9",
+  "prebuilt_file_count": 174,
+  "notes": [
+    "Vercel automatically assigned the project public alias during the successful prebuilt production deployment.",
+    "Vercel Authentication was disabled without creating another deployment.",
+    "A transient edge-propagation SSO redirect on /setup cleared before final public route verification."
+  ]
+}

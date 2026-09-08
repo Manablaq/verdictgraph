@@ -1,6 +1,6 @@
 # Build status
 
-Date: 2026-09-06
+Date: 2026-09-08
 
 ## Completed verification checkpoints
 
@@ -144,10 +144,20 @@ Current reviewer gate: **152/152**.
 
 Current deterministic source identity is recorded in `verification/source-manifest.json`.
 
-## Remaining submission packaging
+## Final public hosting and submission packaging
 
-The on-chain/economic proof is complete. Remaining work is packaging only:
+The on-chain/economic proof remains complete.
 
-- deploy/test the final frontend build in the intended public hosting environment if required;
-- recheck public Explorer/frontend URLs;
-- ensure the final submission form links point only to the exact Registry, Adjudicator, Vault and final frontend deployment.
+The exact reviewer frontend source from commit `2526b91fcc648cfdd1a93042b91c2f248c68b3cb` was built locally under pinned Node/npm, emitted as Vercel Build Output API v3, and uploaded as the preserved prebuilt artifact without rebuilding. The successful production deployment is `dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta`.
+
+- Public frontend: [https://verdictgraph-mr-albert-s-projects.vercel.app](https://verdictgraph-mr-albert-s-projects.vercel.app)
+- Immutable deployment: [https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app](https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app)
+- Production deployment state: `READY`
+- Vercel Authentication: disabled
+- Public HTTP verification: `/`, `/app`, `/docs`, `/setup`, `/vault`, `/workflows`, and `/create` return HTTP 200
+- Prebuilt output: 174 files
+- Prebuilt output SHA-256: `96599d01649f6eb8540404e500e08131c8dd482cbcd2b81f9304dd322f189ed9`
+- No additional deployment was created while removing Vercel Authentication.
+- No blockchain transaction was used for frontend publication.
+
+The only remaining external action is the submission form itself. It must use the exact final frontend and Bradbury Explorer links recorded in the README and reviewer-readiness document.

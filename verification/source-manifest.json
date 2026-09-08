@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-07T23:38:37.448222+00:00",
-  "source_set_sha256": "ae35cb8e4f26435d77dceb977c2192dff91830ac88b793e5bb1cc86f6e363864",
+  "generated_at": "2026-09-08T01:50:14.033036+00:00",
+  "source_set_sha256": "6212fe14bf1671b1b19fa697cc7bdf2a605c0ff3b645fedb4c5eb15595d82075",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -16,8 +16,8 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "7f04d9976bda5016ecd0fdfc63ca03f83ef9865b3462d161365f67d1727fd452",
-      "bytes": 8556
+      "sha256": "9b6538d4d7c30510d49730246f8a5cb3bd3ccdfc8cea20acc1fb5333fc1e7342",
+      "bytes": 9935
     },
     "contracts/verdict_graph_adjudicator.py": {
       "sha256": "973c13d882341a53b3f0e2712c0b64a4cf76f0fb1006fdb226186ebe70f82149",
@@ -52,12 +52,12 @@
       "bytes": 6565
     },
     "docs/BUILD_STATUS.md": {
-      "sha256": "180769a041927ce725c3ec421abade5570cac267afc10ea9451d12736c6c5568",
-      "bytes": 8532
+      "sha256": "13a72660ad7696a106e97f49e751a095c2092f2812c928cd1dc5534d8643a2d5",
+      "bytes": 9491
     },
     "docs/REVIEWER_READINESS.md": {
-      "sha256": "8c562e0c7ab791f26eb4d0a919df945f72d78ad63c4d9443f0114d3e79235f8d",
-      "bytes": 4478
+      "sha256": "88a7814da6aa1af595eb0e7f5ec0dce089e91c772f13cf6ccd62746816caa0b7",
+      "bytes": 5369
     },
     "docs/SPLIT_ARCHITECTURE_V1.md": {
       "sha256": "e8fb91c0465a765d64ae8d52df69d144c70ef0d5fec9d8c466b5e9dd7fc9b642",
@@ -336,8 +336,8 @@
       "bytes": 33359
     },
     "scripts/source_manifest.py": {
-      "sha256": "45d410107b5398ad731cf6540a0fe5e2254ac91c9ed3e956041c260ae78827f7",
-      "bytes": 4187
+      "sha256": "057df5e00867ad660744d4ceadcc9cf52cf1978dce628d6647ac412ac97d1f90",
+      "bytes": 6109
     },
     "scripts/stage4c_core_deploy_estimate.mjs": {
       "sha256": "d3daa58e5e5a6800f25bc7ea11f27917b8aa1017e32230e72623118339b679f3",
@@ -356,8 +356,8 @@
       "bytes": 3665
     },
     "scripts/verify_manifest.py": {
-      "sha256": "ace38cbe11e011d3a3ef564f0b5474fe3be2ff0df2f76fb9e44e3fce20f3ee77",
-      "bytes": 1927
+      "sha256": "bab7da2b81a28834d1279feffc4d588ee77ad7f32cb86de7c4b15c5db2b419b4",
+      "bytes": 5383
     },
     "scripts/whitespace_gate.py": {
       "sha256": "10e2c025048063d827860da4db0d21098e596aa5eecfca123e27f7e44f642f6c",
@@ -399,12 +399,17 @@
   "deployment": {
     "network": "bradbury",
     "chain_id": 4221,
-    "registry_address": null,
-    "adjudicator_address": null,
-    "vault_address": null,
-    "registry_explorer_url": null,
-    "adjudicator_explorer_url": null,
-    "vault_explorer_url": null,
+    "registry_address": "0xCb031FbCEb219079608740fb77BC636F9447E7f5",
+    "adjudicator_address": "0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
+    "vault_address": "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
+    "registry_explorer_url": "https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5",
+    "adjudicator_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
+    "vault_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
+    "public_frontend_url": "https://verdictgraph-mr-albert-s-projects.vercel.app",
+    "immutable_frontend_url": "https://verdictgraph-q0sq7kbad-mr-albert-s-projects.vercel.app",
+    "vercel_deployment_id": "dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta",
+    "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
+    "reviewer_source_commit": null,
     "git_commit": null
   }
 }

@@ -14,10 +14,21 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+FINALITY_PATH = ROOT / "deploy/bradbury.finality.json"
+PUBLIC_HOSTING_PATH = ROOT / "deploy/public-hosting.finality.json"
+BRADBURY_EXPLORER = "https://explorer-bradbury.genlayer.com"
+
+_reviewer_source_commit = os.environ.get(
+    "VERDICTGRAPH_REVIEWER_SOURCE_COMMIT",
+    "",
+).strip()
+REVIEWER_SOURCE_COMMIT = _reviewer_source_commit or None
 
 STATIC_PATHS = {
     ".gitignore",
@@ -117,6 +128,36 @@ for rel in sorted(paths):
     }
 
 source_set = source_set_sha256(entries)
+
+finality = json.loads(FINALITY_PATH.read_text())
+public_hosting = json.loads(PUBLIC_HOSTING_PATH.read_text())
+
+if finality.get("network") != "bradbury":
+    raise SystemExit("Bradbury finality record network mismatch")
+if finality.get("chain_id") != 4221:
+    raise SystemExit("Bradbury finality record chain id mismatch")
+
+addresses = finality.get("addresses") or {}
+
+for key in ("registry", "adjudicator", "vault"):
+    value = addresses.get(key)
+    if (
+        not isinstance(value, str)
+        or not value.startswith("0x")
+        or len(value) != 42
+    ):
+        raise SystemExit(
+            f"Invalid final {key} address in Bradbury finality record"
+        )
+
+if public_hosting.get("state") != "READY":
+    raise SystemExit("Public hosting record is not READY")
+
+if public_hosting.get("target") != "production":
+    raise SystemExit(
+        "Public hosting record is not production-targeted"
+    )
+
 manifest = {
     "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
     "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -125,13 +166,26 @@ manifest = {
     "deployment": {
         "network": "bradbury",
         "chain_id": 4221,
-        "registry_address": None,
-        "adjudicator_address": None,
-        "vault_address": None,
-        "registry_explorer_url": None,
-        "adjudicator_explorer_url": None,
-        "vault_explorer_url": None,
-        "git_commit": None,
+        "registry_address": addresses["registry"],
+        "adjudicator_address": addresses["adjudicator"],
+        "vault_address": addresses["vault"],
+        "registry_explorer_url": (
+            f"{BRADBURY_EXPLORER}/address/{addresses['registry']}"
+        ),
+        "adjudicator_explorer_url": (
+            f"{BRADBURY_EXPLORER}/address/{addresses['adjudicator']}"
+        ),
+        "vault_explorer_url": (
+            f"{BRADBURY_EXPLORER}/address/{addresses['vault']}"
+        ),
+        "public_frontend_url": public_hosting["public_url"],
+        "immutable_frontend_url": public_hosting["immutable_url"],
+        "vercel_deployment_id": public_hosting["deployment_id"],
+        "deployed_contract_source_commit": finality[
+            "deployed_contract_source_commit"
+        ],
+        "reviewer_source_commit": REVIEWER_SOURCE_COMMIT,
+        "git_commit": REVIEWER_SOURCE_COMMIT,
     },
 }
 path = ROOT / "verification/source-manifest.json"

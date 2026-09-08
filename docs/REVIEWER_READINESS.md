@@ -1,6 +1,6 @@
 # Reviewer-readiness hard gates
 
-A submission is blocked if a required item below is false. Checked items are supported by the repository's reproducible gates and/or persisted Bradbury evidence. The final submission-link item intentionally remains a submission-time check.
+A submission is blocked if a required item below is false. Checked items are supported by the repository's reproducible gates and/or persisted Bradbury/public-hosting evidence. The external submission-form entry itself intentionally remains a submission-time human check.
 
 ## Evidence and trust
 
@@ -57,7 +57,10 @@ A submission is blocked if a required item below is false. Checked items are sup
 - [x] Final Vault and immutable `registry_core` / `adjudicator_core` values match the persisted topology evidence.
 - [x] Deployed contract source is byte-stable relative to deployment commit `0e2855d14e142edc6e215c5935f3993eee59be21`; post-deployment frontend/docs work does not modify contract source.
 - [x] Frontend accepts only the exact final Registry, Adjudicator and Vault addresses and verifies all six topology edges.
-- [ ] Final external submission form/public links are rechecked immediately before submission and must point only to the exact final deployments and final frontend build.
+- [x] Final public frontend and Bradbury Explorer address links were rechecked during final packaging and point only to the exact audited deployments.
+- [x] Public production frontend is `https://verdictgraph-mr-albert-s-projects.vercel.app`, backed by READY production deployment `dpl_7GDonyn8pQVssP2cNM7rg3NF1Yta`.
+- [x] Public-hosting evidence is persisted in `deploy/public-hosting.finality.json`.
+- [ ] The external submission form itself must be populated with the exact final links below immediately before the user submits it.
 
 ## Final Bradbury topology
 
@@ -66,3 +69,11 @@ A submission is blocked if a required item below is false. Checked items are sup
 - Vault: `0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
 
 The machine-readable finality record is `deploy/bradbury.finality.json`.
+
+## Final public links
+
+- Frontend: `https://verdictgraph-mr-albert-s-projects.vercel.app`
+- Registry Explorer: `https://explorer-bradbury.genlayer.com/address/0xCb031FbCEb219079608740fb77BC636F9447E7f5`
+- Adjudicator Explorer: `https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868`
+- Vault Explorer: `https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
+- Public-hosting evidence: `deploy/public-hosting.finality.json`
