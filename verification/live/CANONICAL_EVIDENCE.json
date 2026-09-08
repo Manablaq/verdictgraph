@@ -99,9 +99,9 @@
   ],
   "finality_record": {
     "path": "deploy/bradbury.finality.json",
-    "sha256": "c5adb308ca6b16d69f03942502571f57f8b16cec1b6655fd8f2de17c4ab8530e"
+    "sha256": "459b8c17a1ccf0188edef8f7088a4b55ff595af66f11080ab67b1fac07ab83be"
   },
-  "reviewer_source_set_sha256": "e6d2383337440decbd1e01c9f4c91d07636e7fc053724885d46727ff04646916",
+  "reviewer_source_set_sha256": "d6ebbf0fc7adfc73c18ec5f620508b7f49972fbec8863fcce84fa90a6cf11ca1",
   "schema": "verdictgraph-canonical-live-evidence-v1",
   "scope": {
     "historical_attempt_logs_included": false,

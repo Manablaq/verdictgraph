@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-08T05:11:07.864815+00:00",
-  "source_set_sha256": "e6d2383337440decbd1e01c9f4c91d07636e7fc053724885d46727ff04646916",
+  "generated_at": "2026-09-08T06:45:30.657909+00:00",
+  "source_set_sha256": "d6ebbf0fc7adfc73c18ec5f620508b7f49972fbec8863fcce84fa90a6cf11ca1",
   "files": {
     ".gitignore": {
       "sha256": "f210695d4c24b711e63e86154f96feabb76e44835c8fdfa582b08df970901d58",
@@ -16,8 +16,8 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "41a004ea69c50464a230e34e2a476273494c5ae89413f84b75aad49e5e5e148a",
-      "bytes": 9851
+      "sha256": "d1f858f18b48a65110e2d811a052777589ec4080ef02b1f335e881bb51b1562e",
+      "bytes": 10700
     },
     "contracts/verdict_graph_adjudicator.py": {
       "sha256": "973c13d882341a53b3f0e2712c0b64a4cf76f0fb1006fdb226186ebe70f82149",
@@ -48,16 +48,16 @@
       "bytes": 1036
     },
     "docs/ARCHITECTURE.md": {
-      "sha256": "d58b12510fb3b444d9d5124b0daa3e1356dda8edd985169f8559eb75e3f77494",
-      "bytes": 6947
+      "sha256": "5a3953862b3db50182f79b334c615dcfae8fbb4f20fa85859830f04737949f99",
+      "bytes": 7108
     },
     "docs/BUILD_STATUS.md": {
       "sha256": "e35160771575474057b6195bf4652dd3e0b5bde8e5e325e91bd975263b87aabf",
       "bytes": 9521
     },
     "docs/REVIEWER_READINESS.md": {
-      "sha256": "531aea209b67b880f9674ab0a708cfe9627fa812039193425f8bce3b92d8cf23",
-      "bytes": 5413
+      "sha256": "908f20b99b1900abed76d91de8414abc2e23b4414c9a271d41276f89b200b4ba",
+      "bytes": 5813
     },
     "docs/SPLIT_ARCHITECTURE_V1.md": {
       "sha256": "7eb96f202a1fb579be954784af250629d92469f0bc0593e9b14c75576e4f3395",
@@ -72,8 +72,8 @@
       "bytes": 3952
     },
     "docs/VERIFIED_BASELINE.md": {
-      "sha256": "b5c1e74f364710dc3e2d9a2905364453f4be798ef8f5b29ee604f65a5e5477d2",
-      "bytes": 3810
+      "sha256": "6ff3d5a785877eabef5971e016e886ee8cab3b4546c4b363d6b8afa14e2fba30",
+      "bytes": 3991
     },
     "evm/contracts/VerdictGraphVault.sol": {
       "sha256": "b4ff0e535a0993584970657bf104f428035a9015656f1e3d1b15c5a22d37b283",
@@ -272,8 +272,8 @@
       "bytes": 171203
     },
     "package.json": {
-      "sha256": "36a10c69500f7ac8bb6a7f14783246e356950599094059e18fa895fa48278856",
-      "bytes": 596
+      "sha256": "ad201147bd645ac90043eebd5f9a5b0222ceec5b2589410abd205d32f9f207c1",
+      "bytes": 1064
     },
     "pyproject.toml": {
       "sha256": "96348aecb1dad2d4afa26af080e0b221f7051269181b26a0efd74ea625c3570e",
@@ -409,7 +409,7 @@
     "immutable_frontend_url": "https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app",
     "vercel_deployment_id": "dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS",
     "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
-    "reviewer_source_commit": "4048cfff4ef9bf9d8ed0f57c0ac767a79a3ef921",
-    "git_commit": "4048cfff4ef9bf9d8ed0f57c0ac767a79a3ef921"
+    "reviewer_source_commit": "598133269287a2c6ef6feca8435991249da3cb6d",
+    "git_commit": "598133269287a2c6ef6feca8435991249da3cb6d"
   }
 }
