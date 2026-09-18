@@ -10,6 +10,30 @@ import ast
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+EXCLUDED_SOURCE_PARTS = {
+    ".git",
+    ".next",
+    ".venv",
+    "node_modules",
+    "__pycache__",
+    ".pytest_cache",
+    "cache",
+    "out",
+    "artifacts",
+}
+
+
+def iter_frontend_sources():
+    frontend = ROOT / "frontend"
+    for path in frontend.rglob("*"):
+        if path.suffix not in {".ts", ".tsx"} or not path.is_file():
+            continue
+        if any(part in EXCLUDED_SOURCE_PARTS for part in path.relative_to(ROOT).parts):
+            continue
+        yield path
+
+
 CORE = (ROOT / "contracts/verdict_graph_core.py").read_text()
 REGISTRY = (ROOT / "contracts/verdict_graph_registry.py").read_text()
 ADJUDICATOR = (ROOT / "contracts/verdict_graph_adjudicator.py").read_text()
@@ -26,7 +50,8 @@ FRONTEND_PACKAGE = (ROOT / "frontend/package.json").read_text()
 FRONTEND_VAULT = (ROOT / "frontend/lib/genlayer/vault.ts").read_text()
 FRONTEND_CLIENT = (ROOT / "frontend/lib/genlayer/client.ts").read_text()
 FRONTEND_ENV = (ROOT / "frontend/.env.example").read_text()
-FRONTEND_ALL = "\n".join(p.read_text() for p in (ROOT / "frontend").rglob("*") if p.suffix in {".ts", ".tsx"})
+NATIVE_WRITE_PROBE = (ROOT / "scripts/milestone_bradbury_native_write_probe.mjs").read_text()
+FRONTEND_ALL = "\n".join(p.read_text() for p in iter_frontend_sources())
 SOURCE_MANIFEST_SCRIPT = (ROOT / "scripts/source_manifest.py").read_text()
 VERIFY_MANIFEST_SCRIPT = (ROOT / "scripts/verify_manifest.py").read_text()
 VAULT_TESTS = (ROOT / "evm/test/VerdictGraphVault.t.sol").read_text()
@@ -80,6 +105,7 @@ FRONTEND_TSCONFIG = (ROOT / "frontend/tsconfig.json").read_text()
 SEARCH_PARAM_ROUTES = [
     page.read_text()
     for page in (ROOT / "frontend/app").rglob("page.tsx")
+    if not any(part in EXCLUDED_SOURCE_PARTS for part in page.relative_to(ROOT).parts)
     if "useSearchParams(" in page.read_text()
 ]
 
@@ -140,8 +166,9 @@ checks = {
     "genvm-linter commit pinned": "28450e665666300fc648dbe495110dfd0cb6a7b4" in REQ,
     "frontend GenLayer SDK fee-aware commit pinned": "1b7f50a3a3f2963ea857941b0fb386081dd5c326" in FRONTEND_PACKAGE,
     "frontend never floats GenLayer SDK main": "genlayer-js.git#main" not in FRONTEND_PACKAGE,
-    "frontend simulates write fees": "estimateTransactionFeesForWrite" in FRONTEND_CLIENT,
-    "frontend forwards message fee allocations": "messageAllocations: recommended.messageAllocations" in FRONTEND_CLIENT,
+    "frontend uses Bradbury-native SDK write path": "const hash = await client.writeContract" in FRONTEND_CLIENT and "estimateTransactionFeesForWrite" not in FRONTEND_CLIENT,
+    "frontend does not force unavailable Bradbury FeeManager policy reads": "messageFeeParamsBudgetFloor" not in FRONTEND_CLIENT and "estimateTransactionFeesForWrite" not in FRONTEND_CLIENT,
+    "native write probe blocks wallet submission": "VERDICTGRAPH_MILESTONE_NATIVE_WRITE_NO_SEND" in NATIVE_WRITE_PROBE and 'method === "eth_sendTransaction"' in NATIVE_WRITE_PROBE and "provider blocked transaction submission" in NATIVE_WRITE_PROBE,
     "frontend uses current read transaction variants": "TransactionHashVariant.LATEST_FINAL" in FRONTEND_CLIENT and "TransactionHashVariant.LATEST_NONFINAL" in FRONTEND_CLIENT,
     "frontend split calldata uses exact GenLayer SDK encodable type": "type CalldataEncodable" in FRONTEND_CLIENT and "export type ContractArgs = CalldataEncodable[];" in FRONTEND_CLIENT and "args: ContractArgs = []" in FRONTEND_CLIENT and "args: unknown[] = []" not in FRONTEND_CLIENT,
     "frontend transaction hashes use exact GenLayer SDK hash type": "type TransactionHash" in FRONTEND_CLIENT and "export type TxHash = TransactionHash;" in FRONTEND_CLIENT and "const hash = await client.writeContract" in FRONTEND_CLIENT,
@@ -175,6 +202,19 @@ checks = {
             "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
         )
     ),
+    "frontend public env is client-inlined": all(
+        token in FRONTEND_CLIENT
+        for token in (
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_AUTHORITY_ADDRESS",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_REGISTRY_ADDRESS",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_ADJUDICATOR_ADDRESS",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_VAULT_ADDRESS",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_VAULT_RUNTIME_SHA256",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_AUTHORITY_SOURCE_SHA256",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_REGISTRY_SOURCE_SHA256",
+            "process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_ADJUDICATOR_SOURCE_SHA256",
+        )
+    ) and "process.env[" not in FRONTEND_CLIENT,
     "frontend verifies Registry-Adjudicator reciprocal binding": (
         '"get_adjudicator_address"' in FRONTEND_VAULT
         and '"registry_address"' in FRONTEND_VAULT

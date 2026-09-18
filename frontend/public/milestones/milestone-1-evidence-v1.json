@@ -1,0 +1,57 @@
+{
+  "schema": "verdictgraph.milestone-evidence.v1",
+  "project_ref": "verdictgraph",
+  "milestone_id": "1",
+  "milestone_reference": "milestone-fc010324-ec27-4db1-a251-6559535a77a5",
+  "network": {
+    "name": "GenLayer Bradbury",
+    "chain_id": 4221
+  },
+  "accepted_baseline": {
+    "commit": "46b636ffd4449234362d7cc78a8a0242a62ac755",
+    "uri": "https://github.com/Manablaq/verdictgraph/archive/46b636ffd4449234362d7cc78a8a0242a62ac755.tar.gz",
+    "sha256": "0b374bb9df47bc5b6912eb316efcbd808b59d24a2b172479fc7428e67f759735"
+  },
+  "new_milestone_release": {
+    "description": "A GenLayer-native milestone settlement layer beyond the accepted VerdictGraph baseline.",
+    "authority": {
+      "address": "0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E",
+      "deployment_artifact_sha256": "12f96a55796d2277a58cb081ed72818c99ff85adde28fc0d8bf7789fd5077bc8"
+    },
+    "registry": {
+      "address": "0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA",
+      "deployment_artifact_sha256": "ee63023749a1ea41c5b9597e0ecba36896f5bea6fa8c1523ac8a03cfaf3bc082"
+    },
+    "adjudicator": {
+      "address": "0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02",
+      "deployment_artifact_sha256": "88f2992bc589181a74bafbd29711b10baff4c13991106e1d57b11eb8b5404984"
+    },
+    "vault": {
+      "address": "0x229c077AF8446f7EC63E63d0C1F03b555fF50298",
+      "runtime_sha256": "e32731dc0cc221db1c9d66cb07178ce01acbf2a50ba980c0e1cb1696e386898e"
+    },
+    "capabilities": [
+      "constructor-bound acceptance authority and write-once accepted-project trust roots",
+      "immutable milestone terms inherited from the accepted baseline",
+      "hash-pinned HTTPS evidence with authority-registered origins and UTF-8 verification",
+      "independent GenLayer leader and validator review with PASS, FAIL, and UNDETERMINED outcomes",
+      "bounded challenge and re-review lifecycle with repairable fetch and hash failures",
+      "finality-only settlement messages to a deterministic exact-amount Vault",
+      "wallet-free public milestone Proof Pack with topology, source, hash, and EVM block verification"
+    ]
+  },
+  "public_verification": {
+    "application": "https://verdictgraph.vercel.app/milestones/1",
+    "proof_pack": "https://verdictgraph.vercel.app/milestones/1/proof",
+    "evidence_origin": "https://verdictgraph.vercel.app",
+    "frontend_release": "The public application exposes milestone creation, authority registration, lifecycle controls, escrow state, hash-pinned submission, and the public Proof Pack route.",
+    "verification": [
+      "Milestone source gate passed.",
+      "Authority, Registry, and Adjudicator direct-mode suites passed.",
+      "Milestone Vault Foundry security and economic tests passed.",
+      "Frontend TypeScript check and production build passed.",
+      "Production dependency audit reported zero vulnerabilities."
+    ]
+  },
+  "interpretation": "This artifact identifies the byte-pinned accepted baseline and the independently verifiable milestone release built beyond it. The on-chain Registry, GenLayer validator review, and deterministic Vault remain the authorities for lifecycle state, decision, and settlement; this document does not replace those finalized records."
+}

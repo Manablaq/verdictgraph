@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -287,6 +288,7 @@ export function WalletButton() {
           <button
             type="button"
             aria-haspopup="menu"
+            aria-controls="wallet-menu"
             aria-expanded={
               menuOpen
             }
@@ -338,6 +340,7 @@ export function WalletButton() {
 
           {menuOpen ? (
             <div
+              id="wallet-menu"
               role="menu"
               className="
                 absolute right-0
@@ -597,6 +600,35 @@ function WalletPicker({
       walletId: string,
     ) => Promise<void>;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>("button:not([disabled]), a[href], input, select, textarea"));
+    focusable()[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const elements = focusable();
+      if (!elements.length) return;
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    dialog.addEventListener("keydown", onKeyDown);
+    return () => dialog.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
   return (
     <div
       className="
@@ -610,12 +642,13 @@ function WalletPicker({
       "
       role="dialog"
       aria-modal="true"
-      aria-label="Connect wallet"
+      aria-labelledby="wallet-picker-title"
       onMouseDown={
         onClose
       }
     >
       <div
+        ref={dialogRef}
         className="
           w-full
           max-w-[440px]
@@ -644,7 +677,7 @@ function WalletPicker({
           "
         >
           <div>
-            <h2 className="text-lg font-semibold tracking-tight">
+            <h2 id="wallet-picker-title" className="text-lg font-semibold tracking-tight">
               Connect a wallet
             </h2>
 
@@ -655,7 +688,7 @@ function WalletPicker({
 
           <button
             type="button"
-            aria-label="Close"
+            aria-label="Close wallet selector"
             onClick={
               onClose
             }

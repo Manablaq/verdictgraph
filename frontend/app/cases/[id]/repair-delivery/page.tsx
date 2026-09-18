@@ -15,10 +15,14 @@ import {
   writeRegistry,
   writeAdjudicator,
   waitForFinalized,
+  isTransactionFinalityPendingError,
+  type TxHash,
 } from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import { asNumber, shortAddress } from "@/lib/format";
 import type { CaseRecord, HandoffRecord, RevisionRecord } from "@/lib/types";
+import { clearPendingGenLayerWrite, readPendingGenLayerWrite, savePendingGenLayerWrite, type PendingGenLayerWrite } from "@/lib/genlayer/pending";
+import { PendingTransactionNotice } from "@/components/pending-transaction-notice";
 
 export default function RepairDeliveryPage() {
   return (
@@ -42,6 +46,8 @@ function RepairDeliveryContent() {
   const [sha, setSha] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const pendingStorageKey = `verdictgraph:case:${caseId}:delivery-repair-pending`;
+  const [pendingRepair, setPendingRepair] = useState<PendingGenLayerWrite | null>(() => readPendingGenLayerWrite(pendingStorageKey));
 
   useEffect(() => {
     if (!configured || !Number.isInteger(caseId) || caseId <= 0) return;
@@ -65,20 +71,54 @@ function RepairDeliveryContent() {
     })();
   }, [caseId, configured, stateStatus]);
 
+  async function openRevision() {
+    if (!account) throw new Error("Connect the provider wallet before opening the repaired revision");
+    await writeAdjudicator(account, "begin_revision", [BigInt(caseId), "", ""]);
+    toast.success("Versioned delivery repair recorded and fresh review revision opened");
+    router.push(`/cases/${caseId}?state=accepted`);
+  }
+
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!account) { await connect(); return; }
     setBusy(true);
     try {
       const repaired = await writeRegistry(account, "repair_handoff_delivery", [BigInt(caseId), uri, sha.trim().toLowerCase()]);
+      const pending: PendingGenLayerWrite = { hash: repaired.hash, label: "Delivery repair" };
+      setPendingRepair(pending);
+      savePendingGenLayerWrite(pendingStorageKey, pending);
       toast.message("Delivery repair accepted; waiting for finality before opening the new review revision…");
-      const final = await waitForFinalized(repaired.hash);
+      let final;
+      try {
+        final = await waitForFinalized(repaired.hash);
+      } catch (error) {
+        if (isTransactionFinalityPendingError(error)) return;
+        throw error;
+      }
+      setPendingRepair(null);
+      clearPendingGenLayerWrite(pendingStorageKey);
       if (!final.executionSucceeded) throw new Error("Finalized delivery repair did not finish with return");
-      await writeAdjudicator(account, "begin_revision", [BigInt(caseId), "", ""]);
-      toast.success("Versioned delivery repair recorded and fresh review revision opened");
-      router.push(`/cases/${caseId}?state=accepted`);
+      await openRevision();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Delivery repair failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function recheckRepair() {
+    if (!pendingRepair) return;
+    setBusy(true);
+    try {
+      const final = await waitForFinalized(pendingRepair.hash as TxHash);
+      setPendingRepair(null);
+      clearPendingGenLayerWrite(pendingStorageKey);
+      if (!final.executionSucceeded) throw new Error("Finalized delivery repair did not finish with return");
+      await openRevision();
+    } catch (error) {
+      if (!isTransactionFinalityPendingError(error)) {
+        toast.error(error instanceof Error ? error.message : "Could not confirm delivery repair finality");
+      }
     } finally {
       setBusy(false);
     }
@@ -93,12 +133,13 @@ function RepairDeliveryContent() {
         <h1 className="mt-2 text-4xl font-semibold tracking-[-.04em]">Repair the delivery without erasing history.</h1>
         <p className="mt-3 text-sm leading-6 text-zinc-500">The prior delivery version remains on-chain. This action creates the next immutable version, waits for it to finalize, then opens a fresh case revision so validators review the repaired artifact rather than silently mutating the failed result.</p>
       </section>
-      {error ? <div className="mt-7 max-w-3xl rounded-2xl border border-rose-400/15 bg-rose-400/[.04] p-5 text-sm text-rose-200">{error}</div> : !handoff ? <div className="mt-7 text-sm text-zinc-600">Reading repair state…</div> : <form onSubmit={submit} className="mt-8 max-w-3xl space-y-5 rounded-[28px] border border-white/[.08] bg-white/[.02] p-6">
+      {pendingRepair ? <PendingTransactionNotice label={pendingRepair.label} hash={pendingRepair.hash} busy={busy} onRecheck={() => void recheckRepair()} /> : null}
+      {error ? <div className="mt-7 max-w-3xl rounded-2xl border border-rose-400/15 bg-rose-400/[.04] p-5 text-sm text-rose-200" role="alert">{error}</div> : !handoff ? <div className="mt-7 text-sm text-zinc-600" role="status" aria-live="polite">Reading repair state…</div> : <form onSubmit={submit} className="mt-8 max-w-3xl space-y-5 rounded-[28px] border border-white/[.08] bg-white/[.02] p-6">
         <div className="grid gap-3 rounded-xl border border-white/[.07] bg-black/20 p-4 text-xs sm:grid-cols-3"><div><div className="text-zinc-600">Failure</div><div className="mt-1 text-amber-200">{failureCode}</div></div><div><div className="text-zinc-600">Current version</div><div className="mt-1">v{asNumber(handoff.delivery_version)}</div></div><div><div className="text-zinc-600">Provider</div><div className="mt-1">{shortAddress(handoff.provider)}</div></div></div>
         <label className="block"><span className="mb-2 block text-xs text-zinc-500">Repaired immutable/versioned HTTPS URI</span><input required type="url" value={uri} onChange={(e)=>setUri(e.target.value)} className="w-full rounded-xl border border-white/[.09] bg-black/20 px-3 py-2.5 text-sm outline-none focus:border-white/20"/></label>
         <label className="block"><span className="mb-2 block text-xs text-zinc-500">SHA-256 for the new delivery version</span><input required pattern="[0-9a-fA-F]{64}" value={sha} onChange={(e)=>setSha(e.target.value)} className="w-full rounded-xl border border-white/[.09] bg-black/20 px-3 py-2.5 font-mono text-sm outline-none focus:border-white/20"/></label>
         <FileHashHelper onHash={setSha}/>
-        <button disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black disabled:opacity-50">{busy?<LoaderCircle size={15} className="animate-spin"/>:<RotateCcw size={15}/>} {account?"Finalize repair and open revision":"Connect wallet"}</button>
+        <button disabled={busy || Boolean(pendingRepair)} className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black disabled:opacity-50">{busy?<LoaderCircle size={15} className="animate-spin"/>:<RotateCcw size={15}/>} {account?"Finalize repair and open revision":"Connect wallet"}</button>
       </form>}
     </AppShell>
   );

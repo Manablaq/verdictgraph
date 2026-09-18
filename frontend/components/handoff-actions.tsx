@@ -18,8 +18,10 @@ import { useState } from "react";
 import {
   type ContractArgs,
   getVaultAddress,
+  isTransactionFinalityPendingError,
   writeRegistry,
   waitForFinalized,
+  type TxHash,
 } from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import {
@@ -29,7 +31,9 @@ import {
 } from "@/lib/genlayer/vault";
 import { formatGen, shortAddress } from "@/lib/format";
 import type { HandoffRecord } from "@/lib/types";
+import { clearPendingGenLayerWrite, readPendingGenLayerWrite, savePendingGenLayerWrite, type PendingGenLayerWrite } from "@/lib/genlayer/pending";
 import { StatusBadge } from "./status-badge";
+import { PendingTransactionNotice } from "./pending-transaction-notice";
 
 export function HandoffActions({
   workflowId,
@@ -47,11 +51,15 @@ export function HandoffActions({
   const { account, connect } = useWallet();
   const queryClient = useQueryClient();
   const [busy, setBusy] = useState<string | null>(null);
+  const pendingStorageKey = `verdictgraph:handoff:${handoffId}:pending-genlayer-write`;
+  const [pendingFinality, setPendingFinality] = useState<PendingGenLayerWrite | null>(() => readPendingGenLayerWrite(pendingStorageKey));
   const vaultConfigured = Boolean(getVaultAddress());
   const vaultStatus = useQuery({
     queryKey: ["vault-status", handoffId],
     queryFn: () => readVaultStatus(BigInt(handoffId)),
     enabled: vaultConfigured,
+    refetchInterval: 15_000,
+    refetchIntervalInBackground: false,
   });
 
   const now = Math.floor(Date.now() / 1000);
@@ -85,8 +93,19 @@ export function HandoffActions({
     setBusy(busyKey);
     try {
       const { hash } = await writeRegistry(activeAccount, functionName, args);
+      const pending: PendingGenLayerWrite = { hash, label: acceptedMessage.replace(/;.*$/, "") };
+      setPendingFinality(pending);
+      savePendingGenLayerWrite(pendingStorageKey, pending);
       toast.message(acceptedMessage);
-      const final = await waitForFinalized(hash);
+      let final;
+      try {
+        final = await waitForFinalized(hash);
+      } catch (error) {
+        if (isTransactionFinalityPendingError(error)) return;
+        throw error;
+      }
+      setPendingFinality(null);
+      clearPendingGenLayerWrite(pendingStorageKey);
       if (!final.executionSucceeded) {
         throw new Error("Finalized Registry transaction did not finish with return");
       }
@@ -97,6 +116,28 @@ export function HandoffActions({
       ]);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Registry transaction failed");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function recheckPendingFinality() {
+    if (!pendingFinality) return;
+    setBusy("pending-finality");
+    try {
+      const final = await waitForFinalized(pendingFinality.hash as TxHash);
+      setPendingFinality(null);
+      clearPendingGenLayerWrite(pendingStorageKey);
+      if (!final.executionSucceeded) throw new Error("Finalized Registry transaction did not finish with return");
+      toast.success("Previously accepted Registry transaction is now finalized");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["vault-status", handoffId] }),
+        queryClient.invalidateQueries({ queryKey: ["workflow", workflowId] }),
+      ]);
+    } catch (error) {
+      if (!isTransactionFinalityPendingError(error)) {
+        toast.error(error instanceof Error ? error.message : "Could not confirm transaction finality");
+      }
     } finally {
       setBusy(null);
     }
@@ -192,6 +233,8 @@ export function HandoffActions({
           <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-500">
             {handoff.responsibility}
           </p>
+          {pendingFinality ? <PendingTransactionNotice label={pendingFinality.label} hash={pendingFinality.hash} busy={busy === "pending-finality"} onRecheck={() => void recheckPendingFinality()} /> : null}
+          {vaultStatus.isError ? <div className="mt-4 rounded-xl border border-rose-400/15 bg-rose-400/[.04] p-3 text-xs leading-5 text-rose-200" role="alert">Unable to read the live Vault state. No escrow action is enabled until the topology and current state can be verified.</div> : null}
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-700">
             <span>Requester {shortAddress(handoff.requester)}</span>
             <span>Provider {shortAddress(handoff.provider)}</span>
@@ -215,12 +258,12 @@ export function HandoffActions({
             <span className="rounded-full border border-amber-300/15 px-3 py-2 text-xs text-amber-300">
               Vault address not configured
             </span>
-          ) : vaultStatus.data?.code === 0 &&
+          ) : !pendingFinality && vaultStatus.data?.code === 0 &&
             account?.toLowerCase() === workflowOwner.toLowerCase() ? (
             <Action onClick={register} busy={busy === "register"} icon={LockKeyhole}>
               Register escrow
             </Action>
-          ) : vaultStatus.data?.code === 1 && !fundingExpired && isRequester ? (
+          ) : !pendingFinality && vaultStatus.data?.code === 1 && !fundingExpired && isRequester ? (
             <Action
               onClick={() => evm("fund_handoff", handoff.principal_required)}
               busy={busy === "fund_handoff"}
@@ -228,7 +271,7 @@ export function HandoffActions({
             >
               Fund principal
             </Action>
-          ) : vaultStatus.data?.code === 2 && !fundingExpired && isProvider ? (
+          ) : !pendingFinality && vaultStatus.data?.code === 2 && !fundingExpired && isProvider ? (
             <Action
               onClick={() => evm("post_bond", handoff.provider_bond_required)}
               busy={busy === "post_bond"}
@@ -238,7 +281,7 @@ export function HandoffActions({
             </Action>
           ) : null}
 
-          {vaultStatus.data?.code === 3 && completionQueued && isParticipant && !recoveryExpired ? (
+          {!pendingFinality && vaultStatus.data?.code === 3 && completionQueued && isParticipant && !recoveryExpired ? (
             <Action
               onClick={retryCompletion}
               busy={busy === "retry-completion"}
@@ -248,7 +291,7 @@ export function HandoffActions({
             </Action>
           ) : null}
 
-          {vaultStatus.data?.code === 3 && !completionQueued && !caseId && !recoveryExpired ? (
+          {!pendingFinality && vaultStatus.data?.code === 3 && !completionQueued && !caseId && !recoveryExpired ? (
             <>
               {!handoff.delivery_uri && isProvider ? (
                 <Link
@@ -276,7 +319,7 @@ export function HandoffActions({
             </>
           ) : null}
 
-          {(vaultStatus.data?.code === 4 || vaultStatus.data?.code === 5) &&
+          {!pendingFinality && (vaultStatus.data?.code === 4 || vaultStatus.data?.code === 5) &&
           completionQueued &&
           isParticipant &&
           Number(handoff.vault_terminal_status) !== vaultStatus.data.code ? (
@@ -289,7 +332,7 @@ export function HandoffActions({
             </Action>
           ) : null}
 
-          {(vaultStatus.data?.code === 1 || vaultStatus.data?.code === 2) && fundingExpired ? (
+          {!pendingFinality && (vaultStatus.data?.code === 1 || vaultStatus.data?.code === 2) && fundingExpired ? (
             <Action
               onClick={() => evm("recover_unactivated")}
               busy={busy === "recover_unactivated"}
@@ -299,7 +342,7 @@ export function HandoffActions({
             </Action>
           ) : null}
 
-          {vaultStatus.data?.code === 3 && recoveryExpired ? (
+          {!pendingFinality && vaultStatus.data?.code === 3 && recoveryExpired ? (
             <Action
               onClick={() => evm("recover_active")}
               busy={busy === "recover_active"}
@@ -310,6 +353,8 @@ export function HandoffActions({
           ) : null}
 
           <button
+            type="button"
+            aria-label="Refresh handoff Vault state"
             onClick={() => vaultStatus.refetch()}
             className="grid h-8 w-8 place-items-center rounded-full border border-white/10 text-zinc-600 hover:text-zinc-200"
             title="Refresh Vault state"
@@ -326,16 +371,20 @@ function Action({
   children,
   onClick,
   busy,
+  disabled = false,
   icon: Icon,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   busy: boolean;
+  disabled?: boolean;
   icon: typeof LockKeyhole;
 }) {
   return (
     <button
-      disabled={busy}
+      type="button"
+      aria-busy={busy}
+      disabled={busy || disabled}
       onClick={onClick}
       className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-medium text-black disabled:opacity-50"
     >

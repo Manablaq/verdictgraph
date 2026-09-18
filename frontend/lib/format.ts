@@ -12,18 +12,25 @@ export function asNumber(value: unknown): number {
 
 export function formatUnix(value: unknown) {
   const seconds = asNumber(value);
-  if (!seconds) return "—";
+  if (!Number.isFinite(seconds) || seconds <= 0) return "—";
+  const date = new Date(seconds * 1_000);
+  if (Number.isNaN(date.getTime())) return "—";
   return new Intl.DateTimeFormat("en", {
     year: "numeric",
     month: "short",
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(new Date(seconds * 1_000));
+  }).format(date);
 }
 
 export function formatGen(value: unknown) {
-  const raw = typeof value === "bigint" ? value : BigInt(String(value || 0));
+  let raw: bigint;
+  try {
+    raw = typeof value === "bigint" ? value : BigInt(String(value || 0));
+  } catch {
+    return "—";
+  }
   const whole = raw / 10n ** 18n;
   const fraction = (raw % 10n ** 18n).toString().padStart(18, "0").slice(0, 4);
   return `${whole}.${fraction} GEN`;

@@ -14,6 +14,7 @@ import {
   clearActiveWallet,
   connectWallet,
   discoverWallets,
+  restoreWalletConnection,
   type HexAddress,
   type WalletOption,
 } from "./client";
@@ -178,8 +179,36 @@ export function WalletProvider({
    * permission popup.
    */
   useEffect(() => {
-    void refreshWallets();
-  }, [refreshWallets]);
+    let cancelled = false;
+
+    async function restoreSession() {
+      const discovered = await discoverWallets();
+      if (cancelled) return;
+      setWallets(discovered);
+
+      for (const candidate of discovered) {
+        try {
+          const restoredAccount = await restoreWalletConnection(candidate);
+          if (!restoredAccount || cancelled) continue;
+          const chainHex = await candidate.provider.request({ method: "eth_chainId" });
+          if (cancelled) return;
+          const restoredChainId = parseChainId(chainHex);
+          setWallet(candidate);
+          setAccount(restoredAccount);
+          setChainId(restoredChainId);
+          if (restoredChainId !== null && restoredChainId !== BRADBURY_CHAIN_ID) {
+            setError("Wallet is connected to another network. Switch back to Bradbury before sending a transaction.");
+          }
+          return;
+        } catch {
+          // A wallet may expose an account query but reject a chain read; keep discovering others.
+        }
+      }
+    }
+
+    void restoreSession();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!wallet) {

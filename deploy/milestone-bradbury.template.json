@@ -1,0 +1,93 @@
+{
+  "schema": "verdictgraph-milestone-bradbury-deployment-v4-split",
+  "deploymentStatus": "DEPLOYED",
+  "network": "bradbury",
+  "chainId": 4221,
+  "genlayerRpc": "https://rpc-bradbury.genlayer.com",
+  "genlayerChainRpc": "https://rpc.testnet-chain.genlayer.com",
+  "toolchain": {
+    "genlayerCli": "0.39.2",
+    "foundry": "1.8.1",
+    "solc": "0.8.20"
+  },
+  "canonicalSourceSha256": {
+    "authority": "f26675a6703cbcde69554b8d4667b68fa26dbd444bce6816e3c067cc5eb09bd2",
+    "registry": "c67354e756b5bfe075f46e4a4bc695f6f4c69f10a9cc90920fe30b4f63be0b6c",
+    "adjudicator": "9c24cef3a4d81ca5566bcb3b27a8c5eb7cdb350e8e02e2736fb8cdcf9c939655"
+  },
+  "deploymentArtifactSha256": {
+    "authority": "12f96a55796d2277a58cb081ed72818c99ff85adde28fc0d8bf7789fd5077bc8",
+    "registry": "03e2248d139b2870a0d989ddeb42d684df029eabf07f923233ba569668e172bf",
+    "adjudicator": "db1e3467f3983989bc4212d08f2419db701ad6229f85d32527f66c8b6e4e4858"
+  },
+  "sourceSetSha256": null,
+  "vaultCreationSha256": "6f22bb181c07941c4d234eac8186fe6f5781e7707048898dbb3c4ec067b79f82",
+  "vaultRuntimeSha256": "8275e244852a1875404ea3890726bbad505a126945883337d78a6b279986f97f",
+  "expectedVaultRuntimeSha256": "8275e244852a1875404ea3890726bbad505a126945883337d78a6b279986f97f",
+  "acceptanceAuthorityAddress": "0x5bb49021001200fe8156a81c7fcf097e535e7181",
+  "deployerAddress": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+  "authorityAddress": "0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966",
+  "registryAddress": "0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D",
+  "adjudicatorAddress": "0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0",
+  "vaultAddress": "0x99717eD8040890B164BD62007d887EA7d9Cc8b2E",
+  "authorityConstructorArgs": [
+    "W7SQIQASAP6BVqgcf88JflNecYE=",
+    "12f96a55796d2277a58cb081ed72818c99ff85adde28fc0d8bf7789fd5077bc8"
+  ],
+  "registryConstructorArgs": [
+    "fmjTlRIn1An60yVdfZ/g2wx+SWY=",
+    "03e2248d139b2870a0d989ddeb42d684df029eabf07f923233ba569668e172bf"
+  ],
+  "adjudicatorConstructorArgs": [
+    "ZHvKzlC4E3/q0MqvSKXhsV02hU0=",
+    "db1e3467f3983989bc4212d08f2419db701ad6229f85d32527f66c8b6e4e4858"
+  ],
+  "vaultConstructorArgs": [
+    "0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D"
+  ],
+  "authorityDeployTransaction": "0xbfbbfe835cd92cae603a6817a291404897483e245baa84282dd0b2dcc6308de7",
+  "registryDeployTransaction": "0xe6f819446e3ae2fd6e9d82a32e2fad9e472707d53650d3ed53402611d9aebed6",
+  "adjudicatorDeployTransaction": "0x16d7bbce468104018f91df4e985e8974595811a7c6914a201fa55b94b5c531cd",
+  "bindAdjudicatorTransaction": "0xfa3e50d171426c7618bcbfd7cd8b579bfc5cdd246e98f6589f13fdd0bcdb899c",
+  "vaultDeployTransaction": "0x854780f4bbe4d2a17c2bd1fc487c5cde8945b7fc66cec6fe887bad92f385058c",
+  "bindVaultTransaction": "0xe20051f0311eb5693aca6d75b1424479d61f17a0311fb62c2225f514c03812a0",
+  "bindVaultOuterTransaction": null,
+  "acceptedProjectRegistration": {
+    "projectRef": "verdictgraph-v2",
+    "sponsor": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+    "registrationTransaction": "0xa520fd9e232743495914a9f300b76505a19a219869427445478efb2f1102cb50",
+    "status": "Finalized",
+    "statusCode": 7,
+    "registrationSender": "0x5bb49021001200fe8156a81c7fcf097e535e7181",
+    "finalizer": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+    "finalizerOuterTransaction": null,
+    "finalizerOuterBlock": null,
+    "finalizerOuterBlockHash": null,
+    "registeredAt": "2026-09-18T17:55:08Z",
+    "finalizedAt": "2026-09-18T18:26:30Z",
+    "projectCountAfterFinality": 1,
+    "baselineUri": "https://verdictgraph.vercel.app/milestones/accepted-baseline-v2.json",
+    "baselineSha256": "a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34",
+    "acceptanceRecordUri": "https://verdictgraph.vercel.app/milestones/acceptance-record-v2.json",
+    "acceptanceRecordSha256": "09777881c0fada43e09632afe0933dab154768171dd9c06d51ad4f7930aecd7a"
+  },
+  "authorityExplorerUrl": "https://explorer-bradbury.genlayer.com/address/0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966",
+  "registryExplorerUrl": "https://explorer-bradbury.genlayer.com/address/0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D",
+  "adjudicatorExplorerUrl": "https://explorer-bradbury.genlayer.com/address/0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0",
+  "vaultExplorerUrl": "https://explorer-bradbury.genlayer.com/address/0x99717eD8040890B164BD62007d887EA7d9Cc8b2E",
+  "gitCommit": null,
+  "verifiedAt": "2026-09-18T19:26:05Z",
+  "notes": [
+    "Milestone Authority is the only contract that accepts project trust-root registrations; the acceptance authority is constructor-bound and each project reference is write-once.",
+    "Milestone Registry owns lifecycle, review-request state, authenticated Adjudicator callbacks, and finality-only Vault messages; it consumes Authority snapshots by view.",
+    "Milestone Adjudicator owns only hash-pinned web/LLM evidence review and returns an idempotent finalized receipt to the Registry.",
+    "The Vault has one immutable Registry controller. The milestone_core() getter remains only as a compatibility ABI alias for existing tooling.",
+    "This is the final corrected split deployment; all four contracts and both one-shot bindings are finalized and verified from chain state. The Registry was redeployed so its constructor-bound digest exactly equals the generated deployment artifact.",
+    "The frontend intentionally fails closed while any split address, source digest, or Vault runtime digest is unset or mismatched.",
+    "Run scripts/milestone_verify.sh before any Bradbury deployment transaction.",
+    "Run docs/MILESTONE_DEPLOYMENT_RUNBOOK.md in order; generate all three deployment artifacts first and pass each exact deployment-artifact digest to its constructor.",
+    "Earlier broken candidates are deliberately excluded: Registry 0x03383b... and Adjudicator 0x3CC92d... were paired correctly but the first Registry artifact exposed a private bind method; Registry 0xd9FAC... was a constructor-encoding failure; Registry 0x8A938... used the canonical source hash instead of the exact deployment-artifact digest and was superseded. None is a publication address.",
+    "GenLayer CLI 0.39.2 may fall back to 200000 gas for finalization; if that transaction reverts, the same official ConsensusMain finalizer is retried with a measured 2000000 gas limit and recorded separately.",
+    "The verdictgraph-v2 accepted-project trust root was registered by the funded acceptance authority in GenLayer transaction 0xa520fd9e232743495914a9f300b76505a19a219869427445478efb2f1102cb50 and finalized by the protocol. Authority get_project_count() re-read as 1 and get_accepted_project(verdictgraph-v2) matched the exact baseline, acceptance-record, sponsor, and approved-origin values."
+  ]
+}

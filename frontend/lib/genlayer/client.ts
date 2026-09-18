@@ -73,6 +73,9 @@ export const BRADBURY_EXPLORER =
 
 export const BRADBURY_CHAIN_ID = 4221;
 
+const ZERO_ADDRESS =
+  "0x0000000000000000000000000000000000000000";
+
 export const VERDICTGRAPH_REGISTRY_ADDRESS =
   "0xCb031FbCEb219079608740fb77BC636F9447E7f5" as HexAddress;
 
@@ -81,6 +84,109 @@ export const VERDICTGRAPH_ADJUDICATOR_ADDRESS =
 
 export const VERDICTGRAPH_VAULT_ADDRESS =
   "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2" as HexAddress;
+
+const MILESTONE_AUTHORITY_ADDRESS_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_AUTHORITY_ADDRESS;
+const MILESTONE_REGISTRY_ADDRESS_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_REGISTRY_ADDRESS;
+const MILESTONE_REGISTRY_ADDRESS_LEGACY_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_ADDRESS;
+const MILESTONE_ADJUDICATOR_ADDRESS_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_ADJUDICATOR_ADDRESS;
+const MILESTONE_VAULT_ADDRESS_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_VAULT_ADDRESS;
+const MILESTONE_VAULT_RUNTIME_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_VAULT_RUNTIME_SHA256;
+const MILESTONE_AUTHORITY_SOURCE_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_AUTHORITY_SOURCE_SHA256;
+const MILESTONE_REGISTRY_SOURCE_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_REGISTRY_SOURCE_SHA256;
+const MILESTONE_REGISTRY_SOURCE_LEGACY_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_SOURCE_SHA256;
+const MILESTONE_ADJUDICATOR_SOURCE_ENV =
+  process.env.NEXT_PUBLIC_VERDICTGRAPH_MILESTONE_ADJUDICATOR_SOURCE_SHA256;
+
+function configuredMilestoneAddress(
+  ...values: (string | undefined)[]
+): HexAddress | null {
+  for (const candidate of values) {
+    const value = candidate?.trim();
+    if (value) {
+      if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+        return null;
+      }
+
+      // A zero address is never a deployable VerdictGraph target. Treating it
+      // as configured would let the GenLayer SDK encode a contract deployment
+      // instead of a Registry call, which is irreversible and cannot create a
+      // milestone.
+      return value.toLowerCase() === ZERO_ADDRESS
+        ? null
+        : value as HexAddress;
+    }
+  }
+  return null;
+}
+
+export function getMilestoneAuthorityAddress(): HexAddress | null {
+  return configuredMilestoneAddress(MILESTONE_AUTHORITY_ADDRESS_ENV);
+}
+
+export function getMilestoneRegistryAddress(): HexAddress | null {
+  return configuredMilestoneAddress(
+    MILESTONE_REGISTRY_ADDRESS_ENV,
+    MILESTONE_REGISTRY_ADDRESS_LEGACY_ENV,
+  );
+}
+
+export function getMilestoneAdjudicatorAddress(): HexAddress | null {
+  return configuredMilestoneAddress(MILESTONE_ADJUDICATOR_ADDRESS_ENV);
+}
+
+/** Compatibility alias: the split Registry replaces the old Controller. */
+export function getMilestoneAddress(): HexAddress | null {
+  return getMilestoneRegistryAddress();
+}
+
+export function getMilestoneVaultAddress(): HexAddress | null {
+  return configuredMilestoneAddress(MILESTONE_VAULT_ADDRESS_ENV);
+}
+
+export function getMilestoneVaultRuntimeSha256(): string | null {
+  const value = MILESTONE_VAULT_RUNTIME_ENV?.trim();
+  return value && /^[0-9a-f]{64}$/.test(value) ? value : null;
+}
+
+export function getMilestoneControllerSourceSha256(): string | null {
+  return getMilestoneRegistrySourceSha256();
+}
+
+function configuredMilestoneSourceSha256(
+  ...values: (string | undefined)[]
+): string | null {
+  for (const candidate of values) {
+    const value = candidate?.trim();
+    if (value) {
+      return /^[0-9a-f]{64}$/.test(value) ? value : null;
+    }
+  }
+  return null;
+}
+
+export function getMilestoneAuthoritySourceSha256(): string | null {
+  return configuredMilestoneSourceSha256(MILESTONE_AUTHORITY_SOURCE_ENV);
+}
+
+export function getMilestoneRegistrySourceSha256(): string | null {
+  return configuredMilestoneSourceSha256(
+    MILESTONE_REGISTRY_SOURCE_ENV,
+    MILESTONE_REGISTRY_SOURCE_LEGACY_ENV,
+  );
+}
+
+export function getMilestoneAdjudicatorSourceSha256(): string | null {
+  return configuredMilestoneSourceSha256(MILESTONE_ADJUDICATOR_SOURCE_ENV);
+}
 
 function exactAddress(
   configured: string | undefined,
@@ -93,6 +199,10 @@ function exactAddress(
   }
 
   if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+    return null;
+  }
+
+  if (value.toLowerCase() === ZERO_ADDRESS) {
     return null;
   }
 
@@ -134,6 +244,19 @@ export function isProtocolConfigured(): boolean {
     getRegistryAddress() &&
     getAdjudicatorAddress() &&
     getVaultAddress(),
+  );
+}
+
+export function isMilestoneConfigured(): boolean {
+  return Boolean(
+    getMilestoneAuthorityAddress() &&
+    getMilestoneRegistryAddress() &&
+    getMilestoneAdjudicatorAddress() &&
+    getMilestoneVaultAddress() &&
+    getMilestoneVaultRuntimeSha256() &&
+    getMilestoneAuthoritySourceSha256() &&
+    getMilestoneRegistrySourceSha256() &&
+    getMilestoneAdjudicatorSourceSha256(),
   );
 }
 
@@ -330,8 +453,39 @@ export function getEthereumProvider():
   return activeEthereumProvider;
 }
 
+export async function assertBradburyNetwork(): Promise<void> {
+  const provider = getEthereumProvider();
+  if (!provider) {
+    throw new Error("No wallet is connected to VerdictGraph.");
+  }
+  const expected = `0x${BRADBURY_CHAIN_ID.toString(16)}`;
+  const current = String(
+    await provider.request({ method: "eth_chainId" }),
+  ).toLowerCase();
+  if (current !== expected) {
+    throw new Error(
+      `Wallet is on chain ${current}; switch to GenLayer Bradbury (chain ${BRADBURY_CHAIN_ID}) before signing.`,
+    );
+  }
+}
+
 export function clearActiveWallet() {
   activeEthereumProvider = null;
+}
+
+export async function restoreWalletConnection(
+  wallet: WalletOption,
+): Promise<HexAddress | null> {
+  if (typeof window === "undefined") return null;
+
+  const accounts = await wallet.provider.request({ method: "eth_accounts" });
+  const candidate = Array.isArray(accounts) ? accounts[0] : null;
+  if (typeof candidate !== "string" || !/^0x[a-fA-F0-9]{40}$/.test(candidate)) {
+    return null;
+  }
+
+  activeEthereumProvider = wallet.provider;
+  return candidate as HexAddress;
 }
 
 export const readClient = createClient({
@@ -645,6 +799,12 @@ async function readAt<T>(
     );
   }
 
+  if (address.toLowerCase() === ZERO_ADDRESS) {
+    throw new Error(
+      `VerdictGraph ${label} address is the zero address; refusing to use it as a contract target`,
+    );
+  }
+
   return (
     await readClient.readContract({
       address,
@@ -674,6 +834,70 @@ export async function readRegistry<T>(
   );
 }
 
+export async function readMilestoneAuthority<T>(
+  functionName: string,
+  args: ContractArgs = [],
+  stateStatus: "accepted" | "finalized" = "finalized",
+): Promise<T> {
+  return readAt<T>(
+    "Milestone Authority",
+    getMilestoneAuthorityAddress(),
+    functionName,
+    args,
+    stateStatus,
+  );
+}
+
+/**
+ * An unregistered project is a valid first-run state for the authority UI.
+ * GenLayer returns it as a finalized UserError, so callers that are probing
+ * for an optional trust root must handle this exact condition explicitly.
+ */
+export function isUnknownAcceptedProjectError(error: unknown): boolean {
+  // Bradbury currently normalizes GenLayer VM UserErrors from view calls to
+  // "Missing or invalid parameters". The authority contract uses that path
+  // for a project reference that has not been registered yet, so the form
+  // must treat it as an empty registration target rather than render the raw
+  // provider payload as a fatal inspection error.
+  return error instanceof Error && (/unknown accepted project/i.test(error.message) || /missing or invalid parameters/i.test(error.message));
+}
+
+/** Keep provider VM payloads out of the UI while preserving actionable states. */
+export function friendlyGenLayerError(error: unknown, fallback: string): string {
+  const message = error instanceof Error ? error.message : "";
+  if (!message) return fallback;
+  if (isUnknownAcceptedProjectError(error)) {
+    return "That project reference is not registered in finalized GenLayer state.";
+  }
+  if (isTransactionFinalityPendingError(error) || /finality|awaiting Bradbury|timed? out|timeout/i.test(message)) {
+    return "The transaction was accepted and is still awaiting Bradbury finality.";
+  }
+  if (/user rejected|user denied|rejected the request/i.test(message)) {
+    return "The wallet approval was rejected.";
+  }
+  if (/insufficient funds|insufficient balance|not enough GEN/i.test(message)) {
+    return "The connected wallet does not have enough GEN for this action.";
+  }
+  if (/network|fetch failed|failed to fetch|connection/i.test(message)) {
+    return "The GenLayer read could not reach the network. Check the connection and retry.";
+  }
+  return fallback;
+}
+
+export async function readMilestoneRegistry<T>(
+  functionName: string,
+  args: ContractArgs = [],
+  stateStatus: "accepted" | "finalized" = "finalized",
+): Promise<T> {
+  return readAt<T>(
+    "Milestone Registry",
+    getMilestoneRegistryAddress(),
+    functionName,
+    args,
+    stateStatus,
+  );
+}
+
 export async function readAdjudicator<T>(
   functionName: string,
   args: ContractArgs = [],
@@ -684,6 +908,34 @@ export async function readAdjudicator<T>(
   return readAt<T>(
     "Adjudicator",
     getAdjudicatorAddress(),
+    functionName,
+    args,
+    stateStatus,
+  );
+}
+
+export async function readMilestoneAdjudicator<T>(
+  functionName: string,
+  args: ContractArgs = [],
+  stateStatus: "accepted" | "finalized" = "finalized",
+): Promise<T> {
+  return readAt<T>(
+    "Milestone Adjudicator",
+    getMilestoneAdjudicatorAddress(),
+    functionName,
+    args,
+    stateStatus,
+  );
+}
+
+export async function readMilestone<T>(
+  functionName: string,
+  args: ContractArgs = [],
+  stateStatus: "accepted" | "finalized" = "finalized",
+): Promise<T> {
+  return readAt<T>(
+    "Milestone Registry",
+    getMilestoneRegistryAddress(),
     functionName,
     args,
     stateStatus,
@@ -706,26 +958,28 @@ async function writeAt(
     );
   }
 
+  if (address.toLowerCase() === ZERO_ADDRESS) {
+    throw new Error(
+      `VerdictGraph ${label} target is the zero address; refusing to submit a deployment transaction`,
+    );
+  }
+
+  await assertBradburyNetwork();
+
   const client = createWriteClient(account);
 
-  const recommended =
-    await client.estimateTransactionFeesForWrite({
-      address,
-      functionName,
-      args,
-      value: 0n,
-    });
-
+  /*
+   * Bradbury currently exposes the legacy native write path, while its
+   * FeeManager address reverts on the newer optional policy reads used by
+   * GenLayerJS's fee-estimation helper. The documented SDK write path keeps
+   * the transaction fee distribution at the chain-native default and avoids
+   * synthesizing a fee preset from an unavailable policy endpoint.
+   */
   const hash = await client.writeContract({
     address,
     functionName,
     args,
     value: 0n,
-    fees: {
-      distribution: recommended.distribution,
-      messageAllocations: recommended.messageAllocations,
-      feeValue: recommended.feeValue,
-    },
   });
 
   const acceptedReceipt =
@@ -764,6 +1018,34 @@ export async function writeRegistry(
   );
 }
 
+export async function writeMilestoneAuthority(
+  account: HexAddress,
+  functionName: string,
+  args: ContractArgs = [],
+) {
+  return writeAt(
+    account,
+    "Milestone Authority",
+    getMilestoneAuthorityAddress(),
+    functionName,
+    args,
+  );
+}
+
+export async function writeMilestoneRegistry(
+  account: HexAddress,
+  functionName: string,
+  args: ContractArgs = [],
+) {
+  return writeAt(
+    account,
+    "Milestone Registry",
+    getMilestoneRegistryAddress(),
+    functionName,
+    args,
+  );
+}
+
 export async function writeAdjudicator(
   account: HexAddress,
   functionName: string,
@@ -778,22 +1060,77 @@ export async function writeAdjudicator(
   );
 }
 
+export async function writeMilestone(
+  account: HexAddress,
+  functionName: string,
+  args: ContractArgs = [],
+) {
+  return writeAt(
+    account,
+    "Milestone Registry",
+    getMilestoneRegistryAddress(),
+    functionName,
+    args,
+  );
+}
+
+export class TransactionFinalityPendingError extends Error {
+  readonly hash: TxHash;
+
+  constructor(hash: TxHash) {
+    super("Transaction was accepted and is still awaiting Bradbury finality");
+    this.name = "TransactionFinalityPendingError";
+    this.hash = hash;
+  }
+}
+
+function looksLikeFinalityTimeout(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /timed?\s*out|timeout|deadline exceeded|finaliz(?:e|ation).*wait/i.test(message);
+}
+
+export function isTransactionFinalityPendingError(
+  error: unknown,
+): error is TransactionFinalityPendingError {
+  return error instanceof TransactionFinalityPendingError;
+}
+
 export async function waitForFinalized(
   hash: TxHash,
+  options: { timeoutMs?: number } = {},
 ) {
-  const receipt =
-    await readClient.waitForTransactionReceipt({
-      hash,
-      status: TransactionStatus.FINALIZED,
-      fullTransaction: false,
-    });
+  const timeoutMs = options.timeoutMs ?? 25_000;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
 
-  return {
-    receipt,
-    executionSucceeded:
-      receipt.txExecutionResultName ===
-      ExecutionResult.FINISHED_WITH_RETURN,
-  };
+  try {
+    const receipt = await Promise.race([
+      readClient.waitForTransactionReceipt({
+        hash,
+        status: TransactionStatus.FINALIZED,
+        fullTransaction: false,
+      }),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(
+          () => reject(new TransactionFinalityPendingError(hash)),
+          timeoutMs,
+        );
+      }),
+    ]);
+
+    return {
+      receipt,
+      executionSucceeded:
+        receipt.txExecutionResultName ===
+        ExecutionResult.FINISHED_WITH_RETURN,
+    };
+  } catch (error) {
+    if (isTransactionFinalityPendingError(error) || looksLikeFinalityTimeout(error)) {
+      throw new TransactionFinalityPendingError(hash);
+    }
+    throw error;
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
 }
 
 export function explorerTx(hash: string) {

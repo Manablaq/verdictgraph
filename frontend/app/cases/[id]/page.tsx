@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ExternalLink, Scale } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileOutput, Scale } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { CaseActions } from "@/components/case-actions";
 import { ConfigurationRequired } from "@/components/configuration-required";
@@ -12,35 +12,11 @@ import { ConsensusTimeline } from "@/components/consensus-timeline";
 import { EvidenceTrustPanel } from "@/components/evidence-trust-panel";
 import { SnapshotNotice } from "@/components/snapshot-notice";
 import { StatusBadge } from "@/components/status-badge";
+import { loadCase, type ProtocolState } from "@/lib/case-data";
 import {
   isProtocolConfigured,
-  readRegistry,
-  readAdjudicator,
 } from "@/lib/genlayer/client";
 import { asNumber, formatUnix, shortAddress } from "@/lib/format";
-import type { CaseRecord, EvidencePolicyRecord, EvidenceRecord, HandoffRecord, RevisionRecord, VerdictRecord, WorkflowRecord } from "@/lib/types";
-
-async function loadCase(id: number, stateStatus: "accepted" | "finalized") {
-  const caseRecord = await readAdjudicator<CaseRecord>("get_case", [BigInt(id)], stateStatus);
-  const workflow = await readRegistry<WorkflowRecord>("get_workflow", [caseRecord.workflow_id], stateStatus);
-  const [policy, handoff, revision] = await Promise.all([
-    readRegistry<EvidencePolicyRecord>("get_policy", [workflow.policy_id], stateStatus),
-    readRegistry<HandoffRecord>("get_handoff", [caseRecord.handoff_id], stateStatus),
-    readAdjudicator<RevisionRecord>("get_revision", [BigInt(id), caseRecord.current_revision], stateStatus),
-  ]);
-  const evidence = await Promise.all(
-    Array.from({ length: asNumber(revision.evidence_count) }, async (_, index) => {
-      const evidenceId = asNumber(
-        await readAdjudicator<bigint>("get_revision_evidence_id", [BigInt(id), caseRecord.current_revision, BigInt(index)], stateStatus),
-      );
-      return { id: evidenceId, value: await readAdjudicator<EvidenceRecord>("get_evidence", [BigInt(evidenceId)], stateStatus) };
-    }),
-  );
-  const verdict = asNumber(caseRecord.latest_verdict_id) > 0
-    ? await readAdjudicator<VerdictRecord>("get_verdict", [caseRecord.latest_verdict_id], stateStatus)
-    : null;
-  return { caseRecord, workflow, policy, handoff, revision, evidence, verdict };
-}
 
 export default function CasePage() {
   return (
@@ -53,7 +29,7 @@ export default function CasePage() {
 function CaseContent() {
   const params = useParams<{ id: string }>();
   const search = useSearchParams();
-  const stateStatus: "accepted" | "finalized" = search.get("state") === "accepted" ? "accepted" : "finalized";
+  const stateStatus: ProtocolState = search.get("state") === "accepted" ? "accepted" : "finalized";
   const id = Number(params.id);
   const configured = Boolean(isProtocolConfigured());
   const query = useQuery({
@@ -80,6 +56,7 @@ function CaseContent() {
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-600"><span>{d.workflow.title}</span><span>Opened by {shortAddress(d.caseRecord.opener)}</span><span>Revision #{asNumber(d.caseRecord.current_revision)}</span><span>Recovery {formatUnix(d.caseRecord.recovery_deadline)}</span></div>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link href={`/cases/${id}/proof${acceptedSuffix}`} className="inline-flex items-center gap-2 rounded-full border border-sky-300/15 bg-sky-300/[.05] px-4 py-2.5 text-sm text-sky-100"><FileOutput size={15}/> Proof Pack</Link>
             {d.caseRecord.status === "OPEN" ? <Link href={`/cases/${id}/evidence${acceptedSuffix}`} className="rounded-full border border-white/10 bg-white/[.04] px-4 py-2.5 text-sm">Register evidence</Link> : null}
             {(d.caseRecord.status === "OPEN" || d.caseRecord.status === "REVIEWED" || d.caseRecord.status === "REPAIR_REQUIRED") ? <Link href={`/cases/${id}/respond${acceptedSuffix}`} className="rounded-full bg-white px-4 py-2.5 text-sm font-medium text-black">Response / revision</Link> : null}
           </div>

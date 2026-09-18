@@ -49,17 +49,32 @@ VerdictGraphVault.sol (GenLayer Chain / EVM)
 
 See [`docs/SPLIT_ARCHITECTURE_V1.md`](docs/SPLIT_ARCHITECTURE_V1.md).
 
+### Milestone settlement protocol
+
+The milestone release adds a dedicated three-IC GenLayer layer—`VerdictGraphMilestoneAuthority`, `VerdictGraphMilestoneRegistry`, and `VerdictGraphMilestoneAdjudicator`—plus `VerdictGraphMilestoneVault.sol`. The Authority owns write-once accepted-project trust roots, the Registry owns lifecycle and exact finalized callbacks, and the Adjudicator owns only hash-pinned subjective review. Together they bind an accepted project to its authorized sponsor, immutable criteria, a hash-pinned submission restricted to authority-registered public origins, mirrored baseline/acceptance evidence, independent GenLayer leader/validator review, bounded protocol windows and challenge/re-review, and exact PASS/FAIL/UNDETERMINED settlement rules. The frontend includes `/milestones`, `/milestones/authority`, participant controls, a wallet-free public Proof Pack at `/milestones/[id]/proof`, and fail-closed reciprocal four-contract topology, source-digest, Vault-runtime, security-header, route-recovery, and block-anchored live-read verification.
+
+The corrected milestone release is live on Bradbury with finalized reciprocal bindings. The Authority is `0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E`, Registry `0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA`, Adjudicator `0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02`, and Vault `0x229c077AF8446f7EC63E63d0C1F03b555fF50298`. [`deploy/milestone-bradbury.template.json`](deploy/milestone-bradbury.template.json) records the finalized receipts and exact runtime/source identities. See [`docs/MILESTONE_SETTLEMENT.md`](docs/MILESTONE_SETTLEMENT.md).
+
+The first accepted-project trust root is also finalized: `verdictgraph` is registered with sponsor `0x1f87ae197af539253978d435ad45ccf28fb95024`, the exact accepted baseline SHA-256 `0b374bb9df47bc5b6912eb316efcbd808b59d24a2b172479fc7428e67f759735`, and the published acceptance-record SHA-256 `850b5eed95738f699c93b59abb58868ddd179ee97a6ef3f99bd1919e8ecd94e0`. The Authority count is `1`, so the public milestone creation flow is unlocked for the authorized sponsor.
+
 ## Repository map
 
 - `contracts/verdict_graph_registry.py` and `contracts/verdict_graph_adjudicator.py` — canonical split Intelligent Contract sources.
 - `contracts/verdict_graph_registry_deploy.py` and `contracts/verdict_graph_adjudicator_deploy.py` — exact Bradbury deployment artifacts for the final split architecture.
 - `contracts/verdict_graph_core.py` and `contracts/verdict_graph_core_deploy.py` — retained historical single-Core artifacts; they are not the final deployed architecture.
 - `evm/contracts/VerdictGraphVault.sol` — final deterministic dual-controller custody and settlement contract.
+- `contracts/verdict_graph_milestone_authority.py` / `_deploy.py` — canonical and generated Authority IC artifacts for write-once accepted-project trust roots.
+- `contracts/verdict_graph_milestone_registry.py` / `_deploy.py` — canonical and generated Registry IC artifacts for milestone lifecycle, callbacks, and finality-only Vault messages.
+- `contracts/verdict_graph_milestone_adjudicator.py` / `_deploy.py` — canonical and generated Adjudicator IC artifacts for validator-equivalence evidence review.
+- `contracts/verdict_graph_milestone.py` / `_deploy.py` — retained monolithic milestone regression/reference artifacts; they are not the split deployment target.
+- `scripts/build_milestone_deploy_artifact.py` — deterministic artifact builder and parity proof.
+- `evm/contracts/VerdictGraphMilestoneVault.sol` — exact deterministic milestone settlement rail.
 - `frontend/` — production Next.js client.
 - `docs/` — architecture, trust model, state machines, verification history, and reviewer-readiness documentation.
 - `verification/source-manifest.json` — deterministic reviewer source identity and deployment bindings.
 - `verification/live/CANONICAL_EVIDENCE.json` — canonical live-evidence index for the final Bradbury proof.
 - `deploy/` — machine-readable Bradbury finality and public-hosting records.
+- `scripts/milestone_verify.sh` and `scripts/milestone_gate.py` — release-specific milestone verification package.
 
 ## Reviewer-derived hard gates
 
@@ -95,17 +110,21 @@ See [`docs/VERIFIED_BASELINE.md`](docs/VERIFIED_BASELINE.md).
 
 ## App routes
 
-The frontend is migrated to explicit Registry + Adjudicator clients, hard-locks the exact audited Bradbury Registry, Adjudicator and Vault addresses, defaults protocol reads to finalized state, and verifies the full six-way deployment topology before Vault operations.
+The frontend uses explicit Authority + Registry + Adjudicator clients, defaults protocol reads to finalized state, and verifies the full split milestone topology before milestone or Vault operations. The existing case protocol separately verifies its deployed Registry + Adjudicator + Vault topology.
+
+The case release adds a public Proof Pack at `/cases/[id]/proof`. The milestone release adds a separate wallet-free Proof Pack at `/milestones/[id]/proof`, with explicit reviewed/provisional protocol state and an EVM block anchor for the live Vault read. Both are shareable, export deterministic JSON with a canonical pack digest, and provide print/share/copy actions.
 
 Public production frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
 
-Immutable Vercel deployment: [https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app](https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app)
+Immutable Vercel deployment: [https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app](https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app)
 
-Vercel deployment ID: `dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS`.
+Vercel deployment ID: `dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn`.
 
 ## Verification commands
 
 For the current committed reviewer package, run `npm run verify`.
+
+For the milestone release, run `npm run milestone:verify`.
 
 The Stage 4E script is retained only for historical predeployment reproduction; it is not the canonical final-release verification command.
 
@@ -122,7 +141,7 @@ Completed before Stage 4E:
 - Stage 4C: 70,836-byte exact-AST deployment artifact passed GenVM + 35/35 Direct Mode but Bradbury no-send estimate rejected it.
 - Stage 4D: 69,197 / 62,050 / 57,721-byte candidates were all rejected by live Bradbury estimation with signing/sending blocked.
 
-Stage 4E is **complete and verified on macOS**. Both split Intelligent Contract deployment payloads passed live Bradbury `eth_estimateGas` with signing/sending blocked; both ICs passed GenVM validation; Direct Mode passed **40/40** tests (35 canonical + 2 Registry + 3 Adjudicator); the dual-controller Vault passed **30/30** Foundry tests; and the reviewer gate passed **145/145** checks. The verified deployment artifacts are 43,424 bytes for Registry and 52,561 bytes for Adjudicator.
+The milestone split is locally verified and its corrected four-contract topology is finalized on Bradbury. The current package contains source/artifact parity proofs, isolated Authority/Registry/Adjudicator Direct Mode suites, the original monolith regression suite, Foundry economic/security coverage, a fail-closed frontend, a no-send Bradbury preflight, and finalized reciprocal identity evidence.
 
 See [`docs/BUILD_STATUS.md`](docs/BUILD_STATUS.md).
 

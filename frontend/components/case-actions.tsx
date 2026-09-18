@@ -9,14 +9,18 @@ import { toast } from "sonner";
 import {
   type ContractArgs,
   getVaultAddress,
+  isTransactionFinalityPendingError,
   writeAdjudicator,
   waitForFinalized,
   explorerTx,
+  type TxHash,
 } from "@/lib/genlayer/client";
 import { useWallet } from "@/lib/genlayer/wallet-context";
 import { readVaultStatus } from "@/lib/genlayer/vault";
 import { asNumber } from "@/lib/format";
 import type { CaseRecord, EvidencePolicyRecord, HandoffRecord, RevisionRecord } from "@/lib/types";
+import { clearPendingGenLayerWrite, readPendingGenLayerWrite, savePendingGenLayerWrite, type PendingGenLayerWrite } from "@/lib/genlayer/pending";
+import { PendingTransactionNotice } from "./pending-transaction-notice";
 
 export function CaseActions({
   caseId,
@@ -37,6 +41,8 @@ export function CaseActions({
   const queryClient = useQueryClient();
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
+  const pendingStorageKey = `verdictgraph:case:${caseId}:pending-genlayer-write`;
+  const [pendingFinality, setPendingFinality] = useState<PendingGenLayerWrite | null>(() => readPendingGenLayerWrite(pendingStorageKey));
   const vaultConfigured = Boolean(getVaultAddress());
   const vaultStatus = useQuery({
     queryKey: ["vault-status", Number(caseRecord.handoff_id)],
@@ -72,12 +78,23 @@ export function CaseActions({
     try {
       const { hash } = await writeAdjudicator(activeAccount, functionName, args);
       if (finality) {
+        const pending: PendingGenLayerWrite = { hash, label: functionName.replaceAll("_", " ") };
+        setPendingFinality(pending);
+        savePendingGenLayerWrite(pendingStorageKey, pending);
         toast.message("Accepted by consensus; waiting for finalization…");
-        const result = await waitForFinalized(hash);
+        let result;
+        try {
+          result = await waitForFinalized(hash);
+        } catch (error) {
+          if (isTransactionFinalityPendingError(error)) return;
+          throw error;
+        }
+        setPendingFinality(null);
+        clearPendingGenLayerWrite(pendingStorageKey);
         if (!result.executionSucceeded) throw new Error("Finalized transaction did not finish with return");
-        toast.success("Finalized successfully", { action: { label: "Explorer", onClick: () => window.open(explorerTx(hash), "_blank") } });
+        toast.success("Finalized successfully", { action: { label: "Explorer", onClick: () => window.open(explorerTx(hash), "_blank", "noopener,noreferrer") } });
       } else {
-        toast.success("Transaction accepted", { action: { label: "Explorer", onClick: () => window.open(explorerTx(hash), "_blank") } });
+        toast.success("Transaction accepted", { action: { label: "Explorer", onClick: () => window.open(explorerTx(hash), "_blank", "noopener,noreferrer") } });
       }
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["case", caseId] }),
@@ -87,6 +104,28 @@ export function CaseActions({
       ]);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Transaction failed");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function recheckPendingFinality() {
+    if (!pendingFinality) return;
+    setBusy("pending-finality");
+    try {
+      const result = await waitForFinalized(pendingFinality.hash as TxHash);
+      setPendingFinality(null);
+      clearPendingGenLayerWrite(pendingStorageKey);
+      if (!result.executionSucceeded) throw new Error("Finalized transaction did not finish with return");
+      toast.success("Previously accepted case transaction is now finalized");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["case", caseId] }),
+        queryClient.invalidateQueries({ queryKey: ["vault-status", Number(caseRecord.handoff_id)] }),
+      ]);
+    } catch (error) {
+      if (!isTransactionFinalityPendingError(error)) {
+        toast.error(error instanceof Error ? error.message : "Could not confirm transaction finality");
+      }
     } finally {
       setBusy(null);
     }
@@ -128,8 +167,9 @@ export function CaseActions({
           <p className="mt-2 max-w-xl text-xs leading-5 text-zinc-600">
             Review is provisional until the transaction finalizes. EVM settlement is a separate finality-only message and can only be queued for the latest reviewed revision.
           </p>
+          {pendingFinality ? <PendingTransactionNotice label={pendingFinality.label} hash={pendingFinality.hash} busy={busy === "pending-finality"} onRecheck={() => void recheckPendingFinality()} /> : null}
         </div>
-        <button onClick={() => queryClient.invalidateQueries({ queryKey: ["case", caseId] })} className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/10 text-zinc-600 hover:text-zinc-200" title="Refresh case">
+        <button type="button" aria-label="Refresh case" onClick={() => queryClient.invalidateQueries({ queryKey: ["case", caseId] })} className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/10 text-zinc-600 hover:text-zinc-200" title="Refresh case">
           <RefreshCcw size={14} />
         </button>
       </div>
@@ -190,7 +230,7 @@ export function CaseActions({
         ) : null}
 
         {caseRecord.status === "REVIEWED" && !caseRecord.settlement_queued && asNumber(caseRecord.latest_verdict_id) > 0 ? (
-          <Action busy={busy === "settle"} icon={Gavel} disabled={!settlementWindowClosed || recoveryExpired} onClick={() => run("settle", "queue_settlement", [BigInt(caseId), caseRecord.latest_verdict_id], true)}>
+          <Action busy={busy === "settle"} icon={Gavel} disabled={Boolean(pendingFinality) || !settlementWindowClosed || recoveryExpired} onClick={() => run("settle", "queue_settlement", [BigInt(caseId), caseRecord.latest_verdict_id], true)}>
             Queue finalized settlement
           </Action>
         ) : null}
@@ -240,7 +280,7 @@ export function CaseActions({
 
 function Action({ children, onClick, busy, disabled = false, icon: Icon }: { children: React.ReactNode; onClick: () => void; busy: boolean; disabled?: boolean; icon: typeof Gavel }) {
   return (
-    <button disabled={busy || disabled} onClick={onClick} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-medium text-black disabled:cursor-not-allowed disabled:opacity-35">
+    <button type="button" aria-busy={busy} disabled={busy || disabled} onClick={onClick} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-medium text-black disabled:cursor-not-allowed disabled:opacity-35">
       {busy ? <LoaderCircle size={14} className="animate-spin" /> : <Icon size={14} />} {children}
     </button>
   );

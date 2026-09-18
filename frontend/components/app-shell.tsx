@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, GitBranch, LayoutDashboard, Network, Plus, Scale, Settings2, Vault } from "lucide-react";
+import { BookOpen, Flag, GitBranch, LayoutDashboard, Network, Plus, Scale, Settings2, Vault } from "lucide-react";
 import { WalletButton } from "./wallet-button";
 import {
+  isMilestoneConfigured,
   isProtocolConfigured,
 } from "@/lib/genlayer/client";
 
 const nav = [
   { href: "/app", label: "Overview", icon: LayoutDashboard },
   { href: "/workflows", label: "Workflows", icon: Network },
+  { href: "/milestones", label: "Milestones", icon: Flag },
   { href: "/create", label: "Create", icon: Plus },
   { href: "/vault", label: "Vault", icon: Vault },
   { href: "/setup", label: "Setup", icon: Settings2 },
@@ -20,6 +22,9 @@ const nav = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const configured = Boolean(isProtocolConfigured());
+  const milestoneConfigured = Boolean(isMilestoneConfigured());
+  const fullyConfigured = configured && milestoneConfigured;
+  const deploymentLabel = configured && milestoneConfigured ? "Bradbury core + milestone" : configured ? "Bradbury core configured" : "Deployment not configured";
   return (
     <div className="min-h-screen bg-[#07090d] text-zinc-100">
       <header className="sticky top-0 z-50 border-b border-white/[.07] bg-[#07090d]/85 backdrop-blur-xl">
@@ -40,13 +45,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
           <div className="ml-auto flex items-center gap-3">
-            <div className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] sm:flex ${configured ? "border-emerald-400/15 bg-emerald-400/[.07] text-emerald-300" : "border-amber-400/15 bg-amber-400/[.07] text-amber-300"}`}>
-              <span className={`h-1.5 w-1.5 rounded-full ${configured ? "bg-emerald-300" : "bg-amber-300"}`} />
-              {configured ? "Bradbury configured" : "Deployment not configured"}
+            <div className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] sm:flex ${fullyConfigured ? "border-emerald-400/15 bg-emerald-400/[.07] text-emerald-300" : "border-amber-400/15 bg-amber-400/[.07] text-amber-300"}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${fullyConfigured ? "bg-emerald-300" : "bg-amber-300"}`} />
+              {deploymentLabel}
             </div>
             <WalletButton />
           </div>
         </div>
+        <nav className="mx-auto flex max-w-[1540px] gap-1 overflow-x-auto border-t border-white/[.06] px-5 py-2 md:hidden" aria-label="Primary navigation">
+          {nav.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href || (href !== "/app" && pathname.startsWith(href + "/"));
+            return <Link key={href} href={href} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-xs transition ${active ? "bg-white/[.08] text-white" : "text-zinc-500 hover:bg-white/[.04] hover:text-zinc-200"}`}><Icon size={14} />{label}</Link>;
+          })}
+        </nav>
       </header>
       <main className="mx-auto max-w-[1540px] px-5 py-8 lg:px-7">{children}</main>
       <footer className="mx-auto flex max-w-[1540px] items-center justify-between border-t border-white/[.06] px-5 py-8 text-xs text-zinc-600 lg:px-7">

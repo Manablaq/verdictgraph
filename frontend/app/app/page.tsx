@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Activity, ArrowRight, FileCheck2, GitFork, Scale, ShieldCheck } from "lucide-react";
+import { Activity, ArrowRight, FileCheck2, Flag, GitFork, Scale, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import { MetricCard } from "@/components/metric-card";
 import {
+  friendlyGenLayerError,
   isProtocolConfigured,
   readRegistry,
   readAdjudicator,
@@ -34,7 +35,7 @@ export default function DashboardPage() {
           <div><div className="text-xs uppercase tracking-[.2em] text-zinc-600">Protocol overview</div><h1 className="mt-2 text-4xl font-semibold tracking-[-.04em]">Operational accountability, not another black box.</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-500">Finalized contract state only. Accepted-but-appealable transactions are never presented here as settled facts.</p></div>
           <Link href="/create" className="inline-flex items-center gap-2 self-start rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black">Create workflow <ArrowRight size={15}/></Link>
         </section>
-        {!configured ? <ConfigurationRequired /> : query.isError ? <div className="rounded-2xl border border-rose-400/15 bg-rose-400/[.04] p-5 text-sm text-rose-200">Unable to read finalized VerdictGraph state: {query.error instanceof Error ? query.error.message : "Unknown error"}</div> : (
+        {!configured ? <ConfigurationRequired /> : query.isError ? <div className="rounded-2xl border border-rose-400/15 bg-rose-400/[.04] p-5 text-sm text-rose-200">Unable to read finalized VerdictGraph state: {friendlyGenLayerError(query.error, "Retry the finalized VerdictGraph read.")}</div> : (
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             <MetricCard label="Workflows" value={query.data ? asNumber(query.data.workflows) : "—"} detail="Registered workflow graphs" icon={GitFork}/>
             <MetricCard label="Handoffs" value={query.data ? asNumber(query.data.handoffs) : "—"} detail="Explicit responsibility boundaries" icon={Activity}/>
@@ -50,6 +51,7 @@ export default function DashboardPage() {
             ["03", "Settle only the latest verdict", "A post-review response window can supersede an old verdict. Only the latest current revision may queue finality-only settlement."],
           ].map(([n, title, text]) => <div key={n} className="rounded-[26px] border border-white/[.07] bg-white/[.02] p-6"><div className="font-mono text-xs text-zinc-700">{n}</div><h2 className="mt-8 text-lg font-medium">{title}</h2><p className="mt-3 text-sm leading-6 text-zinc-500">{text}</p></div>)}
         </section>
+        <section className="rounded-[28px] border border-sky-300/15 bg-sky-300/[.035] p-6"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-center"><div><div className="flex items-center gap-2 text-xs uppercase tracking-[.18em] text-sky-200/65"><Flag size={14}/> New protocol capability</div><h2 className="mt-3 text-xl font-medium">Milestone settlement</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">Lock an accepted baseline, submit a hash-pinned change, and settle only after GenLayer validator consensus and the challenge window.</p></div><Link href="/milestones" className="inline-flex items-center gap-2 self-start rounded-full border border-sky-300/20 bg-sky-300/[.08] px-4 py-2.5 text-sm text-sky-100">Open milestones <ArrowRight size={15}/></Link></div></section>
       </div>
     </AppShell>
   );

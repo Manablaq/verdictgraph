@@ -14,3 +14,27 @@ body { margin: 0; color: #f5f7fb; background: radial-gradient(circle at 50% -15%
 a { text-decoration: none; }
 .grid-noise { background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px); background-size: 42px 42px; }
 .glass { background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(18px); }
+
+@media print {
+  :root { color-scheme: light; }
+  html, body { background: #fff !important; color: #111827 !important; }
+  body { font-size: 11pt; }
+  header, footer, .no-print { display: none !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  .proof-pack { color: #111827 !important; }
+  .proof-pack .print-surface,
+  .proof-pack .print-card { background: #fff !important; border-color: #d1d5db !important; box-shadow: none !important; break-inside: avoid; }
+  .proof-pack .print-surface { margin-bottom: 18px; }
+  .proof-pack [class*="text-zinc-100"],
+  .proof-pack [class*="text-zinc-200"],
+  .proof-pack [class*="text-zinc-300"],
+  .proof-pack [class*="text-zinc-400"],
+  .proof-pack [class*="text-sky-100"] { color: #111827 !important; }
+  .proof-pack [class*="text-zinc-500"],
+  .proof-pack [class*="text-zinc-600"],
+  .proof-pack [class*="text-zinc-700"] { color: #4b5563 !important; }
+  .proof-pack [class*="bg-black"],
+  .proof-pack [class*="bg-white/[."] { background: #f9fafb !important; }
+  .proof-pack [class*="border-white"] { border-color: #d1d5db !important; }
+  a { color: #111827 !important; }
+}

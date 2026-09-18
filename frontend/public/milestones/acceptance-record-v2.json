@@ -1,0 +1,15 @@
+{
+  "schema": "verdictgraph-acceptance-record-v2",
+  "project_ref": "verdictgraph-v2",
+  "acceptance_authority": "0x5bb49021001200fe8156a81c7fcf097e535e7181",
+  "authorized_sponsor": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+  "accepted_baseline": {
+    "uri": "https://verdictgraph.vercel.app/milestones/accepted-baseline-v2.json",
+    "mirror_uri": "https://verdictgraph-mr-albert-s-projects.vercel.app/milestones/accepted-baseline-v2.json",
+    "format": "UTF-8 JSON",
+    "sha256": "a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34",
+    "purpose": "A text-safe, hash-pinned review identity for the accepted predecessor release."
+  },
+  "acceptance_statement": "The acceptance authority registers verdictgraph-v2 as the corrected text-safe trust root for the same authorized sponsor. The predecessor archive identity remains preserved in the baseline manifest, while GenLayer validators review bounded UTF-8 evidence bytes.",
+  "milestone_boundary": "The deployed GenLayer Bradbury milestone Authority, Registry, Adjudicator, deterministic Vault, lifecycle controls, and public Proof Pack are new work beyond the accepted predecessor."
+}

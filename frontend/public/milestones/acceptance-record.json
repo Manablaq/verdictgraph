@@ -1,0 +1,16 @@
+{
+  "schema": "verdictgraph-acceptance-record-v1",
+  "project_ref": "verdictgraph",
+  "accepted_baseline": {
+    "repository": "https://github.com/Manablaq/verdictgraph",
+    "commit": "46b636ffd4449234362d7cc78a8a0242a62ac755",
+    "uri": "https://github.com/Manablaq/verdictgraph/archive/46b636ffd4449234362d7cc78a8a0242a62ac755.tar.gz",
+    "mirror_uri": "https://codeload.github.com/Manablaq/verdictgraph/tar.gz/46b636ffd4449234362d7cc78a8a0242a62ac755",
+    "sha256": "0b374bb9df47bc5b6912eb316efcbd808b59d24a2b172479fc7428e67f759735"
+  },
+  "acceptance_authority": "0x5bb49021001200fe8156a81c7fcf097e535e7181",
+  "authorized_sponsor": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+  "acceptance_statement": "The acceptance authority designates the exact predecessor release identified above as the accepted VerdictGraph baseline. Subsequent milestone claims must prove measurable progress beyond this byte-pinned baseline.",
+  "accepted_at": "2026-09-15T22:13:33Z",
+  "milestone_boundary": "The deployed GenLayer Bradbury milestone Authority, Registry, Adjudicator and deterministic Vault are new work beyond the accepted baseline."
+}

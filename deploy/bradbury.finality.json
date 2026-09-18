@@ -108,17 +108,17 @@
     }
   },
   "network": "bradbury",
-  "reviewer_source_set_sha256": "d6ebbf0fc7adfc73c18ec5f620508b7f49972fbec8863fcce84fa90a6cf11ca1",
+  "reviewer_source_set_sha256": "e812ddc86b320269c7290e54ca3d61dd420c2216a15642f0036764398127a47a",
   "reviewer_verification": {
     "abi_gate": "passed",
     "deployed_contract_source_modified": false,
     "frontend_six_way_topology": "enforced",
     "generic_core_frontend_api": "absent",
-    "manifest_file_count": 98,
-    "reviewer_gate": "152/152 passed"
+    "manifest_file_count": 146,
+    "reviewer_gate": "154/154 passed"
   },
   "schema": "verdictgraph-bradbury-finality-v1",
-  "scope_note": "The deployed Registry, Adjudicator and Vault source remains bound to the deployment commit. The reviewer_source_set_sha256 separately binds the final frontend, configuration, scripts and reviewer-facing documentation.",
+  "scope_note": "The deployed Registry, Adjudicator and Vault source remains bound to the deployment commit. The reviewer_source_set_sha256 separately binds the final frontend, configuration, scripts and reviewer-facing documentation. The split milestone deployment is recorded independently in deploy/milestone-bradbury.template.json.",
   "six_way_topology": {
     "adjudicator_to_registry": "0xCb031FbCEb219079608740fb77BC636F9447E7f5",
     "adjudicator_to_vault": "0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
@@ -127,7 +127,7 @@
     "vault_to_adjudicator": "0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
     "vault_to_registry": "0xCb031FbCEb219079608740fb77BC636F9447E7f5"
   },
-  "verified_at": "2026-09-07T23:41:48Z",
+  "verified_at": "2026-09-15T19:03:49Z",
   "withdrawals": {
     "provider": {
       "block_number": "0x1409b32",

@@ -34,7 +34,7 @@ A submission is blocked if a required item below is false. Checked items are sup
 - [x] Duplicate/late settlement effects are idempotent.
 - [x] Failed finalized completion/settlement messages are retryable while Vault state remains recoverable.
 - [x] Registry/Adjudicator terminal state can synchronize from deterministic Vault terminal state.
-- [x] Registry and Adjudicator writes use SDK fee estimation and preserve message allocations.
+- [x] Registry and Adjudicator writes use GenLayerJS's documented Bradbury-native write path without forcing FeeManager policy reads that revert on the live network.
 - [x] Repeated identical Vault registration is idempotent and changed terms are rejected.
 - [x] Withdrawals are pull-based and covered by failure/reentrancy tests.
 
@@ -48,7 +48,7 @@ A submission is blocked if a required item below is false. Checked items are sup
 
 ## Deployment/source parity
 
-- [x] `scripts/reviewer_gate.py` passes: **152/152**.
+- [x] `scripts/reviewer_gate.py` passes: **154/154**.
 - [x] `scripts/verify_manifest.py` passes.
 - [x] Deterministic reviewer source identity and deployment bindings are persisted in `verification/source-manifest.json`.
 - [x] Canonical live-evidence navigation for the final Bradbury proof is persisted in `verification/live/CANONICAL_EVIDENCE.json`.
@@ -60,7 +60,7 @@ A submission is blocked if a required item below is false. Checked items are sup
 - [x] Deployed contract source is byte-stable relative to deployment commit `0e2855d14e142edc6e215c5935f3993eee59be21`; post-deployment frontend/docs work does not modify contract source.
 - [x] Frontend accepts only the exact final Registry, Adjudicator and Vault addresses and verifies all six topology edges.
 - [x] Final public frontend and Bradbury Explorer address links were rechecked during final packaging and point only to the exact audited deployments.
-- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS` from exact deployed frontend source commit `46b636ffd4449234362d7cc78a8a0242a62ac755`.
+- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn`; the immutable URL, acceptance-record bytes, and fresh milestone-route browser checks are persisted in `deploy/public-hosting.finality.json`.
 - [x] Public-hosting evidence is persisted in `deploy/public-hosting.finality.json`.
 - [ ] The external submission form itself must be populated with the exact final links below immediately before the user submits it.
 
@@ -71,6 +71,33 @@ A submission is blocked if a required item below is false. Checked items are sup
 - Vault: `0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2`
 
 The machine-readable finality record is `deploy/bradbury.finality.json`.
+
+## Milestone release boundary
+
+The milestone settlement protocol is implemented and locally verified as a
+split Authority + Registry + Adjudicator GenLayer layer plus deterministic
+Vault. Its release evidence is documented in
+[`docs/MILESTONE_SETTLEMENT.md`](MILESTONE_SETTLEMENT.md) and
+[`docs/BUILD_STATUS.md`](BUILD_STATUS.md). The corrected milestone topology is
+finalized on Bradbury and recorded as `DEPLOYED`; its Registry↔Adjudicator and
+Registry↔Vault bindings were finalized and re-read from chain state. The
+template records canonical and generated artifact SHA-256 values plus the
+constructor-specialized Vault runtime SHA-256; the published frontend provides
+all three generated artifact digests before enabling milestone writes. The
+release gate also includes keyless `eth_estimateGas` probes for all three IC
+artifacts and the Vault; these probes cannot sign or submit transactions.
+The first accepted-project trust root, `verdictgraph`, is now finalized on
+Bradbury with Authority project count `1`; its exact baseline, acceptance
+record, sponsor, and approved-origin values are recorded in the deployment
+template and re-read from finalized state.
+
+## Final milestone Bradbury topology
+
+- Authority: `0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E`
+- Registry: `0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA`
+- Adjudicator: `0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02`
+- Vault: `0x229c077AF8446f7EC63E63d0C1F03b555fF50298`
+- Finality and binding evidence: `deploy/milestone-bradbury.template.json`
 
 ## Final public links
 

@@ -1,0 +1,50 @@
+{
+  "schema": "verdictgraph.milestone-evidence.v2",
+  "project_ref": "verdictgraph-v2",
+  "milestone_id": "2",
+  "milestone_reference": "milestone-20fcac69-3c20-41c9-b3df-fd2667db80a0",
+  "network": {
+    "name": "GenLayer Bradbury",
+    "chain_id": 4221
+  },
+  "accepted_project": {
+    "baseline_uri": "https://verdictgraph.vercel.app/milestones/accepted-baseline-v2.json",
+    "baseline_sha256": "a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34",
+    "acceptance_record_uri": "https://verdictgraph.vercel.app/milestones/acceptance-record-v2.json",
+    "acceptance_record_sha256": "09777881c0fada43e09632afe0933dab154768171dd9c06d51ad4f7930aecd7a",
+    "authorized_sponsor": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+    "acceptance_authority": "0x5bb49021001200fe8156a81c7fcf097e535e7181"
+  },
+  "milestone_terms": {
+    "title": "VerdictGraph v2 production settlement",
+    "objective": "Demonstrate that the replacement VerdictGraph v2 deployment is live on Bradbury and independently verifiable through the acceptance-authority, sponsor-bound milestone, hash-pinned evidence, GenLayer review, and deterministic Vault settlement flow.",
+    "success_criterion": "The sponsor creates this milestone from the finalized verdictgraph-v2 trust root; the owner funds exactly 0.010 GEN; the beneficiary posts exactly 0.002 GEN; the beneficiary submits an approved-origin HTTPS evidence artifact whose bytes match its declared SHA-256; GenLayer finalizes PASS, FAIL, or UNDETERMINED; and the public Proof Pack shows the finalized decision, evidence digest, and terminal Vault state.",
+    "owner": "0x1f87ae197af539253978d435ad45ccf28fb95024",
+    "beneficiary": "0x5bb49021001200fe8156a81c7fcf097e535e7181",
+    "principal_gen": "0.010",
+    "beneficiary_bond_gen": "0.002"
+  },
+  "deployed_milestone_release": {
+    "authority": "0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E",
+    "registry": "0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA",
+    "adjudicator": "0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02",
+    "vault": "0x229c077AF8446f7EC63E63d0C1F03b555fF50298",
+    "capabilities": [
+      "constructor-bound acceptance authority and write-once accepted-project trust roots",
+      "immutable milestone terms inherited from the accepted baseline",
+      "hash-pinned HTTPS evidence with authority-registered origins and UTF-8 verification",
+      "independent GenLayer review with PASS, FAIL, and UNDETERMINED outcomes",
+      "bounded challenge and re-review lifecycle",
+      "finality-only settlement messages to a deterministic exact-amount Vault",
+      "wallet-free public milestone Proof Pack"
+    ]
+  },
+  "public_verification": {
+    "application": "https://verdictgraph.vercel.app/milestones/2",
+    "proof_pack": "https://verdictgraph.vercel.app/milestones/2/proof",
+    "evidence_origin": "https://verdictgraph.vercel.app",
+    "creation_transaction": "0xf6c27af918a7f21a3c5dd6afb22eac8b3345a495b4df1b802875fd2a18ad94ad",
+    "creation_transaction_status": "finalized"
+  },
+  "interpretation": "This artifact identifies the accepted v2 trust root and the independently verifiable GenLayer Bradbury milestone release. The on-chain Registry, GenLayer validator review, and deterministic Vault remain the authorities for lifecycle state, decision, and settlement; this document does not replace those finalized records."
+}

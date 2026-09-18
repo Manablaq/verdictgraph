@@ -134,3 +134,100 @@ export type VerdictRecord = {
   verdict_sha256: string;
   resolved_at: string;
 };
+
+export type MilestoneRecord = {
+  project_ref: string;
+  reference: string;
+  owner: string;
+  beneficiary: string;
+  title: string;
+  objective: string;
+  baseline_uri: string;
+  baseline_sha256: string;
+  criteria_json: string;
+  submission_origins_json: string;
+  terms_sha256: string;
+  principal_required: bigint;
+  beneficiary_bond_required: bigint;
+  funding_deadline: bigint;
+  submission_deadline: bigint;
+  recovery_deadline: bigint;
+  challenge_window_seconds: bigint;
+  status:
+    | "DRAFT"
+    | "ACTIVE"
+    | "SUBMITTED"
+    | "REVIEW_PENDING"
+    | "REVIEWED"
+    | "CHALLENGED"
+    | "REPAIR_REQUIRED"
+    | "SETTLED"
+    | "RECOVERED";
+  submission_version: bigint;
+  submission_uri: string;
+  submission_sha256: string;
+  sponsor_ready: boolean;
+  beneficiary_ready: boolean;
+  challenge_count: bigint;
+  challenge_reason: string;
+  challenged_by: string;
+  challenged_at: bigint;
+  challenge_deadline: bigint;
+  settlement_earliest_at: bigint;
+  settlement_queued: boolean;
+  settlement_attempt_count: bigint;
+  settlement_last_attempt_at: bigint;
+  latest_review_id: bigint;
+  review_request_id: bigint;
+  review_queued: boolean;
+  repair_failure_code: string;
+  repair_observed_sha256: string;
+  created_at: string;
+};
+
+export type AcceptedProjectRecord = {
+  version?: number;
+  project_ref: string;
+  sponsor: string;
+  baseline_uri: string;
+  baseline_sha256: string;
+  baseline_mirror_uri: string;
+  acceptance_record_uri: string;
+  acceptance_record_sha256: string;
+  acceptance_record_mirror_uri: string;
+  submission_origins_json: string;
+  registered_at: string;
+};
+
+export type MilestoneSubmissionRecord = {
+  milestone_id: bigint;
+  version: bigint;
+  uri: string;
+  sha256: string;
+  submitted_by: string;
+  submitted_at: bigint;
+  created_at: string;
+};
+
+export type MilestoneReviewRecord = {
+  milestone_id: bigint;
+  submission_version: bigint;
+  challenge_count: bigint;
+  decision: "PASS" | "FAIL" | "UNDETERMINED";
+  failed_criterion_id: bigint;
+  consequence_rule_id: bigint;
+  source_set_sha256: string;
+  summary: string;
+  review_sha256: string;
+  resolved_at: string;
+};
+
+export type MilestoneChallengeRecord = {
+  milestone_id: bigint;
+  challenge_number: bigint;
+  reason: string;
+  challenged_by: string;
+  challenged_at: bigint;
+  resolved_review_id: bigint;
+  created_at: string;
+};

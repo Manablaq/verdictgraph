@@ -1,6 +1,6 @@
 # Build status
 
-Date: 2026-09-08
+Date: 2026-09-15
 
 ## Completed verification checkpoints
 
@@ -140,7 +140,7 @@ The exact deployed Intelligent Contract source remains the source committed at `
 
 The frontend has been migrated from the temporary single-Core abstraction to explicit Registry and Adjudicator clients. It hard-locks the exact final Registry, Adjudicator and Vault addresses and verifies the full six-way topology before Vault operations.
 
-Current reviewer gate: **152/152**.
+Current reviewer gate: **154/154**.
 
 Current deterministic source identity is recorded in `verification/source-manifest.json`.
 
@@ -148,16 +148,117 @@ Current deterministic source identity is recorded in `verification/source-manife
 
 The on-chain/economic proof remains complete.
 
-The exact production frontend source from commit `46b636ffd4449234362d7cc78a8a0242a62ac755` was built locally under pinned Node/npm, emitted as Vercel Build Output API v3, and uploaded as the frozen prebuilt artifact without rebuilding. The successful production deployment is `dpl_AbR6NaKBN81UB8g7jxcpj4cU7NaS`.
+The final production frontend and acceptance record were deployed from the audited working tree after local TypeScript/build checks and a successful remote Vercel install/build. The successful READY production deployment is `dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn`.
 
 - Public frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
-- Immutable deployment: [https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app](https://verdictgraph-9tj6vd3pu-mr-albert-s-projects.vercel.app)
+- Immutable deployment: [https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app](https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app)
 - Production deployment state: `READY`
 - Vercel Authentication: disabled
-- Public HTTP verification: `/`, `/app`, `/docs`, `/setup`, `/vault`, `/workflows`, and `/create` return HTTP 200
-- Prebuilt output: 242 files
-- Prebuilt output SHA-256: `2dee9df8e88eea3cff65211544fdaed948e7be5851c7c0d1b11b490a60309124`
-- The clean `verdictgraph.vercel.app` alias was assigned to the already-approved immutable production deployment without creating another deployment.
+- Public HTTP verification: `/`, `/app`, `/docs`, `/setup`, `/vault`, `/workflows`, `/create`, `/milestones`, `/milestones/authority`, and `/milestones/create` return HTTP 200
+- Fresh browser verification: the three milestone routes render the Bradbury milestone configuration and complete without console errors; the acceptance record returns identical bytes through both public aliases.
+- The clean `verdictgraph.vercel.app` alias points to the final READY production deployment recorded in `deploy/public-hosting.finality.json`.
 - No blockchain transaction was used for frontend publication.
 
 The only remaining external action is the submission form itself. It must use the exact final frontend and Bradbury Explorer links recorded in the README and reviewer-readiness document.
+
+## Milestone Settlement Protocol — local release verification
+
+The milestone release is a new protocol surface beyond the accepted split
+workflow project. It adds:
+
+- `contracts/verdict_graph_milestone_authority.py`, a pinned GenLayer
+  Intelligent Contract for constructor-bound acceptance authority, write-once
+  accepted-project trust roots, sponsor authorization, and mirrored
+  baseline/acceptance provenance;
+- `contracts/verdict_graph_milestone_registry.py`, a pinned GenLayer
+  Intelligent Contract for immutable milestone terms, lifecycle, participant
+  permissions, bounded windows, review callbacks, challenge/re-review, and
+  finality-only settlement messages;
+- `contracts/verdict_graph_milestone_adjudicator.py`, a pinned GenLayer
+  Intelligent Contract for hash-pinned web/LLM review, independent
+  leader/validator equivalence, cached retry results, and repair receipts;
+- deterministic Bradbury artifacts for all three ICs, each preserving its
+  canonical executable AST, public/storage surface, dependency header, and
+  diagnostics while reducing deployment calldata;
+- `evm/contracts/VerdictGraphMilestoneVault.sol`, a dedicated deterministic
+  custody rail with exact PASS/FAIL/UNDETERMINED outcomes, duplicate protection,
+  pull withdrawals and both unfunded and active-expiry recovery;
+- `/milestones`, `/milestones/create`, milestone detail controls and a public
+  wallet-free milestone Proof Pack route;
+- a release-specific source gate and reproducible verification command.
+
+The local release package is verified as follows:
+
+- milestone source gate: **59/59 passed**;
+- pinned GenVM typecheck/lint: passed on all three canonical ICs and all three deployment artifacts;
+- isolated milestone Direct Mode: Authority **2/2**, Registry **3/3**, and Adjudicator **2/2** passed on both each canonical IC and its deployment artifact;
+- milestone Vault Foundry suite: **16/16 passed**;
+- full existing Direct Mode regression: **35/35 passed**;
+- full Foundry regression: **47/47 passed**;
+- frontend TypeScript and optimized webpack production build: passed;
+- production dependency audit: **0 vulnerabilities**;
+- existing reviewer gate: **154/154 passed**;
+- deterministic source manifest: **146 files** with source-set SHA-256 recorded in `verification/source-manifest.json`;
+- combined milestone/source verification: passed;
+
+The exact split deployment artifacts are:
+
+- Authority: **5,570 bytes**, SHA-256 `12f96a55796d2277a58cb081ed72818c99ff85adde28fc0d8bf7789fd5077bc8`;
+- Registry: **19,829 bytes**, SHA-256 `ee63023749a1ea41c5b9597e0ecba36896f5bea6fa8c1523ac8a03cfaf3bc082`;
+- Adjudicator: **12,262 bytes**, SHA-256 `88f2992bc589181a74bafbd29711b10baff4c13991106e1d57b11eb8b5404984`.
+
+The retained monolithic milestone artifact is 28,783 bytes versus 45,063 bytes
+for its canonical reference source (36.13% smaller), with SHA-256
+`4629076b7919bec4d17b3de3547195d3b0184d579c6fd76993c00dce3906f762`. It is
+regression/reference material only; the publication target is the split
+Authority + Registry + Adjudicator topology. The keyless preflight estimates
+all three split artifacts and the Vault without signing or submission.
+
+The requested Bradbury no-send preflight was run with deployer
+`0x1f87ae197af539253978d435ad45ccf28fb95024` and acceptance authority
+`0x5bb49021001200fe8156a81c7fcf097e535e7181`. The preflight itself blocked
+`eth_sendTransaction`; after that no-send gate passed, the corrected split
+milestone topology was deployed and finalized through the authorized worker.
+The earlier monolithic retry was rejected by Bradbury's gas admission boundary;
+the split architecture is the resulting deployment target.
+
+Each artifact is produced by a deterministic, closure-safe local-binding
+compaction pass. The builder proves a reversible executable-AST mapping and
+preserves the public methods, constructor arguments, storage dataclasses,
+dependency header and diagnostics from its canonical IC source. This is a
+transport optimization only; the canonical IC sources remain the review
+sources.
+
+The corrected milestone topology is recorded as `DEPLOYED`. The versioned record
+contains the real Authority, Registry, Adjudicator and Vault addresses, finalized
+deployment and binding transactions, reciprocal reads, and the
+constructor-specialized Vault runtime hash. The existing legacy finality record
+remains separate; the milestone UI is enabled only against this verified split
+topology.
+
+The first accepted-project trust root is now finalized on Bradbury. The funded
+acceptance authority registered `verdictgraph` in GenLayer transaction
+`0xe45d95eb258814e1fc11a0a3f75622af5d174d8a30bec30c703a6f786efa9256`; the
+worker finalized it through the official ConsensusMain operation in outer EVM
+transaction `0x06db9c8849a6eb4cb0d46f771ef41c57ca1087dfa5ff47e1892abbaaf0cb02c2`.
+The finalized Authority reads `get_project_count() = 1` and the exact accepted
+snapshot for `verdictgraph`; `/milestones` now exposes first-milestone creation
+and `/milestones/create` displays the sealed sponsor and baseline digest.
+
+## Bradbury native write-path compatibility repair
+
+The first production authority-registration attempt was intentionally stopped
+before signing when the browser SDK fee estimator read
+`messageFeeParamsBudgetFloor()` from Bradbury's FeeManager and the live RPC
+returned `execution reverted`. Read-only RPC checks also showed that the live
+Bradbury FeeManager currently exposes zero `GENPerTimeUnit` and
+`storageUnitPrice` values and reverts on both `quoteGasPrice()` and
+`messageFeeParamsBudgetFloor()`. This is a network/SDK fee-policy compatibility
+boundary, not a milestone contract failure.
+
+The frontend now uses GenLayerJS's documented native `writeContract()` path for
+Bradbury writes, with no synthetic fee preset and no arbitrary hardcoded gas or
+fee value. A send-blocked live probe reaches the wallet-send boundary using the
+exact authority-registration calldata while preventing `eth_sendTransaction`,
+signing, and submission. The browser must still show the normal wallet approval
+before any real transaction is sent.

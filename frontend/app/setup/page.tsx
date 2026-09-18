@@ -10,6 +10,7 @@ import { AppShell } from "@/components/app-shell";
 import { ConfigurationRequired } from "@/components/configuration-required";
 import {
   explorerAddress,
+  friendlyGenLayerError,
   getAdjudicatorAddress,
   getRegistryAddress,
   getVaultAddress,
@@ -88,9 +89,7 @@ export default function SetupPage() {
       ) : query.isError || !query.data ? (
         <div className="mt-8 rounded-2xl border border-rose-400/15 bg-rose-400/[.04] p-5 text-sm text-rose-200">
           Six-way topology verification failed:{" "}
-          {query.error instanceof Error
-            ? query.error.message
-            : "Unknown topology error"}
+          {friendlyGenLayerError(query.error, "Retry the finalized topology verification.")}
         </div>
       ) : (
         <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_.72fr]">
