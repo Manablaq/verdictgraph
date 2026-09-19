@@ -16,7 +16,7 @@
     "milestone:artifact": "python3 scripts/build_milestone_deploy_artifact.py",
     "milestone:verify": "bash scripts/milestone_verify.sh",
     "milestone:preflight": "bash scripts/milestone_bradbury_preflight.sh",
-    "verify": "npm run gate && npm run milestone:verify && python3 scripts/whitespace_gate.py && npm run lint && npm run build && npm audit --omit=dev --audit-level=high && git diff --check",
+    "verify": "bash scripts/release_verify.sh",
     "milestone:gate": "python3 scripts/milestone_gate.py"
   },
   "engines": {

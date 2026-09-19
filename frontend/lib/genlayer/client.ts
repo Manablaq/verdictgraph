@@ -511,9 +511,6 @@ export function createWriteClient(
   });
 }
 
-const GENLAYER_SNAP_ID =
-  "npm:genlayer-wallet-plugin";
-
 function walletErrorCode(
   error: unknown,
 ): number | null {
@@ -657,72 +654,6 @@ async function ensureBradburyNetwork(
   }
 }
 
-async function ensureGenLayerSnap(
-  provider: EthereumProvider,
-) {
-  let installed:
-    Record<
-      string,
-      { id?: string }
-    >;
-
-  try {
-    installed = (
-      await provider.request({
-        method:
-          "wallet_getSnaps",
-      })
-    ) as Record<
-      string,
-      { id?: string }
-    >;
-  } catch (error) {
-    throw new Error(
-      "MetaMask is connected, but its Snaps API is unavailable. " +
-      "Use a MetaMask version that supports Snaps. " +
-      walletErrorMessage(error),
-    );
-  }
-
-  const installedAlready =
-    Object.values(
-      installed ?? {},
-    ).some(
-      (snap) =>
-        snap?.id ===
-        GENLAYER_SNAP_ID,
-    );
-
-  if (installedAlready) {
-    return;
-  }
-
-  try {
-    await provider.request({
-      method:
-        "wallet_requestSnaps",
-      params: {
-        [GENLAYER_SNAP_ID]:
-          {},
-      },
-    });
-  } catch (error) {
-    if (
-      walletErrorCode(error) ===
-      4001
-    ) {
-      throw new Error(
-        "GenLayer Snap installation was rejected.",
-      );
-    }
-
-    throw new Error(
-      "Could not install the GenLayer wallet Snap. " +
-      walletErrorMessage(error),
-    );
-  }
-}
-
 export async function connectWallet(
   wallet: WalletOption,
 ): Promise<HexAddress> {
@@ -755,20 +686,9 @@ export async function connectWallet(
       provider,
     );
 
-    /*
-     * MetaMask follows GenLayer's
-     * published Snap integration.
-     *
-     * Other EIP-1193 providers are
-     * kept on the standard provider
-     * signing path used by the pinned
-     * GenLayer SDK transport.
-     */
-    if (wallet.isMetaMask) {
-      await ensureGenLayerSnap(
-        provider,
-      );
-    }
+    // All supported injected wallets, including MetaMask, stay on the
+    // standard EIP-1193 provider path. Bradbury network identity is verified
+    // above; no wallet-specific Snap is required for normal signing.
 
     activeEthereumProvider =
       provider;

@@ -1,14 +1,13 @@
 {
   "schema": "verdictgraph-public-hosting-finality-v1",
   "vercel_project_id": "prj_tVk4giE3TKaEHRV8MWtL0l7Zv7sa",
-  "deployment_id": "dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn",
-  "deployment_created_at_utc": "2026-09-16T00:48:47Z",
+  "deployment_id": "dpl_BjRKReHMapFDYFxmz5h1b7ijoATA",
+  "deployment_created_at_utc": "2026-09-19T01:53:35.565Z",
   "state": "READY",
   "target": "production",
   "public_url": "https://verdictgraph.vercel.app",
-  "immutable_url": "https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app",
+  "immutable_url": "https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app",
   "sso_protection": null,
-  "total_deployment_count": 15,
   "public_routes_verified_http_200": [
     "/",
     "/app",
@@ -21,24 +20,27 @@
   "public_milestone_routes_verified_http_200": [
     "/milestones",
     "/milestones/authority",
-    "/milestones/create"
+    "/milestones/create",
+    "/milestones/1",
+    "/milestones/1/proof",
+    "/milestones/2",
+    "/milestones/2/proof"
   ],
   "public_acceptance_record_routes_verified_http_200": [
-    "/milestones/acceptance-record.json"
+    "/milestones/accepted-baseline-v2.json",
+    "/milestones/acceptance-record-v2.json"
   ],
-  "public_access_verified_at_utc": "2026-09-16T03:19:21Z",
+  "public_access_verified_at_utc": "2026-09-19T10:29:15Z",
   "runtime_errors_observed": false,
-  "public_deployment_source_commit": null,
+  "public_deployment_source_commit": "afc3e777aadf908883f9eb34fad1ac2725650747",
   "source_archive_sha256": null,
   "prebuilt_output_sha256": null,
   "prebuilt_file_count": null,
   "notes": [
-    "The production frontend was deployed from the audited working tree; the remote Vercel install and Next.js production build completed successfully with zero reported vulnerabilities.",
-    "The clean public alias verdictgraph.vercel.app points to the final READY production deployment recorded above.",
-    "The acceptance record is available at both verdictgraph.vercel.app and verdictgraph-mr-albert-s-projects.vercel.app; the bytes match SHA-256 850b5eed95738f699c93b59abb58868ddd179ee97a6ef3f99bd1919e8ecd94e0.",
-    "Fresh browser-session checks verified the pre-registration milestone overview, acceptance-authority form, and milestone-creation prerequisite state.",
-    "After the accepted-project trust root finalized on Bradbury, a fresh browser session verified that /milestones shows no milestones yet with creation unlocked, while /milestones/create loads the finalized verdictgraph project, sponsor, and baseline digest.",
-    "The Bradbury-native write-path repair and milestone prerequisite/action gating are deployed in this READY release; a send-blocked authority-registration probe reached wallet submission without signing or sending.",
-    "No Vercel Authentication or SSO barrier was encountered during final public-access verification."
+    "The clean public alias verdictgraph.vercel.app resolves to the READY production deployment recorded above.",
+    "Vercel deployment metadata binds this production build to local Git source commit afc3e777aadf908883f9eb34fad1ac2725650747 (Checkpoint corrected milestone settlement integration).",
+    "Fresh public checks returned HTTP 200 for the milestone overview, authority, creation, detail and proof routes plus the verdictgraph-v2 baseline and acceptance-record JSON documents.",
+    "Vercel runtime-error inspection found no production runtime error clusters in the preceding 24-hour window at verification time.",
+    "This hosting record describes the current production baseline only. It must be regenerated after any later frontend deployment before reviewer submission."
   ]
 }

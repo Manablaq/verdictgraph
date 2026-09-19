@@ -53,9 +53,9 @@ See [`docs/SPLIT_ARCHITECTURE_V1.md`](docs/SPLIT_ARCHITECTURE_V1.md).
 
 The milestone release adds a dedicated three-IC GenLayer layer—`VerdictGraphMilestoneAuthority`, `VerdictGraphMilestoneRegistry`, and `VerdictGraphMilestoneAdjudicator`—plus `VerdictGraphMilestoneVault.sol`. The Authority owns write-once accepted-project trust roots, the Registry owns lifecycle and exact finalized callbacks, and the Adjudicator owns only hash-pinned subjective review. Together they bind an accepted project to its authorized sponsor, immutable criteria, a hash-pinned submission restricted to authority-registered public origins, mirrored baseline/acceptance evidence, independent GenLayer leader/validator review, bounded protocol windows and challenge/re-review, and exact PASS/FAIL/UNDETERMINED settlement rules. The frontend includes `/milestones`, `/milestones/authority`, participant controls, a wallet-free public Proof Pack at `/milestones/[id]/proof`, and fail-closed reciprocal four-contract topology, source-digest, Vault-runtime, security-header, route-recovery, and block-anchored live-read verification.
 
-The corrected milestone release is live on Bradbury with finalized reciprocal bindings. The Authority is `0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E`, Registry `0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA`, Adjudicator `0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02`, and Vault `0x229c077AF8446f7EC63E63d0C1F03b555fF50298`. [`deploy/milestone-bradbury.template.json`](deploy/milestone-bradbury.template.json) records the finalized receipts and exact runtime/source identities. See [`docs/MILESTONE_SETTLEMENT.md`](docs/MILESTONE_SETTLEMENT.md).
+The corrected milestone release is live on Bradbury with finalized reciprocal bindings. The Authority is `0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966`, Registry `0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D`, Adjudicator `0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0`, and Vault `0x99717eD8040890B164BD62007d887EA7d9Cc8b2E`. [`deploy/milestone-bradbury.template.json`](deploy/milestone-bradbury.template.json) records the finalized receipts and exact runtime/source identities. See [`docs/MILESTONE_SETTLEMENT.md`](docs/MILESTONE_SETTLEMENT.md).
 
-The first accepted-project trust root is also finalized: `verdictgraph` is registered with sponsor `0x1f87ae197af539253978d435ad45ccf28fb95024`, the exact accepted baseline SHA-256 `0b374bb9df47bc5b6912eb316efcbd808b59d24a2b172479fc7428e67f759735`, and the published acceptance-record SHA-256 `850b5eed95738f699c93b59abb58868ddd179ee97a6ef3f99bd1919e8ecd94e0`. The Authority count is `1`, so the public milestone creation flow is unlocked for the authorized sponsor.
+The canonical accepted-project trust root is finalized as `verdictgraph-v2`, with sponsor `0x1f87ae197af539253978d435ad45ccf28fb95024`, accepted baseline SHA-256 `a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34`, and acceptance-record SHA-256 `09777881c0fada43e09632afe0933dab154768171dd9c06d51ad4f7930aecd7a`. The Authority count is `1`, so the public milestone creation flow is unlocked for the authorized sponsor.
 
 ## Repository map
 
@@ -116,9 +116,9 @@ The case release adds a public Proof Pack at `/cases/[id]/proof`. The milestone 
 
 Public production frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
 
-Immutable Vercel deployment: [https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app](https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app)
+Immutable Vercel deployment: [https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app](https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app)
 
-Vercel deployment ID: `dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn`.
+Vercel deployment ID: `dpl_BjRKReHMapFDYFxmz5h1b7ijoATA`.
 
 ## Verification commands
 

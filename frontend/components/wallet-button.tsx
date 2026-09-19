@@ -773,7 +773,7 @@ function WalletPicker({
 
                         <div className="mt-1 text-xs text-zinc-500">
                           {candidate.isMetaMask
-                            ? "MetaMask · GenLayer Snap"
+                            ? "MetaMask · EIP-1193"
                             : "Browser wallet · EIP-1193"}
                         </div>
                       </div>

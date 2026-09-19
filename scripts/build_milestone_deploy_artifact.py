@@ -104,17 +104,67 @@ def lexical_minify_line(line: str) -> str:
     except (tokenize.TokenError, IndentationError):
         return line.rstrip()
 
-    fstring_types = {
-        value
-        for value in (
-            getattr(tokenize, "FSTRING_START", None),
-            getattr(tokenize, "FSTRING_MIDDLE", None),
-            getattr(tokenize, "FSTRING_END", None),
-        )
-        if value is not None
-    }
-    if fstring_types and any(token.type in fstring_types for token in tokens):
-        return line.rstrip()
+    fstring_start = getattr(tokenize, "FSTRING_START", None)
+    fstring_end = getattr(tokenize, "FSTRING_END", None)
+
+    if (
+        fstring_start is not None
+        and fstring_end is not None
+        and any(token.type == fstring_start for token in tokens)
+    ):
+        spans: list[tuple[int, int]] = []
+        depth = 0
+        span_start: int | None = None
+
+        for token in tokens:
+            if token.type == fstring_start:
+                if depth == 0:
+                    if token.start[0] != 1:
+                        return line.rstrip()
+                    span_start = token.start[1]
+                depth += 1
+                continue
+
+            if token.type == fstring_end and depth:
+                depth -= 1
+                if depth == 0:
+                    if span_start is None or token.end[0] != 1:
+                        return line.rstrip()
+                    spans.append((span_start, token.end[1]))
+                    span_start = None
+
+        if depth != 0 or not spans:
+            return line.rstrip()
+
+        protected = body
+        replacements: list[tuple[str, str]] = []
+
+        for index, (start, end) in reversed(list(enumerate(spans))):
+            placeholder = f"'__VERDICTGRAPH_FSTRING_{index}__'"
+
+            if placeholder in body:
+                raise SystemExit(
+                    "STOP: f-string placeholder collides with source"
+                )
+
+            literal = body[start:end]
+            protected = (
+                protected[:start]
+                + placeholder
+                + protected[end:]
+            )
+            replacements.append((placeholder, literal))
+
+        result = lexical_minify_line(prefix + protected)
+
+        for placeholder, literal in replacements:
+            if result.count(placeholder) != 1:
+                raise SystemExit(
+                    "STOP: protected f-string placeholder count changed"
+                )
+            result = result.replace(placeholder, literal, 1)
+
+        return result
 
     ignored = {
         tokenize.ENDMARKER,

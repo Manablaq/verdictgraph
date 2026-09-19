@@ -148,10 +148,10 @@ Current deterministic source identity is recorded in `verification/source-manife
 
 The on-chain/economic proof remains complete.
 
-The final production frontend and acceptance record were deployed from the audited working tree after local TypeScript/build checks and a successful remote Vercel install/build. The successful READY production deployment is `dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn`.
+The final production frontend and acceptance record were deployed from the audited working tree after local TypeScript/build checks and a successful remote Vercel install/build. The successful READY production deployment is `dpl_BjRKReHMapFDYFxmz5h1b7ijoATA`.
 
 - Public frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
-- Immutable deployment: [https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app](https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app)
+- Immutable deployment: [https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app](https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app)
 - Production deployment state: `READY`
 - Vercel Authentication: disabled
 - Public HTTP verification: `/`, `/app`, `/docs`, `/setup`, `/vault`, `/workflows`, `/create`, `/milestones`, `/milestones/authority`, and `/milestones/create` return HTTP 200
@@ -198,14 +198,14 @@ The local release package is verified as follows:
 - frontend TypeScript and optimized webpack production build: passed;
 - production dependency audit: **0 vulnerabilities**;
 - existing reviewer gate: **154/154 passed**;
-- deterministic source manifest: **146 files** with source-set SHA-256 recorded in `verification/source-manifest.json`;
+- deterministic source manifest: regenerated for the final reviewer tree and verified by `scripts/verify_manifest.py`;
 - combined milestone/source verification: passed;
 
 The exact split deployment artifacts are:
 
 - Authority: **5,570 bytes**, SHA-256 `12f96a55796d2277a58cb081ed72818c99ff85adde28fc0d8bf7789fd5077bc8`;
-- Registry: **19,829 bytes**, SHA-256 `ee63023749a1ea41c5b9597e0ecba36896f5bea6fa8c1523ac8a03cfaf3bc082`;
-- Adjudicator: **12,262 bytes**, SHA-256 `88f2992bc589181a74bafbd29711b10baff4c13991106e1d57b11eb8b5404984`.
+- Registry: **19,982 bytes**, SHA-256 `03e2248d139b2870a0d989ddeb42d684df029eabf07f923233ba569668e172bf`;
+- Adjudicator: **11,965 bytes**, SHA-256 `db1e3467f3983989bc4212d08f2419db701ad6229f85d32527f66c8b6e4e4858`.
 
 The retained monolithic milestone artifact is 28,783 bytes versus 45,063 bytes
 for its canonical reference source (36.13% smaller), with SHA-256
@@ -236,14 +236,12 @@ constructor-specialized Vault runtime hash. The existing legacy finality record
 remains separate; the milestone UI is enabled only against this verified split
 topology.
 
-The first accepted-project trust root is now finalized on Bradbury. The funded
-acceptance authority registered `verdictgraph` in GenLayer transaction
-`0xe45d95eb258814e1fc11a0a3f75622af5d174d8a30bec30c703a6f786efa9256`; the
-worker finalized it through the official ConsensusMain operation in outer EVM
-transaction `0x06db9c8849a6eb4cb0d46f771ef41c57ca1087dfa5ff47e1892abbaaf0cb02c2`.
+The canonical accepted-project trust root is finalized on Bradbury. The funded
+acceptance authority registered `verdictgraph-v2` in GenLayer transaction
+`0xa520fd9e232743495914a9f300b76505a19a219869427445478efb2f1102cb50`.
 The finalized Authority reads `get_project_count() = 1` and the exact accepted
-snapshot for `verdictgraph`; `/milestones` now exposes first-milestone creation
-and `/milestones/create` displays the sealed sponsor and baseline digest.
+snapshot for `verdictgraph-v2`; `/milestones/create` displays the sealed sponsor
+and baseline digest.
 
 ## Bradbury native write-path compatibility repair
 

@@ -1,8 +1,12 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-16T03:19:01.580131+00:00",
-  "source_set_sha256": "e812ddc86b320269c7290e54ca3d61dd420c2216a15642f0036764398127a47a",
+  "generated_at": "2026-09-19T11:34:50.493825+00:00",
+  "source_set_sha256": "8b72920d7955223abb04e4fcafdd972aca117ace16b736ad066f738036631ea2",
   "files": {
+    ".github/workflows/verify.yml": {
+      "sha256": "6548a04bdfb7b9e6934feaf2c36d0891aca574447c24d122d20c33b12032d0f1",
+      "bytes": 908
+    },
     ".gitignore": {
       "sha256": "9c461369057bb3355b9e03fd885339a22f1e0a2ad4fb83f8169bed6828bf0b1b",
       "bytes": 332
@@ -16,8 +20,8 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "13b2fa0f6bef3e69f89b2dc9893b94ceb78f1d54d9b24288f8488465f9ee785a",
-      "bytes": 14155
+      "sha256": "1eaf28a60acce3a5712a75c351f3c33fb2382b176a160f86b580f9796faa9c49",
+      "bytes": 14122
     },
     "contracts/verdict_graph_adjudicator.py": {
       "sha256": "973c13d882341a53b3f0e2712c0b64a4cf76f0fb1006fdb226186ebe70f82149",
@@ -40,12 +44,12 @@
       "bytes": 45063
     },
     "contracts/verdict_graph_milestone_adjudicator.py": {
-      "sha256": "3a581720f915182ef0d8efe5783c306bfa8aafc895e6369a73d7eb7ffb7b2ad0",
-      "bytes": 18314
+      "sha256": "9c24cef3a4d81ca5566bcb3b27a8c5eb7cdb350e8e02e2736fb8cdcf9c939655",
+      "bytes": 17972
     },
     "contracts/verdict_graph_milestone_adjudicator_deploy.py": {
-      "sha256": "88f2992bc589181a74bafbd29711b10baff4c13991106e1d57b11eb8b5404984",
-      "bytes": 12262
+      "sha256": "db1e3467f3983989bc4212d08f2419db701ad6229f85d32527f66c8b6e4e4858",
+      "bytes": 11965
     },
     "contracts/verdict_graph_milestone_authority.py": {
       "sha256": "f26675a6703cbcde69554b8d4667b68fa26dbd444bce6816e3c067cc5eb09bd2",
@@ -60,12 +64,12 @@
       "bytes": 28783
     },
     "contracts/verdict_graph_milestone_registry.py": {
-      "sha256": "a13647f33a33cc8ab7be1f2946ac2fd3f89e371b2e6727139816d0e054442f14",
-      "bytes": 30222
+      "sha256": "c67354e756b5bfe075f46e4a4bc695f6f4c69f10a9cc90920fe30b4f63be0b6c",
+      "bytes": 30473
     },
     "contracts/verdict_graph_milestone_registry_deploy.py": {
-      "sha256": "ee63023749a1ea41c5b9597e0ecba36896f5bea6fa8c1523ac8a03cfaf3bc082",
-      "bytes": 19829
+      "sha256": "03e2248d139b2870a0d989ddeb42d684df029eabf07f923233ba569668e172bf",
+      "bytes": 19982
     },
     "contracts/verdict_graph_registry.py": {
       "sha256": "62f2a28e02ca2c7040cf2ac57c43c7efafb4fa4211c5e200a8ace4812bf51443",
@@ -80,32 +84,32 @@
       "bytes": 1036
     },
     "deploy/milestone-bradbury.template.json": {
-      "sha256": "1c2d0b6092a50ac41b1276c05f89d30620feddc44cbf853601f1967484c66728",
-      "bytes": 7019
+      "sha256": "321ef444c9a0b643b2462179fb969aa21c18d668db4bca9a9d22652248a9c287",
+      "bytes": 6702
     },
     "docs/ARCHITECTURE.md": {
       "sha256": "5a3953862b3db50182f79b334c615dcfae8fbb4f20fa85859830f04737949f99",
       "bytes": 7108
     },
     "docs/BUILD_STATUS.md": {
-      "sha256": "a8f21dd0e7edaa25507d0f332c1b0c38b6dce696537b45993b90fefd2ef32064",
-      "bytes": 15693
+      "sha256": "d9d62a93b487fa09b958ea813a980344b8df072334a347e4c68a061dbf18d34a",
+      "bytes": 15479
     },
     "docs/MILESTONE_DEPLOYMENT_RUNBOOK.md": {
       "sha256": "e6c31535b3a2c101c53acc620957268a5e3b5f9af009d56746583eceaa789491",
       "bytes": 7138
     },
     "docs/MILESTONE_PROOF_PACK.md": {
-      "sha256": "22231479aad38a71777f9f432c83aa058e38e81822340dcbf8a1093fc59dec31",
-      "bytes": 4008
+      "sha256": "4cee84946a0f818c96801f0c49f5c0c1648c05f6158ea382d208d2608e2e3c8f",
+      "bytes": 4423
     },
     "docs/MILESTONE_SETTLEMENT.md": {
-      "sha256": "f33b6635df1984cf82838059ff40d4ac347966cc8c930831ebec1080df3cd801",
-      "bytes": 12831
+      "sha256": "fc57bdacbb4b5af8878d2c47abb375ac6885d6ced74506468b97f734f7adafa5",
+      "bytes": 13776
     },
     "docs/REVIEWER_READINESS.md": {
-      "sha256": "042b738f008c39dfad81987751a95529eab9ac844b2c13935dc7f8c89dd9fa74",
-      "bytes": 7452
+      "sha256": "cca404ac9f9c4d5b3b1c886b8c8ac02fb74be89d445e49132e9918b1435f7f95",
+      "bytes": 7455
     },
     "docs/SPLIT_ARCHITECTURE_V1.md": {
       "sha256": "7eb96f202a1fb579be954784af250629d92469f0bc0593e9b14c75576e4f3395",
@@ -144,12 +148,12 @@
       "bytes": 120
     },
     "frontend/.env.example": {
-      "sha256": "565f4f5eb758a18a5576bc71a1220962b5b0de2ac98a99d1bb1c2e6ed12bfb1f",
+      "sha256": "84c1579d7f254a76480a079c89e1eea026cfd34f13aa1142e23444c876d31cc3",
       "bytes": 2114
     },
     "frontend/app/app/page.tsx": {
-      "sha256": "2d7fcfd490284d47f59fab21229e75f0dd12ec18d751354586ec4d69e0afbdfa",
-      "bytes": 4863
+      "sha256": "3f0305800f6dbe17f86c5f116a1d94b9a5b508f5a3e14bbd6464642fac9b8ec6",
+      "bytes": 4896
     },
     "frontend/app/cases/[id]/evidence/page.tsx": {
       "sha256": "e8bfd16a081ee564aefdf28fd88308252ab67dd92d4616638f67d1691794b06d",
@@ -164,8 +168,8 @@
       "bytes": 2206
     },
     "frontend/app/cases/[id]/repair-delivery/page.tsx": {
-      "sha256": "d2b6424f0dc7243f76654e7ac97d16906b37bb69940e93c2ce35b389700e55bd",
-      "bytes": 6506
+      "sha256": "12c6b998f6becdd340c44d6ce21a90d6987ebe51df1d82e076cd290ec24bb5a6",
+      "bytes": 8449
     },
     "frontend/app/cases/[id]/respond/page.tsx": {
       "sha256": "3088684ba479be98239c15e0fb99a9d4580a980c8e96d87408492117f16fc1e6",
@@ -196,48 +200,48 @@
       "bytes": 1855
     },
     "frontend/app/layout.tsx": {
-      "sha256": "279821052a9f8a04e3a01666652a035f0378accfed0dea495b7402c4c5c11f9a",
-      "bytes": 511
+      "sha256": "100a457936b53aceb55faad5263cea1aa7f34903d0a4fdd87a9aa6c511518763",
+      "bytes": 704
     },
     "frontend/app/loading.tsx": {
       "sha256": "eea01e434739099ba9b0770800a33e481b6c6403d4df8309aff0afd11eeb24e3",
       "bytes": 335
     },
     "frontend/app/milestones/[id]/page.tsx": {
-      "sha256": "41da7144cdda92ed57b70267d9bdc4cf4208d3f565c2233a92e0c81761a2f609",
-      "bytes": 7655
+      "sha256": "22038dfba04d218afaa5071921fa4faf087dc669f84e16fa6e8ff8854132bc83",
+      "bytes": 7776
     },
     "frontend/app/milestones/[id]/proof/page.tsx": {
       "sha256": "00fc2d11da9a376b0c0b914fbd249d0b6631c64d3875bc81ecaccae6817bee05",
       "bytes": 1676
     },
     "frontend/app/milestones/authority/page.tsx": {
-      "sha256": "4f59a1a63face9562fa35c40337c495cc9545a0f9f97d913b5692a2929f9aa3d",
-      "bytes": 11568
+      "sha256": "efcb8e5266539b02095b489d9ef6d78849d204fec7972d7948793726b6820e51",
+      "bytes": 14981
     },
     "frontend/app/milestones/create/page.tsx": {
-      "sha256": "0df176411e705f76716e0501aacbc2568dfa297432a4bc2e05034066c632a9b5",
-      "bytes": 13983
+      "sha256": "4769ec4dc7a441e94eeb241fc8f709f323a0b88d518e05e453254b17fbb7f603",
+      "bytes": 17233
     },
     "frontend/app/milestones/page.tsx": {
-      "sha256": "83f2c249beaa83d79db4fb8b7c50118b5a5ac8cb7e835bf68a0ff8664310ff5e",
-      "bytes": 7026
+      "sha256": "0063383280b420a3bce82816ce64219f75a40aeb2cac5823453f76d6ca030b8c",
+      "bytes": 7859
     },
     "frontend/app/not-found.tsx": {
-      "sha256": "a3c505c02c2555a984a2758941b0639a0406a956c9ea58764158178fffdab988",
-      "bytes": 787
+      "sha256": "2aa237cd14d5b5dd4855efa128ab6c8a79c18a9860f9b7c40875d7b37a36e4b4",
+      "bytes": 785
     },
     "frontend/app/page.tsx": {
       "sha256": "2c77080d84651c539a58933e12601517419363ad5e0bfc38f53f9e825308b407",
       "bytes": 4445
     },
     "frontend/app/providers.tsx": {
-      "sha256": "9651530f7a524e237e09664b309b30b387daae819dc1ed68aaea61623d3fa72c",
-      "bytes": 698
+      "sha256": "3584511a7a7f9d4d800a772aa36608568c5747560fba54d6c685f6d034e6be00",
+      "bytes": 723
     },
     "frontend/app/setup/page.tsx": {
-      "sha256": "665b2167bebeb87ec9b900101a5f8df01be013388b42fce03111b27c0f816dac",
-      "bytes": 6535
+      "sha256": "1495b9203421b45e287108b954892c6ae67eb102ab8efe339594fa3d9c935238",
+      "bytes": 6539
     },
     "frontend/app/vault/page.tsx": {
       "sha256": "7580a74fed8ff4e1e5db564a8f8298ac4155c90747bb346b89e794fe12b42fff",
@@ -268,12 +272,12 @@
       "bytes": 2917
     },
     "frontend/components/app-shell.tsx": {
-      "sha256": "b95bc1a45e385e6f81a7d04970f3503e82440a5866c41609983cdb1f7358cb72",
-      "bytes": 3957
+      "sha256": "abcff0621df8acdb7ce3540a1134d7cb400eea809e92aa1e2baf768b7f7b22ad",
+      "bytes": 4028
     },
     "frontend/components/case-actions.tsx": {
-      "sha256": "62a2276399a94aad5c5bd158f6415926730bb630e3bf2c03de42916179bb05c6",
-      "bytes": 13010
+      "sha256": "77aad377969b3022431c722a2d386ededf75a68ca0656a2a64544f2a502c2bb2",
+      "bytes": 15205
     },
     "frontend/components/configuration-required.tsx": {
       "sha256": "d4886a4ded102fde72cede86c700e7c2a1300c4274e1c2a4c8227a6c19bf2382",
@@ -292,16 +296,16 @@
       "bytes": 1378
     },
     "frontend/components/handoff-actions.tsx": {
-      "sha256": "73e474b6fad3a4656966076e5c769c548c7559cdb6b98080c7e66d55b955d06a",
-      "bytes": 11367
+      "sha256": "0cb4c21f6b5cb06d7367e3d049f6c776c71631da3a734a66a66fc08d99caf78f",
+      "bytes": 14098
     },
     "frontend/components/metric-card.tsx": {
       "sha256": "057e4b0f9e33dc40ce48dd363d26ea0a9588d71049c16f1932ffd6c7bdd02ba6",
       "bytes": 641
     },
     "frontend/components/milestone-actions.tsx": {
-      "sha256": "b2243c5dae2535e428cfa8a9387125af5ee15daa4a3de0ad101aec5801e1c58c",
-      "bytes": 14371
+      "sha256": "3e6090554a45d958d13c998c67133383587cb3367ac6d4766985ce02ccb9b625",
+      "bytes": 20436
     },
     "frontend/components/milestone-configuration-required.tsx": {
       "sha256": "4b9bbad7cdf448a57742e6085454111d35324026f559789aa6f758c4e5258142",
@@ -310,6 +314,10 @@
     "frontend/components/milestone-proof.tsx": {
       "sha256": "7db7eb7ce0819f1e21db1ae4657c53fe17439affc8635bef102219c8e2c46d41",
       "bytes": 21055
+    },
+    "frontend/components/pending-transaction-notice.tsx": {
+      "sha256": "f972987d21c07625ff213ab3a7e64ac0bf98700ef11610fe27f6ba9954580df9",
+      "bytes": 1435
     },
     "frontend/components/proof-pack.tsx": {
       "sha256": "bda52be7bee9f6a7897a7d81cb92433c188be0f547257843d763bd5bce40819c",
@@ -320,44 +328,48 @@
       "bytes": 865
     },
     "frontend/components/status-badge.tsx": {
-      "sha256": "45b7060c14f54116f8b7ddb5d86e6bb1d7cde4ddd45f3ca3c37e272cb167b643",
-      "bytes": 1290
+      "sha256": "8cfb10759f3d3ff48243324edaa2f01a5ca787a919cf7fbf0553ac735c5ba5ce",
+      "bytes": 1672
     },
     "frontend/components/wallet-button.tsx": {
-      "sha256": "8433666d318dca5028dcf1cbadcf1a19a82b08d938744b34dcc22ee1a68be285",
-      "bytes": 18918
+      "sha256": "570949a49cac28ed9e7c0aaa199d4c4694098adb6b55fd8cc5b9d84d25a926e4",
+      "bytes": 20088
     },
     "frontend/components/workflow-graph.tsx": {
       "sha256": "906b6892db65a2584ac181e67f42c60be8a06229a4156fe15cb72c0276fbff67",
       "bytes": 2391
     },
     "frontend/components/workflow-toolbar.tsx": {
-      "sha256": "7b2c96259c98d73d5812c588ff3dbff470d767ce88784c48e052f4e14c2137c5",
-      "bytes": 3542
+      "sha256": "2101375c96b3423318505f141849b00ddeb30d8f81ac9ec76bfcd617ee03fcf2",
+      "bytes": 5749
     },
     "frontend/lib/case-data.ts": {
       "sha256": "ee34ec2e8479f5b88d3630b5aa79e44d6508b434093ae2067790d2bf888c849c",
       "bytes": 2636
     },
     "frontend/lib/format.ts": {
-      "sha256": "378ff325ae4b4263f8930f43ccb8bdd6e791e050a05677b232bfac2654d4b981",
-      "bytes": 967
+      "sha256": "ad76d2c1fffe8edfd5ddaae275d2062f66b7404145d6d6605af5fb9bc17813af",
+      "bytes": 1128
     },
     "frontend/lib/genlayer/client.ts": {
-      "sha256": "24e6083ff5c836c6d6f0b8cfd6950fcaa8429008a1a352495f6a32c48bd86c9e",
-      "bytes": 21680
+      "sha256": "fb4d02a63f96d05758c6cf153be9a1816a224fdfc6a2622a5d22c671c2a0b0c0",
+      "bytes": 24469
     },
     "frontend/lib/genlayer/milestone-vault.ts": {
-      "sha256": "7d73e73d3cbb68b1c2f7d79379f5cb19637649000dd31432fffd216c6245575c",
-      "bytes": 11863
+      "sha256": "6567fa26d21371648bc1033370c5e997ba1575749ec78f24c81c827f395e69de",
+      "bytes": 12534
+    },
+    "frontend/lib/genlayer/pending.ts": {
+      "sha256": "513e6add49ab158999dd601c0b5ea6568964672575e7ce0f54e6a7af149a054b",
+      "bytes": 1298
     },
     "frontend/lib/genlayer/vault.ts": {
       "sha256": "1a468b297a57a2eed5e8c2672c1a5940ac18c68401a8d6efee0ca25a259e3c8a",
       "bytes": 6623
     },
     "frontend/lib/genlayer/wallet-context.tsx": {
-      "sha256": "14b07c1e362d1120cdc161b9f9962f5d811422779b5f05e61fa8a7a54414381a",
-      "bytes": 8621
+      "sha256": "429dc91762966f8a3df8900141ffdffbdd2b9cd81e663c145af3cb48913c2834",
+      "bytes": 9703
     },
     "frontend/lib/hash.ts": {
       "sha256": "1bc67b26827562d9e8ee8b2c60f6eb949bf6292594597b6d08b5309819436a61",
@@ -372,24 +384,24 @@
       "bytes": 10796
     },
     "frontend/lib/milestone-validation.ts": {
-      "sha256": "b3f6235fda48923929d713970e6bc2e3d5c587f24b9c28dfc4d5145cf2c81fef",
-      "bytes": 9617
+      "sha256": "c3d2fac9ffd77e64159519577156262311d5bc7f22dc85ed6eec1dc8cbabd6a6",
+      "bytes": 13866
     },
     "frontend/lib/proof-pack.ts": {
       "sha256": "b45df3cbb94d14cdaa70dca9ea9b7581ed10fb252d5ce6f4832ed227d361d559",
       "bytes": 10027
     },
     "frontend/lib/types.ts": {
-      "sha256": "0f33f11d03c231dd19b06e0662f3ab643a5e4100110d8431ae6f4e9a6a137494",
-      "bytes": 5562
+      "sha256": "208a4c362692d3b110e8ef634df679ace4350a5eb1f9bdabc5eab5cf3284a708",
+      "bytes": 5652
     },
     "frontend/next-env.d.ts": {
       "sha256": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b",
       "bytes": 288
     },
     "frontend/next.config.mjs": {
-      "sha256": "c646f2a76921886567f61121300723b070fbafcbed825cb6ec215662840159e9",
-      "bytes": 1108
+      "sha256": "0ae9c7efe4112ab63c2f36b015604b8fd48df891ddf20f3abf8d21408563d539",
+      "bytes": 1161
     },
     "frontend/package.json": {
       "sha256": "845d81fe212d0974d3c7e228fa618564ac1edb3caf085c0680057b6dd41a5afb",
@@ -399,9 +411,25 @@
       "sha256": "a1a188221f064d964dd9958c3d48b0c23252fabbeb6099d95ee8e15c764718b0",
       "bytes": 60
     },
+    "frontend/public/milestones/acceptance-record-v2.json": {
+      "sha256": "09777881c0fada43e09632afe0933dab154768171dd9c06d51ad4f7930aecd7a",
+      "bytes": 1162
+    },
     "frontend/public/milestones/acceptance-record.json": {
       "sha256": "850b5eed95738f699c93b59abb58868ddd179ee97a6ef3f99bd1919e8ecd94e0",
       "bytes": 1141
+    },
+    "frontend/public/milestones/accepted-baseline-v2.json": {
+      "sha256": "a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34",
+      "bytes": 1264
+    },
+    "frontend/public/milestones/milestone-1-evidence-v1.json": {
+      "sha256": "7a3cb957e82bb817b73e7a303119e2f1b2873753d473a463da894b7dac97d032",
+      "bytes": 3209
+    },
+    "frontend/public/milestones/milestone-2-evidence-v1.json": {
+      "sha256": "2dede6261f198348e28b84138ce9adbf9fa5928fad7ba2e8d7c344f81342dacf",
+      "bytes": 3351
     },
     "frontend/tsconfig.json": {
       "sha256": "42e5282ba3b219a97feea772bb9b03f8f4128bdf6c87f84fe9b503d705f00ee0",
@@ -416,8 +444,8 @@
       "bytes": 170068
     },
     "package.json": {
-      "sha256": "8db52fb5a13099ed10852139e8e32055a3d9ad0559a713361d7766d07c2a89b6",
-      "bytes": 1710
+      "sha256": "5249aced0c17a847a1d8eebf81b9a43653a8e5d5cc7380d505578e3408899522",
+      "bytes": 1566
     },
     "pyproject.toml": {
       "sha256": "96348aecb1dad2d4afa26af080e0b221f7051269181b26a0efd74ea625c3570e",
@@ -440,8 +468,8 @@
       "bytes": 17482
     },
     "scripts/build_milestone_deploy_artifact.py": {
-      "sha256": "ce2549a8e48eeb9fee8bcab9c852d0603fdd2fdaae2692653bdce16a0d79f247",
-      "bytes": 24969
+      "sha256": "4cc452b1aa05b22a8a3a050f0749cac044b100889349b21ebaea4133b8c606ad",
+      "bytes": 26613
     },
     "scripts/build_stage4e_split_deploy_artifacts.py": {
       "sha256": "3864c81a30f940149ee6df88a11f13cf345f14ba0ed016a5f55fd50fc3257c5e",
@@ -492,8 +520,8 @@
       "bytes": 5707
     },
     "scripts/milestone_gate.py": {
-      "sha256": "4763d533c98b894e4e9329a6232616b1c5408393f25d34fb5ccf330ad29e0781",
-      "bytes": 21735
+      "sha256": "ee2dc596f0b2fca321fd8ae5cde56d1c20ce2b5dc9cbcaad895049135e633429",
+      "bytes": 25073
     },
     "scripts/milestone_vault_deploy_estimate.mjs": {
       "sha256": "179ea587f7a8020b4af51755167aa0fd685e0b1f670a08d9ad5c241fd634f6bf",
@@ -507,13 +535,17 @@
       "sha256": "790b76e3ae6939b59d5398672c43b80920e33f9b6eaa3b2669e84d79582cbce6",
       "bytes": 3542
     },
+    "scripts/release_verify.sh": {
+      "sha256": "f174f5f2a924f24993557880bd084860b843a6978998562f1a874539bda53b30",
+      "bytes": 865
+    },
     "scripts/reviewer_gate.py": {
       "sha256": "5b855276fdc39a7c2cde4fc48fb0b9088364c8287a5d2d33298ffafff6fcd605",
       "bytes": 35217
     },
     "scripts/source_manifest.py": {
-      "sha256": "5afde676b34cfe286a7ed3d101654523d3a3a2c8710a283d893a070d9b866185",
-      "bytes": 6239
+      "sha256": "c3fc9dc301c6b0a1df8a67b144d9337b8ba4e0010066a2c6290ec0c320f54a2a",
+      "bytes": 9275
     },
     "scripts/stage4c_core_deploy_estimate.mjs": {
       "sha256": "d3daa58e5e5a6800f25bc7ea11f27917b8aa1017e32230e72623118339b679f3",
@@ -532,8 +564,8 @@
       "bytes": 3665
     },
     "scripts/verify_manifest.py": {
-      "sha256": "bab7da2b81a28834d1279feffc4d588ee77ad7f32cb86de7c4b15c5db2b419b4",
-      "bytes": 5383
+      "sha256": "ce1e683fcc00fa3744d448aa79c959908402a0465cb38326bc2794ee7ef8b8ac",
+      "bytes": 10821
     },
     "scripts/whitespace_gate.py": {
       "sha256": "10e2c025048063d827860da4db0d21098e596aa5eecfca123e27f7e44f642f6c",
@@ -560,8 +592,8 @@
       "bytes": 21840
     },
     "tests/direct/test_milestone_adjudicator.py": {
-      "sha256": "7bf3a93a608d2df13b26b8130b3639e33809e083b0a2d08f9d0efda5e15ebde6",
-      "bytes": 7282
+      "sha256": "8fcfc538494f49d20b9f391d85fb158fedf9f6939ed17da315d72a5b26d72fa9",
+      "bytes": 7714
     },
     "tests/direct/test_milestone_authority.py": {
       "sha256": "670e20ddc9d26c1b87d38e73499dfa6e47573231d2fa0af2bf47ef614259d8f0",
@@ -586,6 +618,10 @@
     "tests/direct/test_split_registry.py": {
       "sha256": "3143f8389681f63fc0cd5c8cd0d5e8fe57baf50f39503aa05900a637a535a181",
       "bytes": 6040
+    },
+    "verification/live/CANONICAL_EVIDENCE.json": {
+      "sha256": "12825da95c3d06fc5bfaf83aa61333fc499c1cd22ad3e054145fdb8543a3fb86",
+      "bytes": 4060
     }
   },
   "deployment": {
@@ -598,10 +634,38 @@
     "adjudicator_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
     "vault_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
     "public_frontend_url": "https://verdictgraph.vercel.app",
-    "immutable_frontend_url": "https://verdictgraph-3lsg8znbd-mr-albert-s-projects.vercel.app",
-    "vercel_deployment_id": "dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn",
+    "immutable_frontend_url": "https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app",
+    "vercel_deployment_id": "dpl_BjRKReHMapFDYFxmz5h1b7ijoATA",
     "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
     "reviewer_source_commit": null,
-    "git_commit": null
+    "git_commit": null,
+    "base_release_source_set_sha256": "e812ddc86b320269c7290e54ca3d61dd420c2216a15642f0036764398127a47a"
+  },
+  "milestone_deployment": {
+    "network": "bradbury",
+    "chain_id": 4221,
+    "authority_address": "0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966",
+    "registry_address": "0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D",
+    "adjudicator_address": "0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0",
+    "vault_address": "0x99717eD8040890B164BD62007d887EA7d9Cc8b2E",
+    "authority_source_sha256": "12f96a55796d2277a58cb081ed72818c99ff85adde28fc0d8bf7789fd5077bc8",
+    "registry_source_sha256": "03e2248d139b2870a0d989ddeb42d684df029eabf07f923233ba569668e172bf",
+    "adjudicator_source_sha256": "db1e3467f3983989bc4212d08f2419db701ad6229f85d32527f66c8b6e4e4858",
+    "vault_runtime_sha256": "8275e244852a1875404ea3890726bbad505a126945883337d78a6b279986f97f",
+    "authority_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966",
+    "registry_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D",
+    "adjudicator_explorer_url": "https://explorer-bradbury.genlayer.com/address/0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0",
+    "vault_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x99717eD8040890B164BD62007d887EA7d9Cc8b2E",
+    "accepted_project_ref": "verdictgraph-v2",
+    "accepted_project_registration_tx": "0xa520fd9e232743495914a9f300b76505a19a219869427445478efb2f1102cb50",
+    "accepted_project_baseline_sha256": "a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34",
+    "accepted_project_record_sha256": "09777881c0fada43e09632afe0933dab154768171dd9c06d51ad4f7930aecd7a"
+  },
+  "production_baseline": {
+    "public_frontend_url": "https://verdictgraph.vercel.app",
+    "immutable_frontend_url": "https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app",
+    "vercel_deployment_id": "dpl_BjRKReHMapFDYFxmz5h1b7ijoATA",
+    "source_commit": "afc3e777aadf908883f9eb34fad1ac2725650747",
+    "verified_at": "2026-09-19T10:29:15Z"
   }
 }

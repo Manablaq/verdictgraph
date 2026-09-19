@@ -217,24 +217,31 @@ The keyless three-IC and Vault estimate probes were rerun against this exact
 release before publication; they use `eth_estimateGas` only and never read a
 private key or submit a transaction.
 
-The first accepted-project trust root is finalized on Bradbury. The funded
-acceptance authority registered `verdictgraph` in GenLayer transaction
-`0xe45d95eb258814e1fc11a0a3f75622af5d174d8a30bec30c703a6f786efa9256`; the
-worker finalized it through the official ConsensusMain operation in outer EVM
-transaction
-`0x06db9c8849a6eb4cb0d46f771ef41c57ca1087dfa5ff47e1892abbaaf0cb02c2`, mined
-in block `21996294`. A finalized read returned Authority project count `1` and
-the exact registered baseline, acceptance-record, sponsor, and approved-origin
-values. This makes the public milestone creation flow usable by the authorized
-sponsor without weakening the authority gate.
+The canonical accepted-project trust root is finalized on Bradbury. The funded
+acceptance authority registered `verdictgraph-v2` in GenLayer transaction
+`0xa520fd9e232743495914a9f300b76505a19a219869427445478efb2f1102cb50`.
+The finalized Authority reads `get_project_count() = 1` and the exact
+`verdictgraph-v2` baseline, acceptance-record, sponsor, and approved-origin
+values recorded in `deploy/milestone-bradbury.template.json`. This makes the
+public milestone creation flow usable by the authorized sponsor without
+weakening the authority gate.
 
 Final milestone topology:
 
-- Authority: `0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E`
-- Registry: `0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA`
-- Adjudicator: `0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02`
-- Vault: `0x229c077AF8446f7EC63E63d0C1F03b555fF50298`
+- Authority: `0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966`
+- Registry: `0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D`
+- Adjudicator: `0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0`
+- Vault: `0x99717eD8040890B164BD62007d887EA7d9Cc8b2E`
 
 The deployment record is the canonical machine-readable evidence. This keeps
 the milestone feature tied to real finalized Bradbury state rather than an
 unreviewed or fabricated address.
+
+### Historical proof artifacts
+
+`frontend/public/milestones/milestone-1-evidence-v1.json` and
+`milestone-2-evidence-v1.json` are preserved byte-for-byte as historical
+evidence for superseded milestone deployments. They are **not** the canonical
+current topology and must not be edited in place because their bytes may be
+hash-pinned by historical on-chain records. The current publication topology
+is the one in `deploy/milestone-bradbury.template.json`.

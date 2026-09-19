@@ -64,3 +64,12 @@ The feature is read-only. It does not add a new economic authority, alter the de
 - [x] Milestone live Vault reads include an EVM block number/hash anchor.
 - [x] No contract source or deployed address is changed by this release slice.
 - [ ] Deploy the frontend and re-check the public Proof Pack route against a live case before external submission.
+
+
+## Historical evidence preservation
+
+The public `milestone-1-evidence-v1.json` and `milestone-2-evidence-v1.json`
+files describe superseded milestone deployments and are intentionally preserved
+byte-for-byte. They are historical hash-pinned evidence, not current topology
+metadata. Current reviewer links and deployment identities must come from
+`deploy/milestone-bradbury.template.json` and the live Proof Pack.

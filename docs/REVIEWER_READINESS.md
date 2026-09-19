@@ -60,7 +60,7 @@ A submission is blocked if a required item below is false. Checked items are sup
 - [x] Deployed contract source is byte-stable relative to deployment commit `0e2855d14e142edc6e215c5935f3993eee59be21`; post-deployment frontend/docs work does not modify contract source.
 - [x] Frontend accepts only the exact final Registry, Adjudicator and Vault addresses and verifies all six topology edges.
 - [x] Final public frontend and Bradbury Explorer address links were rechecked during final packaging and point only to the exact audited deployments.
-- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_7ZsxcRR7jVVo6UknBkpsEWeKgNjn`; the immutable URL, acceptance-record bytes, and fresh milestone-route browser checks are persisted in `deploy/public-hosting.finality.json`.
+- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_BjRKReHMapFDYFxmz5h1b7ijoATA`; the immutable URL, acceptance-record bytes, and fresh milestone-route browser checks are persisted in `deploy/public-hosting.finality.json`.
 - [x] Public-hosting evidence is persisted in `deploy/public-hosting.finality.json`.
 - [ ] The external submission form itself must be populated with the exact final links below immediately before the user submits it.
 
@@ -86,17 +86,17 @@ constructor-specialized Vault runtime SHA-256; the published frontend provides
 all three generated artifact digests before enabling milestone writes. The
 release gate also includes keyless `eth_estimateGas` probes for all three IC
 artifacts and the Vault; these probes cannot sign or submit transactions.
-The first accepted-project trust root, `verdictgraph`, is now finalized on
+The canonical accepted-project trust root, `verdictgraph-v2`, is finalized on
 Bradbury with Authority project count `1`; its exact baseline, acceptance
 record, sponsor, and approved-origin values are recorded in the deployment
 template and re-read from finalized state.
 
 ## Final milestone Bradbury topology
 
-- Authority: `0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E`
-- Registry: `0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA`
-- Adjudicator: `0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02`
-- Vault: `0x229c077AF8446f7EC63E63d0C1F03b555fF50298`
+- Authority: `0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966`
+- Registry: `0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D`
+- Adjudicator: `0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0`
+- Vault: `0x99717eD8040890B164BD62007d887EA7d9Cc8b2E`
 - Finality and binding evidence: `deploy/milestone-bradbury.template.json`
 
 ## Final public links

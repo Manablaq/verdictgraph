@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 FINALITY_PATH = ROOT / "deploy/bradbury.finality.json"
 PUBLIC_HOSTING_PATH = ROOT / "deploy/public-hosting.finality.json"
+MILESTONE_DEPLOYMENT_PATH = ROOT / "deploy/milestone-bradbury.template.json"
 BRADBURY_EXPLORER = "https://explorer-bradbury.genlayer.com"
 
 _reviewer_source_commit = os.environ.get(
@@ -41,6 +42,8 @@ STATIC_PATHS = {
     "requirements.txt",
     "deploy/bradbury.template.json",
     "deploy/milestone-bradbury.template.json",
+    "verification/live/CANONICAL_EVIDENCE.json",
+    ".github/workflows/verify.yml",
     "frontend/.env.example",
     "frontend/next-env.d.ts",
     "frontend/next.config.mjs",
@@ -135,6 +138,7 @@ source_set = source_set_sha256(entries)
 
 finality = json.loads(FINALITY_PATH.read_text())
 public_hosting = json.loads(PUBLIC_HOSTING_PATH.read_text())
+milestone_deployment = json.loads(MILESTONE_DEPLOYMENT_PATH.read_text())
 
 if finality.get("network") != "bradbury":
     raise SystemExit("Bradbury finality record network mismatch")
@@ -161,6 +165,22 @@ if public_hosting.get("target") != "production":
     raise SystemExit(
         "Public hosting record is not production-targeted"
     )
+
+if milestone_deployment.get("deploymentStatus") != "DEPLOYED":
+    raise SystemExit("Milestone deployment record is not DEPLOYED")
+if milestone_deployment.get("network") != "bradbury":
+    raise SystemExit("Milestone deployment network mismatch")
+if milestone_deployment.get("chainId") != 4221:
+    raise SystemExit("Milestone deployment chain id mismatch")
+
+for key in ("authorityAddress", "registryAddress", "adjudicatorAddress", "vaultAddress"):
+    value = milestone_deployment.get(key)
+    if not isinstance(value, str) or not value.startswith("0x") or len(value) != 42:
+        raise SystemExit(f"Invalid milestone deployment address: {key}")
+
+accepted_project = milestone_deployment.get("acceptedProjectRegistration") or {}
+if accepted_project.get("status") != "Finalized" or accepted_project.get("statusCode") != 7:
+    raise SystemExit("Accepted-project registration is not Finalized/status 7")
 
 manifest = {
     "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
@@ -190,6 +210,34 @@ manifest = {
         ],
         "reviewer_source_commit": REVIEWER_SOURCE_COMMIT,
         "git_commit": REVIEWER_SOURCE_COMMIT,
+        "base_release_source_set_sha256": finality.get("reviewer_source_set_sha256"),
+    },
+    "milestone_deployment": {
+        "network": milestone_deployment["network"],
+        "chain_id": milestone_deployment["chainId"],
+        "authority_address": milestone_deployment["authorityAddress"],
+        "registry_address": milestone_deployment["registryAddress"],
+        "adjudicator_address": milestone_deployment["adjudicatorAddress"],
+        "vault_address": milestone_deployment["vaultAddress"],
+        "authority_source_sha256": milestone_deployment["deploymentArtifactSha256"]["authority"],
+        "registry_source_sha256": milestone_deployment["deploymentArtifactSha256"]["registry"],
+        "adjudicator_source_sha256": milestone_deployment["deploymentArtifactSha256"]["adjudicator"],
+        "vault_runtime_sha256": milestone_deployment["vaultRuntimeSha256"],
+        "authority_explorer_url": milestone_deployment["authorityExplorerUrl"],
+        "registry_explorer_url": milestone_deployment["registryExplorerUrl"],
+        "adjudicator_explorer_url": milestone_deployment["adjudicatorExplorerUrl"],
+        "vault_explorer_url": milestone_deployment["vaultExplorerUrl"],
+        "accepted_project_ref": accepted_project["projectRef"],
+        "accepted_project_registration_tx": accepted_project["registrationTransaction"],
+        "accepted_project_baseline_sha256": accepted_project["baselineSha256"],
+        "accepted_project_record_sha256": accepted_project["acceptanceRecordSha256"],
+    },
+    "production_baseline": {
+        "public_frontend_url": public_hosting["public_url"],
+        "immutable_frontend_url": public_hosting["immutable_url"],
+        "vercel_deployment_id": public_hosting["deployment_id"],
+        "source_commit": public_hosting.get("public_deployment_source_commit"),
+        "verified_at": public_hosting.get("public_access_verified_at_utc"),
     },
 }
 path = ROOT / "verification/source-manifest.json"
