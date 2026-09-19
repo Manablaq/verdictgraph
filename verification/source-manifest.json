@@ -1,6 +1,6 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-19T12:18:12.170445+00:00",
+  "generated_at": "2026-09-19T12:50:45.964514+00:00",
   "source_set_sha256": "d1ac4d38725e00d15563e11d3f0a4b7bfbdc9a491e2a28d998d5c699c7e3d3be",
   "files": {
     ".github/workflows/verify.yml": {
@@ -634,8 +634,8 @@
     "adjudicator_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x1B6d96aEc7A80ab582Afd9cb1eC182F197502868",
     "vault_explorer_url": "https://explorer-bradbury.genlayer.com/address/0x9B6459aE8045cC4afa0bef0A9868DB46369a70C2",
     "public_frontend_url": "https://verdictgraph.vercel.app",
-    "immutable_frontend_url": "https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app",
-    "vercel_deployment_id": "dpl_BjRKReHMapFDYFxmz5h1b7ijoATA",
+    "immutable_frontend_url": "https://verdictgraph-51g1anf1r-mr-albert-s-projects.vercel.app",
+    "vercel_deployment_id": "dpl_G1WV8ExZpS7yVAN2yzrSB7xhsPDw",
     "deployed_contract_source_commit": "0e2855d14e142edc6e215c5935f3993eee59be21",
     "reviewer_source_commit": null,
     "git_commit": null,
@@ -663,9 +663,9 @@
   },
   "production_baseline": {
     "public_frontend_url": "https://verdictgraph.vercel.app",
-    "immutable_frontend_url": "https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app",
-    "vercel_deployment_id": "dpl_BjRKReHMapFDYFxmz5h1b7ijoATA",
-    "source_commit": "afc3e777aadf908883f9eb34fad1ac2725650747",
-    "verified_at": "2026-09-19T10:29:15Z"
+    "immutable_frontend_url": "https://verdictgraph-51g1anf1r-mr-albert-s-projects.vercel.app",
+    "vercel_deployment_id": "dpl_G1WV8ExZpS7yVAN2yzrSB7xhsPDw",
+    "source_commit": "685eb37cd40366ad23b00349bb52d4e592574415",
+    "verified_at": "2026-09-19T12:48:54Z"
   }
 }
