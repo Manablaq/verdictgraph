@@ -1,6 +1,6 @@
 # Build status
 
-Date: 2026-09-15
+Date: 2026-09-19
 
 ## Completed verification checkpoints
 
@@ -148,10 +148,10 @@ Current deterministic source identity is recorded in `verification/source-manife
 
 The on-chain/economic proof remains complete.
 
-The final production frontend and acceptance record were deployed from the audited working tree after local TypeScript/build checks and a successful remote Vercel install/build. The successful READY production deployment is `dpl_BjRKReHMapFDYFxmz5h1b7ijoATA`.
+The final production frontend and acceptance record were deployed from the audited working tree after local TypeScript/build checks and a successful remote Vercel install/build. The successful READY production deployment is `dpl_G1WV8ExZpS7yVAN2yzrSB7xhsPDw`, built from source commit `685eb37cd40366ad23b00349bb52d4e592574415`.
 
 - Public frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
-- Immutable deployment: [https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app](https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app)
+- Immutable deployment: [https://verdictgraph-51g1anf1r-mr-albert-s-projects.vercel.app](https://verdictgraph-51g1anf1r-mr-albert-s-projects.vercel.app)
 - Production deployment state: `READY`
 - Vercel Authentication: disabled
 - Public HTTP verification: `/`, `/app`, `/docs`, `/setup`, `/vault`, `/workflows`, `/create`, `/milestones`, `/milestones/authority`, and `/milestones/create` return HTTP 200
@@ -189,12 +189,12 @@ workflow project. It adds:
 
 The local release package is verified as follows:
 
-- milestone source gate: **59/59 passed**;
+- milestone source gate: **67/67 passed**;
 - pinned GenVM typecheck/lint: passed on all three canonical ICs and all three deployment artifacts;
 - isolated milestone Direct Mode: Authority **2/2**, Registry **3/3**, and Adjudicator **2/2** passed on both each canonical IC and its deployment artifact;
 - milestone Vault Foundry suite: **16/16 passed**;
 - full existing Direct Mode regression: **35/35 passed**;
-- full Foundry regression: **47/47 passed**;
+- full Foundry regression: **52/52 passed**;
 - frontend TypeScript and optimized webpack production build: passed;
 - production dependency audit: **0 vulnerabilities**;
 - existing reviewer gate: **154/154 passed**;

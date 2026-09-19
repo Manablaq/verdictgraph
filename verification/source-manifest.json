@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-19T13:11:29.459827+00:00",
-  "source_set_sha256": "f6e1dd2c00f57b535c6eb42888bbafce9db12805f3c7e01568ea61c45842ee2f",
+  "generated_at": "2026-09-19T13:36:02.487830+00:00",
+  "source_set_sha256": "1f432a2c6809fbc8e4ab44c705bec7138b8d4a8383c4f6e2dca58df2811d815f",
   "files": {
     ".github/workflows/verify.yml": {
       "sha256": "6548a04bdfb7b9e6934feaf2c36d0891aca574447c24d122d20c33b12032d0f1",
@@ -20,8 +20,8 @@
       "bytes": 8
     },
     "README.md": {
-      "sha256": "1eaf28a60acce3a5712a75c351f3c33fb2382b176a160f86b580f9796faa9c49",
-      "bytes": 14122
+      "sha256": "4530ee102c66e1cfbb4ae35330564e260fa8f4dbe1eb628866c3ed7b8ca78cd9",
+      "bytes": 14202
     },
     "contracts/verdict_graph_adjudicator.py": {
       "sha256": "973c13d882341a53b3f0e2712c0b64a4cf76f0fb1006fdb226186ebe70f82149",
@@ -92,8 +92,8 @@
       "bytes": 7108
     },
     "docs/BUILD_STATUS.md": {
-      "sha256": "d9d62a93b487fa09b958ea813a980344b8df072334a347e4c68a061dbf18d34a",
-      "bytes": 15479
+      "sha256": "ebe9d7fc1e335e5818c1f595896dc76fcb479718b58fbfe1c6933359be758b27",
+      "bytes": 15548
     },
     "docs/MILESTONE_DEPLOYMENT_RUNBOOK.md": {
       "sha256": "e6c31535b3a2c101c53acc620957268a5e3b5f9af009d56746583eceaa789491",
@@ -108,8 +108,8 @@
       "bytes": 13776
     },
     "docs/REVIEWER_READINESS.md": {
-      "sha256": "cca404ac9f9c4d5b3b1c886b8c8ac02fb74be89d445e49132e9918b1435f7f95",
-      "bytes": 7455
+      "sha256": "411d743e224c95c6ab89b08dbb26a3b4899cebf667e26210c8d379aad209920f",
+      "bytes": 7517
     },
     "docs/SPLIT_ARCHITECTURE_V1.md": {
       "sha256": "7eb96f202a1fb579be954784af250629d92469f0bc0593e9b14c75576e4f3395",

@@ -60,7 +60,7 @@ A submission is blocked if a required item below is false. Checked items are sup
 - [x] Deployed contract source is byte-stable relative to deployment commit `0e2855d14e142edc6e215c5935f3993eee59be21`; post-deployment frontend/docs work does not modify contract source.
 - [x] Frontend accepts only the exact final Registry, Adjudicator and Vault addresses and verifies all six topology edges.
 - [x] Final public frontend and Bradbury Explorer address links were rechecked during final packaging and point only to the exact audited deployments.
-- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_BjRKReHMapFDYFxmz5h1b7ijoATA`; the immutable URL, acceptance-record bytes, and fresh milestone-route browser checks are persisted in `deploy/public-hosting.finality.json`.
+- [x] Public production frontend is `https://verdictgraph.vercel.app`, backed by READY production deployment `dpl_G1WV8ExZpS7yVAN2yzrSB7xhsPDw` from source commit `685eb37cd40366ad23b00349bb52d4e592574415`; the immutable URL, acceptance-record bytes, and fresh milestone-route browser checks are persisted in `deploy/public-hosting.finality.json`.
 - [x] Public-hosting evidence is persisted in `deploy/public-hosting.finality.json`.
 - [ ] The external submission form itself must be populated with the exact final links below immediately before the user submits it.
 

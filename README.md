@@ -116,9 +116,11 @@ The case release adds a public Proof Pack at `/cases/[id]/proof`. The milestone 
 
 Public production frontend: [https://verdictgraph.vercel.app](https://verdictgraph.vercel.app)
 
-Immutable Vercel deployment: [https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app](https://verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app)
+Immutable Vercel deployment: [https://verdictgraph-51g1anf1r-mr-albert-s-projects.vercel.app](https://verdictgraph-51g1anf1r-mr-albert-s-projects.vercel.app)
 
-Vercel deployment ID: `dpl_BjRKReHMapFDYFxmz5h1b7ijoATA`.
+Vercel deployment ID: `dpl_G1WV8ExZpS7yVAN2yzrSB7xhsPDw`.
+
+Production frontend source commit: `685eb37cd40366ad23b00349bb52d4e592574415`.
 
 ## Verification commands
 
