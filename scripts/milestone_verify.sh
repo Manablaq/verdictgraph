@@ -30,6 +30,12 @@ VERDICTGRAPH_MILESTONE_DIRECT_ROLE=adjudicator .venv/bin/python -m pytest tests/
 VERDICTGRAPH_MILESTONE_DIRECT_ROLE=authority VERDICTGRAPH_MILESTONE_DIRECT_CONTRACT=contracts/verdict_graph_milestone_authority_deploy.py .venv/bin/python -m pytest tests/direct/test_milestone_authority.py -v
 VERDICTGRAPH_MILESTONE_DIRECT_ROLE=registry VERDICTGRAPH_MILESTONE_DIRECT_CONTRACT=contracts/verdict_graph_milestone_registry_deploy.py .venv/bin/python -m pytest tests/direct/test_milestone_registry.py -v
 VERDICTGRAPH_MILESTONE_DIRECT_ROLE=adjudicator VERDICTGRAPH_MILESTONE_DIRECT_CONTRACT=contracts/verdict_graph_milestone_adjudicator_deploy.py .venv/bin/python -m pytest tests/direct/test_milestone_adjudicator.py -v
+# Remove only the generated Vault artifact copies before the build so a
+# stale local artifact can never mask a fresh-run/CI artifact-path failure.
+rm -f \
+  out/VerdictGraphMilestoneVault.sol/VerdictGraphMilestoneVault.json \
+  artifacts/VerdictGraphMilestoneVault.sol/VerdictGraphMilestoneVault.json
+
 forge build --force --sizes
 EXPECTED_RUNTIME="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["expectedVaultRuntimeSha256"])' deploy/milestone-bradbury.template.json)"
 RUNTIME_REGISTRY="${VERDICTGRAPH_MILESTONE_REGISTRY_ADDRESS:-$(python3 -c 'import json; value=json.load(open("deploy/milestone-bradbury.template.json"))["vaultConstructorArgs"][0]; print(value if isinstance(value,str) and len(value)==42 and value.startswith("0x") else "0x"+"0"*40)')}"

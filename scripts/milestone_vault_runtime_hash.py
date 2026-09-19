@@ -8,7 +8,54 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT = ROOT / "out/VerdictGraphMilestoneVault.sol/VerdictGraphMilestoneVault.json"
+
+ARTIFACT_RELATIVE_PATH = (
+    Path("VerdictGraphMilestoneVault.sol")
+    / "VerdictGraphMilestoneVault.json"
+)
+
+# Foundry 1.8.1 can materialize the dynamically linked build artifact under
+# `artifacts/`, while older/cached local builds may still have the conventional
+# `out/` copy. Accept either deterministic location, but never silently choose
+# between disagreeing copies.
+ARTIFACT_CANDIDATES = (
+    ROOT / "artifacts" / ARTIFACT_RELATIVE_PATH,
+    ROOT / "out" / ARTIFACT_RELATIVE_PATH,
+)
+
+
+def load_artifact() -> dict:
+    existing = [
+        candidate
+        for candidate in ARTIFACT_CANDIDATES
+        if candidate.is_file()
+    ]
+
+    if not existing:
+        checked = ", ".join(str(path) for path in ARTIFACT_CANDIDATES)
+        raise SystemExit(
+            "milestone Vault build artifact not found; checked: "
+            + checked
+        )
+
+    payloads = [
+        (candidate, candidate.read_bytes())
+        for candidate in existing
+    ]
+
+    if len(payloads) > 1:
+        payload_hashes = {
+            hashlib.sha256(payload).hexdigest()
+            for _, payload in payloads
+        }
+        if len(payload_hashes) != 1:
+            locations = ", ".join(str(path) for path, _ in payloads)
+            raise SystemExit(
+                "milestone Vault artifact copies disagree: "
+                + locations
+            )
+
+    return json.loads(payloads[0][1])
 
 
 def main() -> None:
@@ -22,7 +69,7 @@ def main() -> None:
     except ValueError as exc:
         raise SystemExit("invalid Registry address") from exc
 
-    artifact = json.loads(ARTIFACT.read_text())
+    artifact = load_artifact()
     runtime_hex = artifact["deployedBytecode"]["object"]
     runtime = bytes.fromhex(runtime_hex[2:])
     zero_address = bytes(20)
