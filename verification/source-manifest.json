@@ -1,7 +1,7 @@
 {
   "schema": "verdictgraph-source-manifest-v4-deterministic-source-set",
-  "generated_at": "2026-09-19T12:50:45.964514+00:00",
-  "source_set_sha256": "d1ac4d38725e00d15563e11d3f0a4b7bfbdc9a491e2a28d998d5c699c7e3d3be",
+  "generated_at": "2026-09-19T13:11:29.459827+00:00",
+  "source_set_sha256": "f6e1dd2c00f57b535c6eb42888bbafce9db12805f3c7e01568ea61c45842ee2f",
   "files": {
     ".github/workflows/verify.yml": {
       "sha256": "6548a04bdfb7b9e6934feaf2c36d0891aca574447c24d122d20c33b12032d0f1",
@@ -520,8 +520,8 @@
       "bytes": 5707
     },
     "scripts/milestone_gate.py": {
-      "sha256": "ee2dc596f0b2fca321fd8ae5cde56d1c20ce2b5dc9cbcaad895049135e633429",
-      "bytes": 25073
+      "sha256": "837cc5cde06321e735ed55bfbd160c42c93cebe524c7e4b274caeca848532905",
+      "bytes": 26889
     },
     "scripts/milestone_vault_deploy_estimate.mjs": {
       "sha256": "179ea587f7a8020b4af51755167aa0fd685e0b1f670a08d9ad5c241fd634f6bf",

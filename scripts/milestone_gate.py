@@ -6,6 +6,7 @@ changing the existing deployed-case gates. Runtime checks remain authoritative
 and are run by ``scripts/milestone_verify.sh``.
 """
 
+import json
 from pathlib import Path
 
 
@@ -49,6 +50,7 @@ README_PATH = ROOT / "README.md"
 REVIEWER_READINESS_PATH = ROOT / "docs/REVIEWER_READINESS.md"
 MILESTONE_SETTLEMENT_DOC_PATH = ROOT / "docs/MILESTONE_SETTLEMENT.md"
 PUBLIC_HOSTING_PATH = ROOT / "deploy/public-hosting.finality.json"
+SOURCE_MANIFEST_PATH = ROOT / "verification/source-manifest.json"
 SOURCE_MANIFEST_SCRIPT_PATH = ROOT / "scripts/source_manifest.py"
 VERIFY_MANIFEST_PATH = ROOT / "scripts/verify_manifest.py"
 CI_WORKFLOW_PATH = ROOT / ".github/workflows/verify.yml"
@@ -99,6 +101,9 @@ readme = read(README_PATH)
 reviewer_readiness = read(REVIEWER_READINESS_PATH)
 milestone_settlement_doc = read(MILESTONE_SETTLEMENT_DOC_PATH)
 public_hosting = read(PUBLIC_HOSTING_PATH)
+public_hosting_data = json.loads(public_hosting)
+source_manifest_data = json.loads(read(SOURCE_MANIFEST_PATH))
+production_baseline = source_manifest_data.get("production_baseline") or {}
 source_manifest_script = read(SOURCE_MANIFEST_SCRIPT_PATH)
 verify_manifest = read(VERIFY_MANIFEST_PATH)
 ci_workflow = read(CI_WORKFLOW_PATH)
@@ -108,7 +113,38 @@ checks = {
     "wallet uses standard EIP-1193 without mandatory Snap": all(token not in frontend_client for token in ("wallet_getSnaps", "wallet_requestSnaps", "GENLAYER_SNAP_ID", "ensureGenLayerSnap")) and "wallet_switchEthereumChain" in frontend_client and "wallet_addEthereumChain" in frontend_client,
     "canonical docs bind the finalized milestone topology": all(token in (readme + reviewer_readiness + milestone_settlement_doc) for token in ("0x7e68D3951227D409FAD3255D7D9Fe0DB0C7E4966", "0x647bcaCe50b8137fEad0caAf48a5E1B15D36854D", "0xFcfda4EE1b8bE66F7E9EEf887c744a704cF7F0F0", "0x99717eD8040890B164BD62007d887EA7d9Cc8b2E")) and all(token not in (readme + reviewer_readiness + milestone_settlement_doc) for token in ("0x71a26DdBd90Fb84D04a77275008B3364F60D4f0E", "0x1b4EC19147bCD91237A2A890f2C14b473D46B4cA", "0x73c9e51b3f1D3A51b27913959D9d1c39Be674B02", "0x229c077AF8446f7EC63E63d0C1F03b555fF50298")),
     "canonical docs bind verdictgraph-v2 trust root": all(token in (readme + reviewer_readiness + milestone_settlement_doc) for token in ("verdictgraph-v2", "a07bd4c9ad4b54775fe44349f5fb41ecdf62a1f628843ad895c0abb053fcad34", "09777881c0fada43e09632afe0933dab154768171dd9c06d51ad4f7930aecd7a")),
-    "current production hosting record is source-bound": all(token in public_hosting for token in ("dpl_BjRKReHMapFDYFxmz5h1b7ijoATA", "afc3e777aadf908883f9eb34fad1ac2725650747", "verdictgraph-820eb6pt2-mr-albert-s-projects.vercel.app")),
+    "current production hosting record is source-bound": (
+        public_hosting_data.get("schema") == "verdictgraph-public-hosting-finality-v1"
+        and public_hosting_data.get("state") == "READY"
+        and public_hosting_data.get("target") == "production"
+        and public_hosting_data.get("public_url") == "https://verdictgraph.vercel.app"
+        and isinstance(public_hosting_data.get("deployment_id"), str)
+        and public_hosting_data["deployment_id"].startswith("dpl_")
+        and len(public_hosting_data["deployment_id"]) > 4
+        and isinstance(public_hosting_data.get("immutable_url"), str)
+        and public_hosting_data["immutable_url"].startswith("https://verdictgraph-")
+        and public_hosting_data["immutable_url"].endswith(".vercel.app")
+        and public_hosting_data["immutable_url"] != public_hosting_data["public_url"]
+        and isinstance(
+            public_hosting_data.get("public_deployment_source_commit"),
+            str,
+        )
+        and len(public_hosting_data["public_deployment_source_commit"]) == 40
+        and all(
+            char in "0123456789abcdef"
+            for char in public_hosting_data["public_deployment_source_commit"]
+        )
+        and production_baseline.get("public_frontend_url")
+        == public_hosting_data.get("public_url")
+        and production_baseline.get("immutable_frontend_url")
+        == public_hosting_data.get("immutable_url")
+        and production_baseline.get("vercel_deployment_id")
+        == public_hosting_data.get("deployment_id")
+        and production_baseline.get("source_commit")
+        == public_hosting_data.get("public_deployment_source_commit")
+        and production_baseline.get("verified_at")
+        == public_hosting_data.get("public_access_verified_at_utc")
+    ),
     "CI runs the complete release verifier": "npm run verify" in ci_workflow and all(token in release_verify for token in ("scripts/verify_manifest.py", "npm run contract:typecheck", "npm run contract:lint", "pytest tests/direct", "scripts/milestone_verify.sh", "forge test -vvv", "npm audit --omit=dev --audit-level=high")),
     "source set avoids dynamic release-evidence circularity": all(token not in source_manifest_script for token in ('    "deploy/bradbury.finality.json",', '    "deploy/public-hosting.finality.json",')) and '".github/workflows/verify.yml"' in source_manifest_script,
     "manifest verifier binds milestone deployment and accepted trust root": all(token in verify_manifest for token in ("milestone_deployment", "deploymentArtifactSha256", "accepted-baseline-v2.json", "acceptance-record-v2.json", "public_milestone_routes_verified_http_200")) and "finality.get(\"reviewer_source_set_sha256\") != actual_source_set" not in verify_manifest,
