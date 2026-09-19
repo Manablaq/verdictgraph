@@ -73,7 +73,15 @@ export function MilestoneActions({ milestoneId, milestone, allowedSubmissionOrig
       if (expectedVaultStatus !== null) {
         const downstream = await waitForMilestoneVaultStatus(BigInt(milestoneId), expectedVaultStatus);
         if (!downstream.reached) {
-          toast.message(`GenLayer finalized. Vault is still ${downstream.label}; refresh this page to check settlement.`);
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ["milestone", milestoneId] }),
+            queryClient.invalidateQueries({ queryKey: ["milestone-vault-status", milestoneId] }),
+          ]);
+          if (functionName === "register_milestone_in_vault" && downstream.code === 0 && Math.floor(Date.now() / 1_000) >= Number(milestone.funding_deadline)) {
+            toast.error("Registry finalized, but the Vault rejected registration because the funding deadline expired. Create a replacement milestone with a future funding deadline; do not retry this action.");
+          } else {
+            toast.message(`GenLayer finalized. Vault is still ${downstream.label}; refresh this page to check settlement.`);
+          }
           return;
         }
       }
@@ -157,16 +165,19 @@ export function MilestoneActions({ milestoneId, milestone, allowedSubmissionOrig
   const readyLabel = isOwner && !milestone.sponsor_ready ? "Mark sponsor ready" : isBeneficiary && !milestone.beneficiary_ready ? "Mark beneficiary ready" : null;
   const readinessComplete = milestone.sponsor_ready && milestone.beneficiary_ready;
   const submissionDeadlinePassed = now >= Number(milestone.submission_deadline);
+  const fundingDeadlinePassed = now >= Number(milestone.funding_deadline);
+  const registrationExpired = milestone.status === "ACTIVE" && vaultCode === 0 && fundingDeadlinePassed;
   const canRunReview = milestone.status === "SUBMITTED" && Boolean(account) && (readinessComplete || submissionDeadlinePassed);
   return <section className="rounded-[28px] border border-white/[.08] bg-white/[.02] p-6"><div className="flex flex-col justify-between gap-4 md:flex-row md:items-start"><div><div className="flex flex-wrap items-center gap-2"><Flag size={17} className="text-sky-300" /><span className="text-sm font-medium">Execution controls</span><StatusBadge value={vault.data?.label ?? (vault.isLoading ? "CHECKING" : "UNAVAILABLE")} /></div><p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500">Each action is gated by the on-chain milestone state. Subjective review stays inside GenLayer; the Vault only receives finalized exact outcomes.</p></div><button type="button" aria-label="Refresh milestone Vault state" onClick={() => void vault.refetch()} className="inline-flex items-center gap-2 self-start rounded-full border border-white/10 px-3 py-2 text-xs text-zinc-400"><RefreshCw size={13}/> Refresh</button></div>
     {vault.isError ? <div className="mt-5 rounded-2xl border border-rose-400/15 bg-rose-400/[.04] p-4 text-xs leading-5 text-rose-200" role="alert">The live milestone Vault state could not be verified. Actions remain hidden until the audited topology and escrow status can be read.</div> : null}
     {wrongNetwork ? <div className="mt-5 rounded-2xl border border-amber-300/15 bg-amber-300/[.04] p-4 text-xs leading-5 text-amber-100/80" role="alert">Your wallet is connected on another network. Switch back to GenLayer Bradbury (chain {BRADBURY_CHAIN_ID}) before approving a milestone action.</div> : null}
     {pendingWrite ? <PendingTransactionNotice label={pendingWrite.label} hash={pendingWrite.hash} busy={busy === "pending-finality"} onRecheck={() => void recheckPendingWrite()} /> : null}
     {!pendingWrite && milestone.status === "REVIEW_PENDING" ? <div className="mt-5 rounded-2xl border border-amber-300/15 bg-amber-300/[.04] p-4 text-xs leading-5 text-amber-100/80" role="status"><div className="font-medium text-amber-100">{milestone.review_queued ? "Adjudicator review is still in progress." : "The Registry is waiting for the Adjudicator callback."}</div><p className="mt-1">Review request <span className="font-mono">#{milestone.review_request_id.toString()}</span> is recorded on the finalized Registry. The parent transaction only dispatches the review; the Adjudicator review and its callback are separate finalized transactions. Retry only when the downstream review has completed without updating this milestone; signing repeatedly while it is processing creates duplicate reviews.</p></div> : null}
+    {!pendingWrite && registrationExpired ? <div className="mt-5 rounded-2xl border border-rose-300/15 bg-rose-300/[.04] p-4 text-xs leading-5 text-rose-100/80" role="alert"><div className="font-medium text-rose-100">Escrow registration window expired.</div><p className="mt-1">The Registry is finalized as ACTIVE, but the Vault cannot register an escrow after the funding deadline. Do not sign this action again. Create a replacement milestone with a funding deadline at least 2 hours in the future.</p></div> : null}
     {!pendingWrite && vaultCode === 0 && !isOwner ? <div className="mt-5 rounded-2xl border border-sky-300/15 bg-sky-300/[.04] p-4 text-xs leading-5 text-sky-100/80">The escrow is not registered yet. Connect the sponsor wallet to activate the milestone and register its exact Vault terms.</div> : null}
     <div className="mt-6 flex flex-wrap gap-2">
       {!pendingWrite && milestone.status === "DRAFT" && isOwner ? <Action onClick={() => void genlayer("activate", "activate_milestone", [BigInt(milestoneId)], "Activation accepted.")} busy={busy === "activate"} disabled={wrongNetwork} icon={LockKeyhole}>Activate milestone</Action> : null}
-      {!pendingWrite && milestone.status === "ACTIVE" && isOwner && vaultCode === 0 ? <Action onClick={() => void genlayer("register", "register_milestone_in_vault", [BigInt(milestoneId)], "Escrow registration accepted.")} busy={busy === "register"} disabled={wrongNetwork} icon={LockKeyhole}>Register escrow</Action> : null}
+      {!pendingWrite && milestone.status === "ACTIVE" && isOwner && vaultCode === 0 && !fundingDeadlinePassed ? <Action onClick={() => void genlayer("register", "register_milestone_in_vault", [BigInt(milestoneId)], "Escrow registration accepted.")} busy={busy === "register"} disabled={wrongNetwork} icon={LockKeyhole}>Register escrow</Action> : null}
       {vaultCode === 1 && isOwner ? <Action onClick={() => void evm("fund_milestone", milestone.principal_required)} busy={busy === "fund_milestone"} disabled={wrongNetwork} icon={CircleDollarSign}>Fund {formatGen(milestone.principal_required)}</Action> : null}
       {vaultCode === 2 && isBeneficiary ? <Action onClick={() => void evm("post_bond", milestone.beneficiary_bond_required)} busy={busy === "post_bond"} disabled={wrongNetwork} icon={ShieldCheck}>Post bond {formatGen(milestone.beneficiary_bond_required)}</Action> : null}
       {vaultCode === 1 && account && now > Number(milestone.funding_deadline) ? <Action onClick={() => void evm("recover_unactivated")} busy={busy === "recover_unactivated"} disabled={wrongNetwork} icon={RefreshCw}>Recover unfunded escrow</Action> : null}

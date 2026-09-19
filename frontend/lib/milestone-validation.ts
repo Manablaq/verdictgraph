@@ -3,6 +3,9 @@ import { isAddress, parseEther } from "viem";
 const SHA256_RE = /^[0-9a-f]{64}$/;
 const MAX_UINT256 = (1n << 256n) - 1n;
 const MIN_FUNDING_WINDOW_SECONDS = 900;
+// Bradbury finality can take roughly 30 minutes. Keep enough time for the
+// finalized Registry callback to reach the EVM Vault before its deadline.
+const MIN_FUNDING_FINALITY_BUFFER_SECONDS = 2 * 60 * 60;
 const MIN_SUBMISSION_WINDOW_SECONDS = 900;
 const MIN_RECOVERY_BUFFER_SECONDS = 900;
 const MIN_CHALLENGE_WINDOW_SECONDS = 300;
@@ -122,6 +125,7 @@ export function validateMilestoneCreate(input: {
   if (submission.error) errors.push(submission.error);
   if (recovery.error) errors.push(recovery.error);
   if (!funding.error && funding.value - BigInt(nowSeconds) < BigInt(MIN_FUNDING_WINDOW_SECONDS)) errors.push("Funding deadline must leave at least 15 minutes.");
+  if (!funding.error && funding.value - BigInt(nowSeconds) < BigInt(MIN_FUNDING_FINALITY_BUFFER_SECONDS)) errors.push("Funding deadline must leave at least 2 hours so Bradbury finality can complete before escrow registration.");
   if (!funding.error && !submission.error && submission.value - funding.value < BigInt(MIN_SUBMISSION_WINDOW_SECONDS)) errors.push("Submission deadline must leave at least 15 minutes after funding.");
   if (!submission.error && !recovery.error && recovery.value - submission.value < BigInt(MIN_RECOVERY_BUFFER_SECONDS)) errors.push("Recovery deadline must leave at least 15 minutes after submission.");
   if (!recovery.error && recovery.value - BigInt(nowSeconds) > BigInt(MAX_MILESTONE_HORIZON_SECONDS)) errors.push("Recovery horizon cannot exceed 365 days.");
