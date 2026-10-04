@@ -1,5 +1,7 @@
 # VerdictGraph
 
+Immutable last-rewarded-project comparison: [2f6d98e...2d90bf0](https://github.com/Manablaq/verdictgraph/compare/2f6d98e1636067b58ecbf705ed720ac35cbf05c9...2d90bf0730f5f198c907e7612e8aaa8d86183400).
+
 **Accountability and deterministic settlement for autonomous workflow handoffs, adjudicated by GenLayer.**
 
 VerdictGraph turns each handoff in an autonomous workflow into an explicit commitment: responsibility, exact breach criteria, authenticated evidence authorities, deadlines, escrow terms, and deterministic consequence rules. When a handoff is disputed, GenLayer validators independently retrieve the registered evidence and must agree exactly on the fields that can change downstream consequences.

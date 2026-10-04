@@ -2,6 +2,16 @@
 
 A submission is blocked if a required item below is false. Checked items are supported by the repository's reproducible gates and/or persisted Bradbury/public-hosting evidence. The external submission-form entry itself intentionally remains a submission-time human check.
 
+## Immutable last-rewarded-project comparison
+
+The exact prior reviewer/reward package is commit `2f6d98e1636067b58ecbf705ed720ac35cbf05c9`. The submitted head is commit `2d90bf0730f5f198c907e7612e8aaa8d86183400`.
+
+Permanent GitHub comparison:
+
+https://github.com/Manablaq/verdictgraph/compare/2f6d98e1636067b58ecbf705ed720ac35cbf05c9...2d90bf0730f5f198c907e7612e8aaa8d86183400
+
+This range contains 89 changed files, 11,259 additions, and 495 deletions. It covers the GenLayer milestone contracts and deployment artifacts, the deterministic EVM milestone Vault and Foundry tests, application topology and fail-closed checks, frontend milestone routes, release scripts, and the associated direct/integration test evidence. This is the single immutable scope record for novelty, overlap, functional completeness, and materiality review.
+
 ## Evidence and trust
 
 - [x] Approved evidence authorities are policy-bound on-chain; the live reviewer flow used the two approved issuer accounts recorded in the Stage 4 live evidence.
